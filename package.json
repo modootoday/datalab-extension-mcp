@@ -1,0 +1,14 @@
+{
+  "name": "datalab-extension-mcp-repo",
+  "private": true,
+  "workspaces": [
+    "mcp",
+    "mcp-core",
+    "mcp-server",
+    "mcp-installer"
+  ],
+  "scripts": {
+    "test": "npm run test --workspaces",
+    "build": "npm run build --workspace mcp-core && npm run build --workspace mcp-server && npm run build --workspace mcp-installer && npm run build --workspace mcp"
+  }
+}

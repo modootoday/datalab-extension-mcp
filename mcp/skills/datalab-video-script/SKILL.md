@@ -1,0 +1,96 @@
+---
+name: datalab-video-script
+description: 주제나 아이디어를 장면별 스크립트로 만들어 데이터랩툴즈 영상 편집기에 넣는다. 숏폼·릴스 스크립트, 장면 구성, 자막과 AI 목소리 제작에 사용한다. 빈 프로젝트로 시작하거나 저장 프로젝트를 열 수 있고 AI 이미지·목소리는 유료다.
+license: Proprietary
+metadata:
+  surfaces: both
+  install: optional
+  tools: video_project_get, video_project_new, video_project_list, video_project_open, video_timeline_get, video_sources_list, video_canvas_resize, video_scene_add, video_subtitle_set, video_scene_update, video_scene_reorder, video_text_add, video_background_set, photo_gallery_list, video_image_add_from_gallery, video_scene_image_set, generate_images, video_narration_generate, my_content_read, my_content_info
+---
+
+## MCP 도구 연결
+
+요청에 필요한 실제 도구가 현재 목록에 직접 보이면 그 도구를 사용한다. 보이지 않으면
+사용자의 원래 의도를 `datalab_find_tools`에 보내고, 반환된 스키마와 도구 이름만 사용해
+`datalab_call`로 실행한다. 도구 이름이나 인자를 지어내지 않는다. 결과가
+`awaiting_confirm`이면 원래 호출을 반복하지 말고 ticket을 `datalab_confirm_status`로
+확인한다.
+
+
+# 영상 스크립트 기획과 제작
+
+주제나 대본 아이디어를 장면별 스크립트로 기획하고, 데이터랩툴즈 영상 편집기 타임라인에 장면마다
+실제로 만들어 넣는다. 산출물은 다른 곳에 붙여넣을 텍스트가 아니라 완성된 타임라인이다.
+
+## 시작하기 전에 — 프로젝트를 정한다
+
+새 작업이면 `video_project_new`로 빈 프로젝트를 만든다. 이 호출은 관리 탭을 직접 열 수 있다.
+저장된 작업을 이어가면 `video_project_list`로 찾고 `video_project_open`으로 연다. 현재 문서를
+바꾸는 호출이므로 사용자 확인을 거친다.
+
+`video_project_get`과 `video_timeline_get`으로 현재 project ref, revision과 기존 장면을 확인한다.
+기존 내용이 있으면 이어서 쓸지 새 프로젝트로 바꿀지 묻는다. 이후 변경 호출에는 가능하면
+같은 editor session, project ref와 expected revision을 넘겨 대상이 바뀌면 멈추게 한다.
+
+## 무엇을 읽고 시작하나
+
+1. 사용자가 주제나 대본을 직접 줬으면 그것이 기준이다.
+2. "이 글을 영상으로" 처럼 이미 발행한 글을 가리키면 `my_content_read` 로 본문을 읽는다.
+   제목만 알고 있으면 `my_content_info` 로 먼저 찾는다.
+3. 둘 다 없으면 무슨 주제인지 묻고 멈춘다. **지어내지 않는다.**
+
+## 기획은 짧게 확인만 한다
+
+- **형식** — 세로 숏폼(9:16) 또는 가로(16:9)가 기본. 다르면 물어본다.
+- **장면 수** — 안 정했으면 대본 분량 기준으로 5~8장을 제안하고 확인만 받는다.
+- **어투** — 차분한 설명형이 기본값이다.
+
+장면 역할과 자막 길이는 `references/scene-structure.md`.
+
+## 만들기
+
+첫 장면 전에 `video_canvas_resize` 로 화면 비율을 맞춘다. 이미 장면이 여러 개 있는
+타임라인에서는 함부로 다시 부르지 않는다 — 모든 장면에 한꺼번에 적용돼 기존 배치가 틀어진다.
+
+장면마다:
+
+1. `video_scene_add` 로 장면을 추가하며 그 장면의 자막(내레이션 원고)을 함께 넣는다.
+   목소리로 읽힐 문장이니 귀로 읽히게 쓴다 — 기준은 `references/writing-for-the-ear.md`.
+2. `video_background_set` 으로 색 배경을 정하거나(기본값, 무료), 이미지가 필요하면
+   `video_sources_list` 로 이 영상에 이미 있는 이미지를 먼저 확인해 `video_scene_image_set`
+   으로 재사용한다. 확장 갤러리 사진은 `photo_gallery_list` 로 찾아
+   `video_image_add_from_gallery` 로 가져온다.
+3. 화면에 그려지는 강조 문구(제목·CTA)가 필요하면 `video_text_add`. 자막과는 별개다.
+4. 전환과 움직임은 `video_scene_update`.
+
+순서를 바꾸려면 `video_scene_reorder`. 자막을 고치려면 `video_subtitle_set` — 이미 목소리를
+만든 장면이면 자막을 고친 뒤 목소리를 다시 만들어야 한다.
+
+**이 스킬은 장면이나 요소 삭제를 사용하지 않는다.** 삭제 요청은 별도의 파괴적 확인이 필요한
+작업이라고 안내하고, 영상 제작 흐름에서 임의로 실행하지 않는다.
+
+## 이미지와 목소리 생성은 유료다
+
+- `generate_images` 는 과금된다. 장면마다 하나씩이면 N장이 N번이다. 기본은 색 배경 + 자막
+  시안을 제안하고, AI 이미지를 원하면 **몇 장을 생성할지 먼저 확인한다.**
+- `video_narration_generate` 도 과금된다. 새로 만들어야 하는 장면 수를 `video_timeline_get`
+  의 내레이션 상태로 미리 세어 **부르기 전에 몇 장인지 확인받는다.** 대상을 생략하면 전부
+  한 번에 청구된다.
+- 실제 단가는 알 수 없다 — 매수만 확인하고, 승인 없이 장면 수만큼 자동으로 돌리지 않는다.
+
+## 없는 것 (찾지 마라)
+
+- **실제 카메라로 찍는 영상은 다루지 않는다.** 이 표면은 이미지·자막·AI 목소리로 이루어진
+  슬라이드형 편집기다. 샷 리스트, 카메라 앵글, 조명 장비, 촬영 장소 추천은 대응 도구가 없다.
+- **외부 영상 생성기를 부르는 도구는 없다.** 그런 생성기용 전용 문법의 프롬프트도 만들지
+  않는다 — 이 표면이 실행하는 도구가 아니다.
+- 목소리는 이 패널에 설정된 AI 음성 하나뿐이다. 특정 성우·음색을 지정하는 문법은 없다.
+- 조회수·완시청률·참여율·구독자 증가·클릭률을 예측하거나 등급을 매기지 않는다.
+- 업로드·썸네일 등록 도구는 없다. 제목·설명 문구는 복사용으로 제안할 수 있지만 등록은
+  사용자 몫이다.
+
+## 산출물
+
+- 완성된 타임라인 — 열려 있던 편집기에 장면이 채워진 상태.
+- 복사용 스크립트 요약 — 장면별 자막, 타임라인에 넣은 내용 그대로.
+- 원하면 제목·설명 문구 제안. 예상 수치는 붙이지 않는다.
