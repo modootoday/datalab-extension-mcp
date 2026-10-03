@@ -1,0 +1,31 @@
+export {
+  buildEnv,
+  buildFileEntry,
+  buildUrlEntry,
+  daemonMcpUrl,
+  DEFAULT_EXTENSION_ID,
+  DEFAULT_PORT,
+  packageSpec,
+  SERVER_NAME,
+  SERVER_PACKAGE,
+  type FileServerEntry,
+  type ServerEntryOptions,
+  type StdioFileEntry,
+  type UrlFileEntry,
+} from "./hosts/entries.js";
+export { resolveHostPath, type HostPathSpec } from "./hosts/paths.js";
+export {
+  buildEntryForHost,
+  CLI_HOSTS,
+  CODEX_CHATGPT_NOTE,
+  FILE_HOSTS,
+  INSTALLABLE_CLIS,
+  SKILL_HOSTS,
+  SNIPPET_HOSTS,
+  SUPPORTED_APPS,
+  type CliHost,
+  type FileHost,
+  type InstallableCli,
+  type SnippetContext,
+  type SnippetHost,
+} from "./hosts/index.js";
