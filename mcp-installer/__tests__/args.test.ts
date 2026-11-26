@@ -37,7 +37,7 @@ describe("claude CLI args", () => {
     expect(host("claude").buildAddArgs(OPTS)).toEqual([
       "mcp",
       "add",
-      "datalab",
+      "datalab-extension-mcp",
       "--scope",
       "user",
       "--env",
@@ -62,7 +62,7 @@ describe("claude CLI args", () => {
     expect(host("claude").buildRemoveArgs()).toEqual([
       "mcp",
       "remove",
-      "datalab",
+      "datalab-extension-mcp",
       "--scope",
       "user",
     ]);
@@ -80,7 +80,7 @@ describe("gemini CLI args", () => {
       `DATALAB_MCP_TOKEN=${VALID_TOKEN}`,
       "-e",
       `DATALAB_MCP_EXTENSION_ID=${VALID_EXTENSION_ID}`,
-      "datalab",
+      "datalab-extension-mcp",
       "npx",
       "-y",
       "@modootoday/datalab-extension-mcp@1.2.3",
@@ -93,7 +93,7 @@ describe("gemini CLI args", () => {
       "remove",
       "-s",
       "user",
-      "datalab",
+      "datalab-extension-mcp",
     ]);
   });
 });
@@ -107,14 +107,14 @@ describe("codex CLI args", () => {
       "-y",
       "@modootoday/datalab-extension-mcp@1.2.3",
     ]);
-    expect(args.slice(0, 3)).toEqual(["mcp", "add", "datalab"]);
+    expect(args.slice(0, 3)).toEqual(["mcp", "add", "datalab-extension-mcp"]);
   });
 
   it("builds the exact remove argv", () => {
     expect(host("codex").buildRemoveArgs()).toEqual([
       "mcp",
       "remove",
-      "datalab",
+      "datalab-extension-mcp",
     ]);
   });
 });

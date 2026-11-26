@@ -5,13 +5,17 @@
  */
 import {
   buildEntryForHost,
+  isOurEntry,
+  isOurTomlTable,
+  LEGACY_SERVER_NAMES,
   SERVER_NAME,
+  type CliHost,
   type ServerEntryOptions,
 } from "./hosts.js";
 import { detectHosts } from "./run.js";
 import type { HostResult, Io } from "./types.js";
 import { upsertServerKey } from "./write-json.js";
-import { upsertTomlServer } from "./write-toml.js";
+import { tomlTableText, upsertTomlServer } from "./write-toml.js";
 
 const RUNNER = /\bnpx(?:\.cmd)?\b/;
 
@@ -30,13 +34,35 @@ async function readJson(io: Io, path: string): Promise<unknown> {
   }
 }
 
-/** The span of our own TOML table, up to the next table header. */
-function ourTomlTable(raw: string): string | null {
-  const start = raw.indexOf(`[mcp_servers.${SERVER_NAME}]`);
-  if (start === -1) return null;
-  const rest = raw.slice(start + 1);
-  const next = rest.search(/^\[(?!mcp_servers\.datalab[.\]])/m);
-  return next === -1 ? rest : rest.slice(0, next);
+/** A runner entry under our key, or under a legacy key when it proves ours. */
+function hasRunnerEntry(servers: Record<string, unknown> | undefined): boolean {
+  if (servers === undefined) return false;
+  if (runsThroughRunner(servers[SERVER_NAME])) return true;
+  return LEGACY_SERVER_NAMES.some(
+    (name) => isOurEntry(servers[name]) && runsThroughRunner(servers[name]),
+  );
+}
+
+function hasRunnerTable(raw: string): boolean {
+  const current = tomlTableText(raw, SERVER_NAME);
+  if (current !== null && RUNNER.test(current)) return true;
+  return LEGACY_SERVER_NAMES.some((name) => {
+    const table = tomlTableText(raw, name);
+    return table !== null && isOurTomlTable(table) && RUNNER.test(table);
+  });
+}
+
+async function isRegistered(
+  io: Io,
+  cli: CliHost,
+  getArgs: (name: string) => string[],
+): Promise<boolean> {
+  const shell = io.platform === "win32";
+  for (const name of [SERVER_NAME, ...LEGACY_SERVER_NAMES]) {
+    const got = await io.spawn(cli.bin, getArgs(name), { shell });
+    if (got.code === 0) return true;
+  }
+  return false;
 }
 
 export async function relinkInstalledHosts(
@@ -49,8 +75,11 @@ export async function relinkInstalledHosts(
   for (const d of await detectHosts(io)) {
     try {
       if (d.tier === 1 && d.cli?.buildGetArgs !== undefined) {
-        const got = await io.spawn(d.cli.bin, d.cli.buildGetArgs(), { shell });
-        if (got.code !== 0) continue;
+        const getArgs = d.cli.buildGetArgs.bind(d.cli);
+        if (!(await isRegistered(io, d.cli, getArgs))) continue;
+        for (const name of LEGACY_SERVER_NAMES) {
+          await io.spawn(d.cli.bin, d.cli.buildRemoveArgs(name), { shell });
+        }
         await io.spawn(d.cli.bin, d.cli.buildRemoveArgs(), { shell });
         const added = await io.spawn(d.cli.bin, d.cli.buildAddArgs(opts), {
           shell,
@@ -70,7 +99,7 @@ export async function relinkInstalledHosts(
         const doc = (await readJson(io, d.configPath)) as {
           mcpServers?: Record<string, unknown>;
         } | null;
-        if (!runsThroughRunner(doc?.mcpServers?.[SERVER_NAME])) continue;
+        if (!hasRunnerEntry(doc?.mcpServers)) continue;
         const outcome = await upsertServerKey(
           io,
           d.configPath,
@@ -86,8 +115,7 @@ export async function relinkInstalledHosts(
       } else if (d.tier === 3 && d.snippet?.tomlServerName !== undefined) {
         const path = d.snippet.detectedPath(io);
         if (path === null || !(await io.exists(path))) continue;
-        const table = ourTomlTable(await io.readFile(path));
-        if (table === null || !RUNNER.test(table)) continue;
+        if (!hasRunnerTable(await io.readFile(path))) continue;
         const outcome = await upsertTomlServer(
           io,
           path,

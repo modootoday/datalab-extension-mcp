@@ -78,6 +78,17 @@ export {
   writeTakeoverSecret,
 } from "./takeover.js";
 export {
+  CLAIM_WINDOW_MS,
+  deletePairingRecord,
+  fixedRoot,
+  pairingPath,
+  pairingRoot,
+  readPairingRecord,
+  type ClaimOutcome,
+  type PairingRecord,
+  type RootCredential,
+} from "./pairing/index.js";
+export {
   killPortOwner,
   listenerPids,
   listenerQuery,

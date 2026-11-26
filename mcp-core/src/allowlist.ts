@@ -316,6 +316,7 @@ export const TOOL_TIERS: Readonly<Record<string, ToolTier>> = Object.freeze({
   photo_inpaint: "write",
   photo_group: "write",
   photo_ungroup: "write",
+  photo_redact_add: "write",
 
   // ── Gallery: the free way in ────────────────────────────────────
   //
@@ -373,11 +374,13 @@ export const TOOL_TIERS: Readonly<Record<string, ToolTier>> = Object.freeze({
   video_marker_add: "write",
   video_marker_remove: "destructive",
   video_lane_set: "write",
+  video_subtitle_style_set: "write",
   video_auto_edit: "write",
   video_template_list: "read",
   video_template_apply: "destructive",
   video_post_import: "write",
   video_source_add: "write",
+  video_redact_add: "write",
 
   // ── Post editor: reads ──────────────────────────────────────────
   editor_read: "read",
@@ -452,6 +455,8 @@ export const TOOL_TIERS: Readonly<Record<string, ToolTier>> = Object.freeze({
   tab_open: "write",
   tab_focus: "write",
   tab_close: "destructive",
+  // Runs the caller's own code in one open tab, so it can do anything that page can.
+  tab_debug: "destructive",
   // Insertion appends, so it never passes through the overwrite prompt; the
   // tier is the only barrier, and the user approves each image's source.
   editor_insert_image: "destructive",
@@ -486,6 +491,11 @@ export const TOOL_TIERS: Readonly<Record<string, ToolTier>> = Object.freeze({
   editor_insert_component: "write",
   editor_replace: "destructive",
 });
+
+/** Every name the gate admits, read-only names first: the set a host can ever see. */
+export const ADMITTED_TOOLS: readonly string[] = Object.freeze([
+  ...new Set([...READ_ONLY_TOOLS, ...Object.keys(TOOL_TIERS)]),
+]);
 
 /** How a tier is asked about. */
 export type TierPolicy = "always" | "per-call" | "closed";

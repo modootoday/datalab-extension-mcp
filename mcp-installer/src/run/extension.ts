@@ -4,6 +4,7 @@
  * when that is safe, otherwise handed to the person as a card.
  */
 import {
+  LEGACY_SERVER_NAMES,
   SERVER_NAME,
   buildEntryForHost,
   type CliHost,
@@ -104,7 +105,10 @@ async function installByCli(
   const shell = ctx.io.platform === "win32";
   // Remove-then-add makes re-running the install an idempotent upsert, and
   // re-running it is the only recovery the docs offer. The remove outcome is
-  // ignored on purpose.
+  // ignored on purpose. Legacy names go first, so one connector stays.
+  for (const name of LEGACY_SERVER_NAMES) {
+    await ctx.io.spawn(cli.bin, cli.buildRemoveArgs(name), { shell });
+  }
   await ctx.io.spawn(cli.bin, cli.buildRemoveArgs(), { shell });
   const result = await ctx.io.spawn(cli.bin, cli.buildAddArgs(ctx.opts), {
     shell,
@@ -260,12 +264,17 @@ async function whereLines(io: Io, host: SnippetHost): Promise<string[]> {
 }
 
 async function removeByCli(io: Io, cli: CliHost): Promise<Outcome> {
-  const result = await io.spawn(cli.bin, cli.buildRemoveArgs(), {
-    shell: io.platform === "win32",
-  });
+  const shell = io.platform === "win32";
+  let removed = false;
+  for (const name of [SERVER_NAME, ...LEGACY_SERVER_NAMES]) {
+    const result = await io.spawn(cli.bin, cli.buildRemoveArgs(name), {
+      shell,
+    });
+    if (result.code === 0) removed = true;
+  }
   // A non-zero exit usually means there was no such server, which is already
   // the state the person asked for.
-  if (result.code !== 0) {
+  if (!removed) {
     return {
       row: {
         status: "건너뜀",

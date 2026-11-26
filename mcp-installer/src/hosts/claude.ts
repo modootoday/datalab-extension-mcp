@@ -18,11 +18,11 @@ export const claudeCliHost: CliHost = {
     args.push("--", ...launchArgv(opts));
     return args;
   },
-  buildRemoveArgs() {
-    return ["mcp", "remove", SERVER_NAME, "--scope", "user"];
+  buildRemoveArgs(name = SERVER_NAME) {
+    return ["mcp", "remove", name, "--scope", "user"];
   },
-  buildGetArgs() {
-    return ["mcp", "get", SERVER_NAME];
+  buildGetArgs(name = SERVER_NAME) {
+    return ["mcp", "get", name];
   },
 };
 

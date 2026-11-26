@@ -24,6 +24,32 @@ const ENV = {
 let running: { http: { close: () => Promise<void> } } | null = null;
 let home = "";
 
+/**
+ * Resolves once the daemon holds its port: the bind completes after runDaemon
+ * returns, and under load a fetch sent at once is refused.
+ */
+async function start(
+  env: typeof ENV,
+  deps: Omit<NonNullable<Parameters<typeof runDaemon>[1]>, "log" | "exit">,
+): Promise<NonNullable<ReturnType<typeof runDaemon>>> {
+  let listening = (): void => {};
+  let taken = (): void => {};
+  const ready = new Promise<void>((resolve, reject) => {
+    listening = resolve;
+    taken = () => reject(new Error(`port ${env.DATALAB_MCP_PORT} is taken`));
+  });
+  const daemon = runDaemon(env, {
+    ...deps,
+    log: (line: string) => {
+      if (line.startsWith("listening on")) listening();
+    },
+    exit: taken,
+  });
+  expect(daemon).not.toBeNull();
+  await ready;
+  return daemon!;
+}
+
 afterEach(async () => {
   await running?.http.close();
   running = null;
@@ -34,8 +60,7 @@ afterEach(async () => {
 describe("데몬이 자기 상태를 두는 곳", () => {
   it("준 홈 아래에만 쓴다", async () => {
     home = await mkdtemp(join(tmpdir(), "daemon-home-"));
-    running = runDaemon(ENV, { home, log: () => {}, exit: () => {} })!;
-    expect(running).not.toBeNull();
+    running = await start(ENV, { home });
 
     // The root is chosen lazily, so booting alone proves nothing about it.
     // Only a real write says which directory the daemon actually picked.
@@ -129,15 +154,12 @@ describe("같은 키를 든 브라우저들이 각자 붙는가", () => {
   const boot = async (): Promise<void> => {
     home = await mkdtemp(join(tmpdir(), "daemon-attach-"));
     await mkdir(join(home, ".datalab-mcp"), { recursive: true });
-    running = runDaemon(ATTACH_ENV, {
+    running = await start(ATTACH_ENV, {
       home,
-      log: () => {},
-      exit: () => {},
       // The HTTP client holds a stream until something is written to it, so at
       // the real interval this would wait out the whole test rather than read.
       heartbeatMs: 25,
-    })!;
-    expect(running).not.toBeNull();
+    });
   };
 
   it("두 브라우저가 같은 키로 각자의 슬롯을 받는다", async () => {

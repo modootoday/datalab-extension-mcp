@@ -1,0 +1,44 @@
+{
+  "manifest_version": "0.3",
+  "name": "datalab-extension-mcp",
+  "display_name": "DataLab Tools",
+  "version": "1.18.0",
+  "description": "Use the DataLab Tools browser extension from an AI app, inside your own browser session.",
+  "long_description": "Local MCP server that exposes the DataLab Tools browser extension's tools to an MCP host. Read-only lookups run without a prompt; anything that edits a document or costs money is gated by the extension and confirmed by you first. Holds no credentials; every call runs inside your own browser session.",
+  "author": {
+    "name": "modootoday",
+    "url": "https://github.com/modootoday"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/modootoday/datalab-extension-mcp"
+  },
+  "homepage": "https://github.com/modootoday/datalab-extension-mcp#readme",
+  "license": "MIT",
+  "keywords": [
+    "mcp",
+    "modelcontextprotocol",
+    "chrome-extension",
+    "naver"
+  ],
+  "server": {
+    "type": "node",
+    "entry_point": "server/dist/cli.js",
+    "mcp_config": {
+      "command": "node",
+      "args": [
+        "${__dirname}/server/dist/cli.js"
+      ]
+    }
+  },
+  "compatibility": {
+    "platforms": [
+      "darwin",
+      "win32",
+      "linux"
+    ],
+    "runtimes": {
+      "node": ">=22.0.0"
+    }
+  }
+}

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  ADMITTED_TOOLS,
   EXCLUDED_TOOLS,
   READ_ONLY_TOOLS,
   filterReadOnly,
@@ -11,6 +12,15 @@ import {
   type ToolTier,
 } from "../src/allowlist.js";
 import { MCP_TOOL_NAME_RE } from "../src/protocol.js";
+
+describe("ADMITTED_TOOLS", () => {
+  it("is the read-only list and the tier table, each name once", () => {
+    expect(new Set(ADMITTED_TOOLS).size).toBe(
+      READ_ONLY_TOOLS.length + Object.keys(TOOL_TIERS).length,
+    );
+    expect(ADMITTED_TOOLS.filter((name) => tierOf(name) === null)).toEqual([]);
+  });
+});
 
 describe("READ_ONLY_TOOLS", () => {
   it("has no duplicates", () => {
@@ -221,9 +231,7 @@ describe("naver-write", () => {
  * without somebody coming back to read them.
  */
 describe("제3자 표면 도구", () => {
-  const thirdParty = [
-    ...new Set([...Object.keys(TOOL_TIERS), ...READ_ONLY_TOOLS]),
-  ]
+  const thirdParty = [...ADMITTED_TOOLS]
     .filter((name) => name.startsWith("pumasi_"))
     .sort();
 

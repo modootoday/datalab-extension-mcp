@@ -5,6 +5,7 @@ export {
   daemonMcpUrl,
   DEFAULT_EXTENSION_ID,
   DEFAULT_PORT,
+  LEGACY_SERVER_NAMES,
   packageSpec,
   SERVER_NAME,
   SERVER_PACKAGE,
@@ -13,6 +14,7 @@ export {
   type StdioFileEntry,
   type UrlFileEntry,
 } from "./hosts/entries.js";
+export { isOurEntry, isOurTomlTable } from "./hosts/ownership.js";
 export { resolveHostPath, type HostPathSpec } from "./hosts/paths.js";
 export {
   buildEntryForHost,

@@ -9,7 +9,12 @@ import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 import { runInstall } from "../src/run.js";
-import { FILE_HOSTS, SNIPPET_HOSTS, resolveHostPath } from "../src/hosts.js";
+import {
+  FILE_HOSTS,
+  SERVER_NAME,
+  SNIPPET_HOSTS,
+  resolveHostPath,
+} from "../src/hosts.js";
 import { INSTALL_TITLE } from "../src/strings.js";
 import { VALID_EXTENSION_ID, VALID_TOKEN, createTempIo } from "./helpers.js";
 
@@ -34,7 +39,7 @@ async function datalabEntry(path: string): Promise<unknown> {
   const doc = JSON.parse(await fs.readFile(path, "utf8")) as {
     mcpServers?: Record<string, unknown>;
   };
-  return doc.mcpServers?.["datalab"];
+  return doc.mcpServers?.[SERVER_NAME];
 }
 
 describe("brand banner", () => {
@@ -677,14 +682,14 @@ describe("newly covered hosts", () => {
       );
       const root = snippet as { mcp?: Record<string, Record<string, unknown>> };
       expect(root.mcp).toBeDefined();
-      const entry = root.mcp!["datalab"]!;
+      const entry = root.mcp![SERVER_NAME]!;
       expect(entry["type"]).toBe("local");
       expect(Array.isArray(entry["command"])).toBe(true);
       expect((entry["command"] as string[])[0]).toBe("npx");
       // The env map has its own key name on this host.
       expect(entry["environment"]).toBeDefined();
       expect(entry["env"]).toBeUndefined();
-      expect(root.mcp!["datalab"]).not.toHaveProperty("args");
+      expect(root.mcp![SERVER_NAME]).not.toHaveProperty("args");
     });
 
     it("does not use the mcpServers shape", () => {

@@ -16,8 +16,8 @@ export const geminiCliHost: CliHost = {
     args.push(SERVER_NAME, ...launchArgv(opts));
     return args;
   },
-  buildRemoveArgs() {
-    return ["mcp", "remove", "-s", "user", SERVER_NAME];
+  buildRemoveArgs(name = SERVER_NAME) {
+    return ["mcp", "remove", "-s", "user", name];
   },
 };
 

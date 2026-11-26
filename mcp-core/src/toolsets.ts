@@ -243,7 +243,9 @@ const VIDEO_TIMELINE = [
   "video_marker_add",
   "video_marker_remove",
   "video_lane_set",
+  "video_subtitle_style_set",
   "video_auto_edit",
+  "video_redact_add",
 ] as const;
 
 const EXPLICIT: ReadonlyArray<{ slug: string; tools: readonly string[] }> = [
@@ -335,8 +337,9 @@ const META: ReadonlyArray<Omit<Toolset, "tools">> = [
     // the way to do it, rather than opening a second tab of the same page.
     slug: "browser-tabs",
     label: "내 브라우저 탭",
-    summary: "지금 열려 있는 탭을 보고, 열고, 앞으로 가져오고, 닫는다",
-    aliases: ["브라우저 탭", "탭 열기", "탭 닫기", "탭 전환"],
+    summary:
+      "지금 열려 있는 탭을 보고, 열고, 앞으로 가져오고, 닫고, 개발용 점검 코드를 실행한다",
+    aliases: ["브라우저 탭", "탭 열기", "탭 닫기", "탭 전환", "탭 점검 코드"],
     dataScope: "local",
     // The two named here are how this group's surface is created and reduced,
     // and a guard holds them equal to the surface policy - one place would go
@@ -448,7 +451,13 @@ const META: ReadonlyArray<Omit<Toolset, "tools">> = [
     slug: "photo-editor",
     label: "사진 편집기 조작",
     summary: "사진 편집기 캔버스에 텍스트·도형·이미지를 넣는다",
-    aliases: ["사진 편집기", "카드뉴스", "캔버스", "슬라이드 디자인"],
+    aliases: [
+      "사진 편집기",
+      "카드뉴스",
+      "캔버스",
+      "슬라이드 디자인",
+      "사진 모자이크",
+    ],
     dataScope: "local",
     needsTab: true,
     reducerTool: "editor_reduce_windows",
@@ -475,8 +484,9 @@ const META: ReadonlyArray<Omit<Toolset, "tools">> = [
     slug: "video-timeline",
     label: "영상 타임라인 편집",
     summary:
-      "영상 장면을 자르고, 배경 음악 클립·화면 속 화면·카메라 움직임·표시·줄 숨기기를 다루고, 자동 편집을 돌린다. 장면 ref 는 영상 편집기 묶음의 video_timeline_get 으로 얻는다",
+      "영상 장면을 자르고, 배경 음악 클립·화면 속 화면·카메라 움직임·표시·줄 숨기기·모자이크 가림을 다루고, 자동 편집을 돌린다. 장면 ref 는 영상 편집기 묶음의 video_timeline_get 으로 얻는다",
     aliases: [
+      "영상 모자이크",
       "장면 자르기",
       "배경 음악 편집",
       "화면 속 화면",

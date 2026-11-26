@@ -29,6 +29,7 @@ import {
   type McpTool,
 } from "@modootoday/datalab-extension-app-mcp-core";
 
+import { fixedRoot, type RootCredential } from "./pairing/index.js";
 import { digestToken } from "./token-digest.js";
 import {
   DEFAULT_TIMEOUT_MS,
@@ -43,8 +44,10 @@ export interface BridgeDeps {
    * answered, and the two deserve different waits.
    */
   send: (frame: BridgeDownstream, key: string) => boolean;
-  /** The pairing token this server was started with. */
-  token: string;
+  /** The pairing token this server was started with; shorthand for `fixedRoot(token)`. */
+  token?: string;
+  /** The machine's root credential. Exactly one of this and `token` is given. */
+  root?: RootCredential;
   /** The extension ids allowed to connect. */
   extensionIds: readonly string[];
   /** Reported in the handshake for operator diagnostics. */
@@ -234,6 +237,7 @@ function daemonIdTag(): string {
 
 export class Bridge {
   readonly #deps: BridgeDeps;
+  readonly #root: RootCredential;
   readonly #sessions = new Map<string, SessionEntry>();
   /** browserId to the name it reported, for datalab_browsers. */
   readonly #labels = new Map<string, string>();
@@ -249,6 +253,7 @@ export class Bridge {
 
   constructor(deps: BridgeDeps) {
     this.#deps = deps;
+    this.#root = resolveRoot(deps);
     const limit = deps.rateLimit ?? DEFAULT_RATE_LIMIT;
     this.#bucketTokens = limit.capacity;
     this.#bucketRefilledAt = (deps.now ?? Date.now)();
@@ -417,8 +422,25 @@ export class Bridge {
    * The root token only. A browser's own credential must never open this:
    * one browser could then end another's unattended run.
    */
+  /**
+   * The root token a handshake is checked against. An unpaired connector
+   * pairs only with a handshake that every other check admits: identity,
+   * protocol and capabilities before this call, a routable name here.
+   */
+  #rootFor(presented: string, browserId: string | undefined): string | null {
+    const held = this.#root.current();
+    if (held !== null) return held;
+    if (browserId === undefined || browserId.length === 0) return null;
+    if (this.#root.claim(presented) === "claimed") {
+      this.#deps.log?.("paired with a side panel");
+    }
+    return this.#root.current();
+  }
+
   verifyRootToken(presented: string | undefined | null): boolean {
-    return checkToken(presented ?? undefined, this.#deps.token).ok;
+    const root = this.#root.current();
+    if (root === null) return false;
+    return checkToken(presented ?? undefined, root).ok;
   }
 
   /**
@@ -678,10 +700,20 @@ export class Bridge {
       };
     }
 
+    const rootToken = this.#rootFor(parsed.data.token, parsed.data.browserId);
+    if (rootToken === null) {
+      return {
+        t: "hello_nack",
+        reason: "unauthorized",
+        supported: [],
+        message:
+          "This connector is not paired. Restart your AI app, then connect from the side panel within 10 minutes.",
+      };
+    }
     const tokenHash = digestToken(parsed.data.token);
     const credential = resolveCredential(
       { token: parsed.data.token, browserId: parsed.data.browserId },
-      { rootToken: this.#deps.token },
+      { rootToken },
     );
     if (credential.kind !== "claimed") {
       this.#deps.log?.("refused an unauthorized browser credential");
@@ -1131,6 +1163,15 @@ export class BridgeError extends Error {
     this.reason = reason;
     if (timing) this.timing = timing;
   }
+}
+
+function resolveRoot(deps: BridgeDeps): RootCredential {
+  if (deps.root !== undefined && deps.token !== undefined) {
+    throw new Error("Bridge takes a root credential or a token, not both.");
+  }
+  if (deps.root !== undefined) return deps.root;
+  if (deps.token !== undefined) return fixedRoot(deps.token);
+  throw new Error("Bridge needs a root credential or a token.");
 }
 
 /** Reject a token the server was started with before it can be used. */

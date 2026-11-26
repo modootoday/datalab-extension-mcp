@@ -9,7 +9,11 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
-import { buildFileEntry, type FileServerEntry } from "../src/hosts.js";
+import {
+  buildFileEntry,
+  SERVER_NAME,
+  type FileServerEntry,
+} from "../src/hosts.js";
 import { runInstall } from "../src/run.js";
 import { removeServerKey, upsertServerKey } from "../src/write-json.js";
 import type { Io } from "../src/types.js";
@@ -67,9 +71,9 @@ describe("upsertServerKey", () => {
     expect((after["mcpServers"] as Record<string, unknown>)["other"]).toEqual(
       (before["mcpServers"] as Record<string, unknown>)["other"],
     );
-    expect((after["mcpServers"] as Record<string, unknown>)["datalab"]).toEqual(
-      ENTRY,
-    );
+    expect(
+      (after["mcpServers"] as Record<string, unknown>)[SERVER_NAME],
+    ).toEqual(ENTRY);
 
     // Backup holds the pre-write bytes exactly.
     const backupRaw = await fs.readFile(outcome.backupPath as string, "utf8");
@@ -120,7 +124,7 @@ describe("upsertServerKey", () => {
         (bloated["mcpServers"] as Record<string, unknown>)["existing"],
       ),
     );
-    expect(servers["datalab"]).toEqual(ENTRY);
+    expect(servers[SERVER_NAME]).toEqual(ENTRY);
   });
 
   it("creates a fresh minimal file when only the parent directory exists", async () => {
@@ -137,7 +141,7 @@ describe("upsertServerKey", () => {
       string,
       unknown
     >;
-    expect(after).toEqual({ mcpServers: { datalab: ENTRY } });
+    expect(after).toEqual({ mcpServers: { [SERVER_NAME]: ENTRY } });
     // No backup for a file that did not exist.
     expect(await listDir(dir)).toEqual(["mcp.json"]);
   });
@@ -204,7 +208,7 @@ describe("removeServerKey", () => {
     const target = join(dir, "config.json");
     const doc = {
       keepMe: { a: [1, 2], b: "text" },
-      mcpServers: { datalab: ENTRY, other: { command: "keep" } },
+      mcpServers: { [SERVER_NAME]: ENTRY, other: { command: "keep" } },
     };
     await fs.writeFile(target, JSON.stringify(doc, null, 2), "utf8");
 
@@ -219,7 +223,7 @@ describe("removeServerKey", () => {
     >;
     expect(JSON.stringify(after["keepMe"])).toBe(JSON.stringify(doc.keepMe));
     const servers = after["mcpServers"] as Record<string, unknown>;
-    expect(servers["datalab"]).toBeUndefined();
+    expect(servers[SERVER_NAME]).toBeUndefined();
     expect(JSON.stringify(servers["other"])).toBe(
       JSON.stringify(doc.mcpServers.other),
     );
@@ -233,7 +237,7 @@ describe("removeServerKey", () => {
     const target = join(home, "solo.json");
     await fs.writeFile(
       target,
-      JSON.stringify({ mcpServers: { datalab: ENTRY } }),
+      JSON.stringify({ mcpServers: { [SERVER_NAME]: ENTRY } }),
       "utf8",
     );
 
@@ -259,6 +263,92 @@ describe("removeServerKey", () => {
     expect(outcome.changed).toBe(false);
     expect(await fs.readFile(target, "utf8")).toBe(original);
     expect(await listDir(dir)).toEqual(["config.json"]);
+  });
+});
+
+describe("legacy key migration", () => {
+  const FOREIGN = { command: "my-own-datalab", args: ["--serve"] };
+
+  async function writeServers(
+    servers: Record<string, unknown>,
+  ): Promise<string> {
+    const target = join(home, "legacy.json");
+    await fs.writeFile(target, JSON.stringify({ mcpServers: servers }), "utf8");
+    return target;
+  }
+
+  async function readServers(target: string): Promise<Record<string, unknown>> {
+    const doc = JSON.parse(await fs.readFile(target, "utf8")) as {
+      mcpServers: Record<string, unknown>;
+    };
+    return doc.mcpServers;
+  }
+
+  it("install moves a legacy entry that runs our package to the new key", async () => {
+    const { io } = createTempIo({ home });
+    const target = await writeServers({
+      datalab: ENTRY,
+      other: { command: "keep" },
+    });
+
+    const outcome = await upsertServerKey(io, target, ENTRY);
+    expect(outcome.ok).toBe(true);
+
+    const servers = await readServers(target);
+    expect(Object.keys(servers).sort()).toEqual(["other", SERVER_NAME].sort());
+    expect(servers[SERVER_NAME]).toEqual(ENTRY);
+  });
+
+  it("install migrates a legacy url entry pointing at our daemon", async () => {
+    const { io } = createTempIo({ home });
+    const url = { url: "http://127.0.0.1:8765/mcp" };
+    const target = await writeServers({ datalab: url });
+
+    await upsertServerKey(io, target, url);
+    expect(Object.keys(await readServers(target))).toEqual([SERVER_NAME]);
+  });
+
+  it("install leaves a foreign datalab entry alone", async () => {
+    const { io } = createTempIo({ home });
+    const target = await writeServers({ datalab: FOREIGN });
+
+    await upsertServerKey(io, target, ENTRY);
+    const servers = await readServers(target);
+    expect(servers["datalab"]).toEqual(FOREIGN);
+    expect(servers[SERVER_NAME]).toEqual(ENTRY);
+  });
+
+  it("uninstall removes both the new key and an owned legacy key", async () => {
+    const { io } = createTempIo({ home });
+    const target = await writeServers({
+      datalab: ENTRY,
+      [SERVER_NAME]: ENTRY,
+      other: { command: "keep" },
+    });
+
+    const outcome = await removeServerKey(io, target);
+    expect(outcome).toMatchObject({ ok: true, changed: true });
+    expect(Object.keys(await readServers(target))).toEqual(["other"]);
+  });
+
+  it("uninstall removes an owned legacy key on its own", async () => {
+    const { io } = createTempIo({ home });
+    const target = await writeServers({ datalab: ENTRY });
+
+    const outcome = await removeServerKey(io, target);
+    expect(outcome).toMatchObject({ ok: true, changed: true });
+    expect(await readServers(target)).toEqual({});
+  });
+
+  it("uninstall keeps a foreign datalab entry", async () => {
+    const { io } = createTempIo({ home });
+    const target = await writeServers({
+      datalab: FOREIGN,
+      [SERVER_NAME]: ENTRY,
+    });
+
+    await removeServerKey(io, target);
+    expect(await readServers(target)).toEqual({ datalab: FOREIGN });
   });
 });
 
@@ -289,7 +379,7 @@ describe("unparseable tier-2 config through the full install flow", () => {
     const text = out.join("\n");
     expect(out).toContain("    실패  데이터랩툴즈 확장");
     expect(text).toContain("설정 파일 형식을 읽을 수 없어 건드리지 않았어요.");
-    expect(text).toContain('"datalab"');
+    expect(text).toContain(`"${SERVER_NAME}"`);
   });
 });
 
@@ -324,7 +414,7 @@ describe("Cursor url entry — real filesystem", () => {
       Record<string, unknown>
     >;
     // Our url entry landed.
-    expect(after["mcpServers"]["datalab"]).toEqual(URL_ENTRY);
+    expect(after["mcpServers"][SERVER_NAME]).toEqual(URL_ENTRY);
     // Both the foreign server and the unrelated key are untouched.
     expect(after["mcpServers"]["other"]).toEqual(before.mcpServers.other);
     expect(after["someUnrelatedKey"]).toEqual(before.someUnrelatedKey);
@@ -341,7 +431,7 @@ describe("Cursor url entry — real filesystem", () => {
       target,
       JSON.stringify({
         mcpServers: {
-          datalab: URL_ENTRY,
+          [SERVER_NAME]: URL_ENTRY,
           other: { url: "http://localhost:9999/x" },
         },
       }),
@@ -354,7 +444,7 @@ describe("Cursor url entry — real filesystem", () => {
       string,
       Record<string, unknown>
     >;
-    expect(after["mcpServers"]["datalab"]).toBeUndefined();
+    expect(after["mcpServers"][SERVER_NAME]).toBeUndefined();
     expect(after["mcpServers"]["other"]).toEqual({
       url: "http://localhost:9999/x",
     });

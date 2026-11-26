@@ -29,6 +29,8 @@ export interface McpToolAnnotations {
   readonly "x-datalab-tier"?: ToolTier;
   /** For a paid tier: what the charge is for, in one line. */
   readonly "x-datalab-cost-basis"?: string;
+  /** For a paid tier: the MCP caller makes the media itself and imports it. */
+  readonly "x-datalab-generated-by"?: "client";
   /**
    * "own" when the call reads the user's own account through their session.
    *
@@ -112,6 +114,7 @@ export function annotationsForTier(
     ...(idempotent === undefined ? {} : { idempotentHint: idempotent }),
     "x-datalab-tier": tier,
     ...(cost ? { "x-datalab-cost-basis": cost.basis } : {}),
+    ...(tier === "paid" ? { "x-datalab-generated-by": "client" } : {}),
     ...(facts.sensitivity ? { "x-datalab-reads": facts.sensitivity } : {}),
   });
 }

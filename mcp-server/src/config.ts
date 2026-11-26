@@ -7,6 +7,7 @@
  */
 import {
   MIN_TOKEN_LENGTH,
+  PUBLISHED_EXTENSION_ID,
   isLoopbackHost,
 } from "@modootoday/datalab-extension-app-mcp-core";
 
@@ -15,8 +16,11 @@ export interface McpConfig {
   port: number;
   /** Loopback host. Never a wildcard. */
   host: string;
-  /** Pairing token the panel must present. */
-  token: string;
+  /**
+   * Pairing token the panel must present, when given in the environment.
+   * Null means the connector pairs with the first side panel that claims it.
+   */
+  token: string | null;
   /**
    * The extension ids allowed to connect.
    *
@@ -43,37 +47,25 @@ export interface ConfigEnv {
 }
 
 export type ConfigOutcome =
-  { ok: true; config: McpConfig } | { ok: false; message: string };
+  | { ok: true; config: McpConfig }
+  | { ok: false; message: string };
 
 /**
- * Resolve config from the environment, failing closed on every missing value.
- * A generated token would defeat pairing, since the panel could not know it,
- * and a guessed extension id would let any extension connect.
+ * Resolve config from the environment. A token given here is the credential;
+ * without one the connector pairs with the side panel, never with a token it
+ * generated itself. The extension id defaults to the published extension.
  */
 export function resolveConfig(env: ConfigEnv): ConfigOutcome {
-  const token = env.DATALAB_MCP_TOKEN?.trim();
-  if (!token) {
-    return {
-      ok: false,
-      message:
-        "DATALAB_MCP_TOKEN is not set. Copy the pairing token from the extension's side panel.",
-    };
-  }
-  if (token.length < MIN_TOKEN_LENGTH) {
+  const token = env.DATALAB_MCP_TOKEN?.trim() || null;
+  if (token !== null && token.length < MIN_TOKEN_LENGTH) {
     return {
       ok: false,
       message: `DATALAB_MCP_TOKEN must be at least ${MIN_TOKEN_LENGTH} characters; got ${token.length}.`,
     };
   }
 
-  const extensionId = env.DATALAB_MCP_EXTENSION_ID?.trim();
-  if (!extensionId) {
-    return {
-      ok: false,
-      message:
-        "DATALAB_MCP_EXTENSION_ID is not set. Copy the extension id from the side panel.",
-    };
-  }
+  const extensionId =
+    env.DATALAB_MCP_EXTENSION_ID?.trim() || PUBLISHED_EXTENSION_ID;
 
   const host = env.DATALAB_MCP_HOST?.trim() || DEFAULT_HOST;
   if (!isLoopbackHost(host)) {

@@ -25,9 +25,10 @@ export interface CliHost {
   /** Extra line printed after this host's result. */
   note?: string;
   buildAddArgs(opts: ServerEntryOptions): string[];
-  buildRemoveArgs(): string[];
-  /** Exits 0 only when our server is registered. Absent: cannot be asked. */
-  buildGetArgs?(): string[];
+  /** Removes the named server, our own key when no name is given. */
+  buildRemoveArgs(name?: string): string[];
+  /** Exits 0 only when the named server is registered. Absent: cannot be asked. */
+  buildGetArgs?(name?: string): string[];
 }
 
 /**

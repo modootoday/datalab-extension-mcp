@@ -25,6 +25,8 @@ import {
   isSemver,
   staticDiscoveryCatalog,
   REQUEST_DEADLINE_MS,
+  APP_NAME_MAX,
+  MCP_APP_HEADER,
 } from "@modootoday/datalab-extension-app-mcp-core";
 import {
   DEFAULT_HOST,
@@ -33,6 +35,7 @@ import {
   tryConnect,
   spawnDaemon,
   readTakeoverSecret,
+  readPairingRecord,
   killPortOwner,
 } from "@modootoday/datalab-extension-app-mcp-server";
 
@@ -170,8 +173,15 @@ export const POST_TIMEOUT_MS = REQUEST_DEADLINE_MS + 15_000;
  * a gate would lock out the ones that never update.
  */
 function credentialHeader(): Record<string, string> {
-  const token = process.env["DATALAB_MCP_TOKEN"]?.trim();
+  const token = localRootToken();
   return token ? { authorization: `Bearer ${token}` } : {};
+}
+
+/** The machine's pairing token: the environment's, else the paired record's. */
+function localRootToken(): string | undefined {
+  const configured = process.env["DATALAB_MCP_TOKEN"]?.trim();
+  if (configured) return configured;
+  return readPairingRecord()?.token;
 }
 
 /**
@@ -188,11 +198,22 @@ function credentialHeader(): Record<string, string> {
 const CLIENT_ID = randomUUID();
 export const CLIENT_ID_HEADER = "x-datalab-mcp-client";
 
+/**
+ * The AI app's name from its MCP initialize, for the panel's per-app approval.
+ * Kept to printable ASCII because a header value outside Latin-1 makes fetch throw.
+ */
+export function appHeader(name: string | undefined): Record<string, string> {
+  const ascii = (name ?? "").replace(/[^\x20-\x7e]/gu, "").trim();
+  if (ascii.length === 0) return {};
+  return { [MCP_APP_HEADER]: ascii.slice(0, APP_NAME_MAX) };
+}
+
 async function postMcp(
   fetchImpl: FetchImpl,
   url: string,
   method: string,
   params?: Record<string, unknown>,
+  appName?: string,
 ): Promise<JsonRpcResponse> {
   nextRpcId += 1;
   const payload: Record<string, unknown> = {
@@ -211,6 +232,7 @@ async function postMcp(
       accept: "application/json",
       ...credentialHeader(),
       [CLIENT_ID_HEADER]: CLIENT_ID,
+      ...appHeader(appName),
     },
     body: JSON.stringify(payload),
     signal: AbortSignal.timeout(POST_TIMEOUT_MS),
@@ -243,7 +265,10 @@ async function defaultReadVersion(base: string): Promise<string | null> {
 }
 
 /** Ask the running daemon to step aside. True only on an accepted (200) request. */
-async function defaultShutdown(base: string, token: string): Promise<boolean> {
+export async function defaultShutdown(
+  base: string,
+  token: string,
+): Promise<boolean> {
   try {
     const res = await (globalThis.fetch as typeof fetch)(
       `${base}/mcp/shutdown`,
@@ -349,7 +374,7 @@ export async function ensureDaemonRunning(
   const intervalMs = deps.intervalMs ?? READY_INTERVAL_MS;
   const base = `http://${host}:${port}`;
   const selfVersion = deps.selfVersion;
-  const token = deps.token ?? process.env["DATALAB_MCP_TOKEN"];
+  const token = deps.token ?? localRootToken();
   const readVersion = deps.readVersion ?? defaultReadVersion;
   const shutdown = deps.shutdown ?? defaultShutdown;
   const checkAuthority = deps.checkAuthority ?? defaultCheckAuthority;
@@ -512,6 +537,8 @@ export function createAdapterServer(deps: AdapterServerDeps = {}): Server {
     { capabilities: { tools: { listChanged: true } } },
   );
 
+  const hostApp = (): string | undefined => server.getClientVersion()?.name;
+
   let daemonReady = deps.ready === undefined;
   let servedEarly = false;
   void deps.ready?.then(() => {
@@ -547,7 +574,13 @@ export function createAdapterServer(deps: AdapterServerDeps = {}): Server {
     }
     let resp: JsonRpcResponse;
     try {
-      resp = await postMcp(fetchImpl, mcpUrl, "tools/list");
+      resp = await postMcp(
+        fetchImpl,
+        mcpUrl,
+        "tools/list",
+        undefined,
+        hostApp(),
+      );
     } catch (first) {
       // The daemon idle-exits by design, so a host that spent a while
       // thinking arrives here with nothing listening — the same situation a
@@ -562,7 +595,13 @@ export function createAdapterServer(deps: AdapterServerDeps = {}): Server {
           log,
           selfVersion: deps.version,
         });
-        resp = await postMcp(fetchImpl, mcpUrl, "tools/list");
+        resp = await postMcp(
+          fetchImpl,
+          mcpUrl,
+          "tools/list",
+          undefined,
+          hostApp(),
+        );
       } catch (second) {
         // The façade rather than a throw. These names are how anything is
         // reached at all, and a host left holding none of them has no way to
@@ -607,10 +646,13 @@ export function createAdapterServer(deps: AdapterServerDeps = {}): Server {
     await deps.ready;
     let resp: JsonRpcResponse;
     try {
-      resp = await postMcp(fetchImpl, mcpUrl, "tools/call", {
-        name,
-        arguments: args ?? {},
-      });
+      resp = await postMcp(
+        fetchImpl,
+        mcpUrl,
+        "tools/call",
+        { name, arguments: args ?? {} },
+        hostApp(),
+      );
     } catch (first) {
       // The daemon idle-exits by design, and a host that spent longer than
       // the window thinking arrives here with nothing listening. Bring it back
@@ -640,10 +682,13 @@ export function createAdapterServer(deps: AdapterServerDeps = {}): Server {
       log,
       selfVersion: deps.version,
     });
-    return postMcp(fetchImpl, mcpUrl, "tools/call", {
-      name,
-      arguments: args ?? {},
-    });
+    return postMcp(
+      fetchImpl,
+      mcpUrl,
+      "tools/call",
+      { name, arguments: args ?? {} },
+      hostApp(),
+    );
   }
 
   /**
@@ -1085,6 +1130,7 @@ export interface CliHandlers {
     argv: readonly string[],
   ) => Promise<void>;
   serve: () => void;
+  unpair: () => Promise<void>;
   adapter: () => Promise<void>;
   /**
    * A word we do not know. Injected so the refusal is testable without a
@@ -1118,6 +1164,10 @@ export async function dispatchCli(
   }
   if (sub === "serve") {
     handlers.serve();
+    return;
+  }
+  if (sub === "unpair") {
+    await handlers.unpair();
     return;
   }
   if (sub !== undefined && !sub.startsWith("-")) {

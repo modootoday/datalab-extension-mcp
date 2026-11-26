@@ -6,7 +6,12 @@
  * rename (a cross-device rename is not atomic); re-read to verify and restore
  * the backup if it fails. Expected refusals are reported, never thrown.
  */
-import { SERVER_NAME, type FileServerEntry } from "./hosts.js";
+import {
+  isOurEntry,
+  LEGACY_SERVER_NAMES,
+  SERVER_NAME,
+  type FileServerEntry,
+} from "./hosts.js";
 import type { Io } from "./types.js";
 
 export const BACKUP_KEEP = 3;
@@ -183,6 +188,13 @@ function deepEqual(a: unknown, b: unknown): boolean {
   return false;
 }
 
+/** Legacy keys in this server map whose entries this connector wrote. */
+function ourLegacyKeys(servers: Record<string, unknown>): string[] {
+  return LEGACY_SERVER_NAMES.filter(
+    (name) => name !== SERVER_NAME && isOurEntry(servers[name]),
+  );
+}
+
 /**
  * Install path: merge our own server key into the file. When the file does not
  * exist yet, a fresh minimal document is created, with no backup because there
@@ -219,6 +231,7 @@ export async function upsertServerKey(
     return { ok: false, changed: false, reason: "parse" };
   }
   doc["mcpServers"] = servers;
+  for (const name of ourLegacyKeys(servers)) delete servers[name];
   servers[SERVER_NAME] = entry;
 
   let backupPath: string | undefined;
@@ -268,10 +281,15 @@ export async function removeServerKey(
   }
 
   const servers = state.doc["mcpServers"];
-  if (!isPlainObject(servers) || !(SERVER_NAME in servers)) {
+  if (!isPlainObject(servers)) {
     return { ok: true, changed: false, reason: "missing" };
   }
-  delete servers[SERVER_NAME];
+  const gone = ourLegacyKeys(servers);
+  if (SERVER_NAME in servers) gone.push(SERVER_NAME);
+  if (gone.length === 0) {
+    return { ok: true, changed: false, reason: "missing" };
+  }
+  for (const name of gone) delete servers[name];
 
   const backupPath = await writeBackup(io, filePath, state.raw);
   await atomicWrite(io, filePath, serialize(state.doc));
@@ -281,7 +299,7 @@ export async function removeServerKey(
   if (after.doc !== null) {
     const afterServers = after.doc["mcpServers"];
     if (isPlainObject(afterServers)) {
-      verified = !(SERVER_NAME in afterServers);
+      verified = gone.every((name) => !(name in afterServers));
     } else if (afterServers === undefined) {
       verified = true;
     }

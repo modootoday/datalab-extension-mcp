@@ -21,6 +21,12 @@ import { Lifecycle } from "./lifecycle.js";
 import { logDir } from "./log-file.js";
 import { createMediaStage } from "./media-stage.js";
 import { createArtifactStore } from "./artifact-store.js";
+import {
+  createAppBook,
+  createPairingDesk,
+  fixedRoot,
+  pairingRoot,
+} from "./pairing/index.js";
 import { writeTakeoverSecret } from "./takeover.js";
 import { bindAsLock } from "./singleton.js";
 
@@ -113,9 +119,18 @@ export function runDaemon(
   // Each needs the other: the bridge pushes frames, the HTTP server owns the
   // socket. The closure defers the lookup until a frame is sent, by which point
   // both exist.
+  // A token in the environment wins and nothing is written; without one the
+  // connector pairs with the first side panel that claims it.
+  const root =
+    token === null ? pairingRoot({ home: deps.home, log }) : fixedRoot(token);
+  const apps = token === null ? createAppBook({ home: deps.home, log }) : null;
+  const pairingDesk =
+    apps === null
+      ? undefined
+      : createPairingDesk({ root, apps, extensionIds, log });
   const bridge = new Bridge({
     send: (frame, key) => http.send(frame, key),
-    token,
+    root,
     extensionIds,
     serverVersion: version,
     rateLimit: deps.rateLimit,
@@ -136,6 +151,8 @@ export function runDaemon(
     host,
     mediaStage,
     artifactStore,
+    pairingDesk,
+    apps: apps ?? undefined,
     heartbeatMs: deps.heartbeatMs,
     identity: { name: NAME, version },
     log,

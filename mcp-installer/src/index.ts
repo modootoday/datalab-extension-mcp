@@ -35,6 +35,7 @@ export {
   INSTALLABLE_CLIS,
   type InstallableCli,
   SERVER_NAME,
+  LEGACY_SERVER_NAMES,
   SERVER_PACKAGE,
   DEFAULT_PORT,
   CODEX_CHATGPT_NOTE,
@@ -98,6 +99,7 @@ export {
 } from "./ui.js";
 
 export { createNodeIo } from "./io.js";
+export { DEFAULT_EXTENSION_ID } from "./hosts/entries.js";
 
 export type {
   Io,

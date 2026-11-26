@@ -1,0 +1,24 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.modootoday/datalab-extension-mcp",
+  "title": "DataLab Tools",
+  "description": "Use the DataLab Tools browser extension from an AI app, inside your own browser session.",
+  "version": "1.18.0",
+  "repository": {
+    "url": "https://github.com/modootoday/datalab-extension-mcp",
+    "source": "github",
+    "subfolder": "mcp"
+  },
+  "websiteUrl": "https://github.com/modootoday/datalab-extension-mcp#readme",
+  "packages": [
+    {
+      "registryType": "npm",
+      "registryBaseUrl": "https://registry.npmjs.org",
+      "identifier": "@modootoday/datalab-extension-mcp",
+      "version": "1.18.0",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ]
+}

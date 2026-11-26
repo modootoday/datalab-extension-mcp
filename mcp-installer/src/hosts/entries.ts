@@ -6,7 +6,9 @@
  * so a new vendor cannot invent a different command line for the same daemon.
  */
 
-export const SERVER_NAME = "datalab";
+export const SERVER_NAME = "datalab-extension-mcp";
+/** Keys older installs may hold; retired only when the entry proves to be ours. */
+export const LEGACY_SERVER_NAMES: readonly string[] = ["datalab"];
 export const SERVER_PACKAGE = "@modootoday/datalab-extension-mcp";
 /** The gateway's default port — omitted from configs to keep them minimal. */
 export const DEFAULT_PORT = "8765";

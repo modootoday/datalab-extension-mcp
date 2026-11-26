@@ -10,12 +10,14 @@ import { dispatchCli, type CliHandlers } from "../src/adapter.js";
 function spies(): CliHandlers & {
   install: ReturnType<typeof vi.fn>;
   serve: ReturnType<typeof vi.fn>;
+  unpair: ReturnType<typeof vi.fn>;
   adapter: ReturnType<typeof vi.fn>;
   unknown: ReturnType<typeof vi.fn>;
 } {
   return {
     install: vi.fn().mockResolvedValue(undefined),
     serve: vi.fn(),
+    unpair: vi.fn().mockResolvedValue(undefined),
     unknown: vi.fn(),
     adapter: vi.fn().mockResolvedValue(undefined),
   };
@@ -25,6 +27,14 @@ const NODE = "/usr/bin/node";
 const BIN = "/abs/cli.js";
 
 describe("dispatchCli", () => {
+  it("routes `unpair` to the unpair handler only", async () => {
+    const h = spies();
+    await dispatchCli([NODE, BIN, "unpair"], h);
+    expect(h.unpair).toHaveBeenCalledOnce();
+    expect(h.adapter).not.toHaveBeenCalled();
+    expect(h.unknown).not.toHaveBeenCalled();
+  });
+
   it("routes `install` to the installer with the remaining args", async () => {
     const h = spies();
     await dispatchCli([NODE, BIN, "install", "--yes"], h);

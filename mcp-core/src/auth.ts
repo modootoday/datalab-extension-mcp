@@ -71,8 +71,12 @@ export function timingSafeEqual(a: string, b: string): boolean {
 /** Minimum pairing-token entropy we will accept, in characters. */
 export const MIN_TOKEN_LENGTH = 32;
 
+/** The Chrome Web Store id of the extension, allowed when none is configured. */
+export const PUBLISHED_EXTENSION_ID = "ldoknfkedngbdfgdkeicojmhnojgpdcb";
+
 export type TokenCheck =
-  { ok: true } | { ok: false; reason: "unauthorized"; message: string };
+  | { ok: true }
+  | { ok: false; reason: "unauthorized"; message: string };
 
 /**
  * Verify a presented pairing token against the expected one. Every failure
@@ -94,7 +98,8 @@ export function checkToken(
 }
 
 export type OriginCheck =
-  { ok: true } | { ok: false; reason: "forbidden_origin"; message: string };
+  | { ok: true }
+  | { ok: false; reason: "forbidden_origin"; message: string };
 
 /**
  * Verify the Origin header names our extension. The browser stamps Origin on a

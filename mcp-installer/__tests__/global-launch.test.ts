@@ -100,7 +100,11 @@ describe("direct launch entries", () => {
     const claude = claudeCliHost.buildAddArgs({ ...ENTRY, launch });
     expect(claude.slice(-3)).toEqual(["--", launch.node, launch.cli]);
     const gemini = geminiCliHost.buildAddArgs({ ...ENTRY, launch });
-    expect(gemini.slice(-3)).toEqual(["datalab", launch.node, launch.cli]);
+    expect(gemini.slice(-3)).toEqual([
+      "datalab-extension-mcp",
+      launch.node,
+      launch.cli,
+    ]);
   });
 
   it("keeps the package runner when no global copy is in hand", () => {

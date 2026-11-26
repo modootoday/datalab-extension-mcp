@@ -33,11 +33,11 @@ export const codexCliHost: CliHost = {
     args.push("--", ...launchArgv(opts));
     return args;
   },
-  buildRemoveArgs() {
-    return ["mcp", "remove", SERVER_NAME];
+  buildRemoveArgs(name = SERVER_NAME) {
+    return ["mcp", "remove", name];
   },
-  buildGetArgs() {
-    return ["mcp", "get", SERVER_NAME];
+  buildGetArgs(name = SERVER_NAME) {
+    return ["mcp", "get", name];
   },
 };
 

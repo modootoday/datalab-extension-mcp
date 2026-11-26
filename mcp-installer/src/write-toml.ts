@@ -7,6 +7,7 @@
  * occupies and leaves every other byte alone, refusing outright on any shape
  * it cannot locate unambiguously.
  */
+import { isOurTomlTable, LEGACY_SERVER_NAMES } from "./hosts.js";
 import type { Io } from "./types.js";
 import {
   atomicWrite,
@@ -59,11 +60,11 @@ function isAmbiguous(lines: readonly string[], server: string): boolean {
       inServersTable = /^\s*\[\s*mcp_servers\s*\]\s*$/.test(line);
       continue;
     }
-    // `mcp_servers.datalab = { ... }` at any level.
+    // A dotted mcp_servers.<server> assignment at any level.
     if (new RegExp(`^\\s*mcp_servers\\s*\\.\\s*${server}\\s*=`).test(line)) {
       return true;
     }
-    // `datalab = { ... }` inside [mcp_servers].
+    // A bare server assignment inside [mcp_servers].
     if (inServersTable && new RegExp(`^\\s*${server}\\s*=`).test(line)) {
       return true;
     }
@@ -109,6 +110,28 @@ function splice(raw: string, snippet: string, server: string): string | null {
   return [...before, ...snippet.split("\n"), ...after].join("\n");
 }
 
+/** A server's own table, header through its last owned line; null when absent. */
+export function tomlTableText(raw: string, server: string): string | null {
+  const lines = raw.split("\n");
+  if (isAmbiguous(lines, server)) return null;
+  const span = findSpan(lines, server);
+  if (span.start === -1) return null;
+  const end = trimTrailingBlanks(lines, span.end);
+  return lines.slice(span.start, end).join("\n");
+}
+
+/** Cuts every legacy table that proves to be ours, so one install leaves one table. */
+function retireLegacy(raw: string, server: string): string {
+  let text = raw;
+  for (const name of LEGACY_SERVER_NAMES) {
+    if (name === server) continue;
+    const table = tomlTableText(text, name);
+    if (table === null || !isOurTomlTable(table)) continue;
+    text = cut(text, name).text;
+  }
+  return text;
+}
+
 function cut(raw: string, server: string): { text: string; found: boolean } {
   const lines = raw.split("\n");
   if (isAmbiguous(lines, server)) return { text: raw, found: false };
@@ -135,7 +158,7 @@ export async function upsertTomlServer(
 ): Promise<WriteOutcome> {
   const exists = await io.exists(filePath);
   const raw = exists ? await io.readFile(filePath) : "";
-  const next = splice(raw, snippet, server);
+  const next = splice(retireLegacy(raw, server), snippet, server);
   if (next === null) {
     return { ok: false, changed: false, reason: "parse" };
   }
@@ -166,8 +189,8 @@ export async function removeTomlServer(
     return { ok: true, changed: false, reason: "missing" };
   }
   const raw = await io.readFile(filePath);
-  const { text, found } = cut(raw, server);
-  if (!found) {
+  const { text, found } = cut(retireLegacy(raw, server), server);
+  if (!found && text === raw) {
     return { ok: true, changed: false };
   }
 

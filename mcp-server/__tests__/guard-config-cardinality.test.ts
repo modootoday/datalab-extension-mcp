@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { PUBLISHED_EXTENSION_ID } from "@modootoday/datalab-extension-app-mcp-core";
 
 import { resolveConfig } from "../src/config.js";
 
@@ -33,8 +34,9 @@ describe("허용 확장 목록", () => {
     expect(idsFor({ ...base, DATALAB_MCP_EXTENSION_ID: two })).toEqual([two]);
   });
 
-  it("빈 값은 설정 오류로 답한다 — 빈 목록으로 넘어가지 않는다", () => {
-    const resolved = resolveConfig({ ...base, DATALAB_MCP_EXTENSION_ID: "  " });
-    expect(resolved.ok).toBe(false);
+  it("빈 값은 공개 확장 id 하나가 된다 — 빈 목록으로 넘어가지 않는다", () => {
+    expect(idsFor({ ...base, DATALAB_MCP_EXTENSION_ID: "  " })).toEqual([
+      PUBLISHED_EXTENSION_ID,
+    ]);
   });
 });

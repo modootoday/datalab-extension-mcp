@@ -15,15 +15,14 @@
  * token gate exists for is unchanged.
  */
 import { randomBytes } from "node:crypto";
-import { chmodSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
 
 import { logDir } from "./log-file.js";
+import { writeOwnerOnly } from "./owner-file/index.js";
 
 const FILE_NAME = "takeover";
-/** Owner read/write. Best-effort: Windows ignores the bits. */
-const OWNER_ONLY = 0o600;
 
 export function takeoverPath(home: string = homedir()): string {
   return join(logDir(home), FILE_NAME);
@@ -38,16 +37,8 @@ export function takeoverPath(home: string = homedir()): string {
  */
 export function writeTakeoverSecret(home: string = homedir()): string | null {
   try {
-    mkdirSync(logDir(home), { recursive: true });
     const secret = randomBytes(32).toString("hex");
-    const path = takeoverPath(home);
-    writeFileSync(path, `${secret}\n`, { encoding: "utf8", mode: OWNER_ONLY });
-    try {
-      chmodSync(path, OWNER_ONLY);
-    } catch {
-      // Already created with the mode; a filesystem that refuses chmod is not
-      // a reason to refuse to run.
-    }
+    writeOwnerOnly(takeoverPath(home), `${secret}\n`);
     return secret;
   } catch {
     return null;

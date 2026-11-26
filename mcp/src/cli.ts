@@ -10,11 +10,17 @@
 import { createRequire } from "node:module";
 
 import {
+  DEFAULT_HOST,
+  DEFAULT_PORT,
+  deletePairingRecord,
+  readTakeoverSecret,
   resolveConfig,
   runDaemon,
+  tryConnect,
 } from "@modootoday/datalab-extension-app-mcp-server";
 
-import { dispatchCli, runAdapter } from "./adapter.js";
+import { defaultShutdown, dispatchCli, runAdapter } from "./adapter.js";
+import { runUnpair } from "./pairing/unpair.js";
 
 const NAME = "datalab-extension-mcp";
 
@@ -92,6 +98,27 @@ async function main(): Promise<void> {
     serve: () => {
       runDaemon(process.env);
     },
+    unpair: async () => {
+      const env = resolveConfig(process.env);
+      const host = env.ok ? env.config.host : DEFAULT_HOST;
+      const port = env.ok ? env.config.port : DEFAULT_PORT;
+      const base = `http://${host}:${String(port)}`;
+      const code = await runUnpair({
+        deleteRecord: () => deletePairingRecord(),
+        stopDaemon: async () => {
+          const socket = await tryConnect(host, port, 500);
+          if (!socket) return "not_running";
+          socket.destroy();
+          const secret = readTakeoverSecret();
+          if (secret !== null && (await defaultShutdown(base, secret))) {
+            return "stopped";
+          }
+          return "refused";
+        },
+        print: (line) => process.stdout.write(`${line}\n`),
+      });
+      process.exit(code);
+    },
     adapter: () => {
       // The daemon this adapter spawns binds the address from the same env.
       const env = resolveConfig(process.env);
@@ -110,7 +137,7 @@ async function main(): Promise<void> {
     // go to stderr — and start a connector on the way.
     unknown: (sub) => {
       log(`unknown command "${sub}".`);
-      log(`usage: ${NAME} [install|uninstall|serve]`);
+      log(`usage: ${NAME} [install|uninstall|serve|unpair]`);
       log(`run with no command to serve an MCP host over stdio.`);
       process.exit(2);
     },

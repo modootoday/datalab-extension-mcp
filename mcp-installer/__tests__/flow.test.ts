@@ -4,6 +4,7 @@
  */
 import { describe, expect, it } from "vitest";
 
+import { SERVER_NAME } from "../src/hosts.js";
 import { runInstall, runUninstall } from "../src/run.js";
 import { VALID_EXTENSION_ID, VALID_TOKEN, createMemIo } from "./helpers.js";
 
@@ -49,7 +50,7 @@ describe("install flow", () => {
       harness.files.get(CURSOR_PATH) as string,
     ) as Record<string, unknown>;
     expect(
-      (written["mcpServers"] as Record<string, unknown>)["datalab"],
+      (written["mcpServers"] as Record<string, unknown>)[SERVER_NAME],
     ).toBeDefined();
   });
 
@@ -67,8 +68,20 @@ describe("install flow", () => {
       harness.files.get(CURSOR_PATH) as string,
     ) as Record<string, unknown>;
     expect(
-      (written["mcpServers"] as Record<string, unknown>)["datalab"],
+      (written["mcpServers"] as Record<string, unknown>)[SERVER_NAME],
     ).toBeDefined();
+  });
+
+  it("clears the legacy CLI name before adding under the new one", async () => {
+    const harness = twoHostSetup();
+    await runInstall({ ...INSTALL_OPTS, yes: true }, harness.io);
+    const lines = harness.spawns
+      .filter((s) => s.command === "claude")
+      .map((s) => s.args.slice(0, 3).join(" "));
+    const legacy = lines.indexOf("mcp remove datalab");
+    const add = lines.indexOf(`mcp add ${SERVER_NAME}`);
+    expect(legacy).toBeGreaterThanOrEqual(0);
+    expect(add).toBeGreaterThan(legacy);
   });
 
   it("draws four steps and groups both surfaces under each program", async () => {
@@ -110,7 +123,7 @@ describe("install flow", () => {
     const cursorConfig = JSON.parse(
       harness.files.get(CURSOR_PATH) as string,
     ) as { mcpServers: Record<string, unknown> };
-    expect(Object.keys(cursorConfig.mcpServers)).toEqual(["datalab"]);
+    expect(Object.keys(cursorConfig.mcpServers)).toEqual([SERVER_NAME]);
     const text = harness.out.join("\n");
     expect(text).toContain("  ┃ Cursor 에 스킬 카탈로그 추가하기");
     expect(text).toContain("  ┃ 주소  https://skills.modoo.today/mcp");
@@ -188,7 +201,10 @@ describe("uninstall flow", () => {
   it("asks its own single question and removes only our key", async () => {
     const doc = {
       keepMe: { deeply: ["nested", 1] },
-      mcpServers: { datalab: { command: "npx" }, other: { command: "keep" } },
+      mcpServers: {
+        [SERVER_NAME]: { command: "npx" },
+        other: { command: "keep" },
+      },
     };
     const harness = createMemIo({
       platform: "linux",
@@ -205,7 +221,7 @@ describe("uninstall flow", () => {
     ) as Record<string, unknown>;
     expect(JSON.stringify(after["keepMe"])).toBe(JSON.stringify(doc.keepMe));
     const servers = after["mcpServers"] as Record<string, unknown>;
-    expect(servers["datalab"]).toBeUndefined();
+    expect(servers[SERVER_NAME]).toBeUndefined();
     expect(JSON.stringify(servers["other"])).toBe(
       JSON.stringify(doc.mcpServers.other),
     );
@@ -234,11 +250,27 @@ describe("uninstall flow", () => {
     ).toBe(true);
   });
 
+  it("removes both the new and the legacy name through the vendor CLI", async () => {
+    const harness = createMemIo({
+      platform: "linux",
+      home: "/home/user",
+      cliBins: ["claude"],
+    });
+    await runUninstall({ version: "1.2.3", yes: true }, harness.io);
+    const removed = harness.spawns
+      .filter((s) => s.command === "claude" && s.args[1] === "remove")
+      .map((s) => s.args[2]);
+    expect(removed).toContain(SERVER_NAME);
+    expect(removed).toContain("datalab");
+  });
+
   it("answering n changes nothing", async () => {
     const harness = createMemIo({
       platform: "linux",
       home: "/home/user",
-      files: { [CURSOR_PATH]: JSON.stringify({ mcpServers: { datalab: {} } }) },
+      files: {
+        [CURSOR_PATH]: JSON.stringify({ mcpServers: { [SERVER_NAME]: {} } }),
+      },
       answers: ["n"],
     });
     const code = await runUninstall({ version: "1.2.3" }, harness.io);

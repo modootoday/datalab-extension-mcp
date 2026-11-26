@@ -80,7 +80,7 @@ describe("JSONC hosts", () => {
     );
     const servers = (written as { servers?: Record<string, unknown> }).servers;
     expect(servers).toBeDefined();
-    expect(Object.keys(servers ?? {})).toEqual(["datalab"]);
+    expect(Object.keys(servers ?? {})).toEqual(["datalab-extension-mcp"]);
 
     const text = out.join("\n");
     expect(text).toContain("VS Code");
@@ -155,7 +155,7 @@ describe("TOML host (Codex config without the CLI)", () => {
     expect(exitCode).toBe(0);
     const written = await fs.readFile(join(codexDir, "config.toml"), "utf8");
     // This host's table name differs from the JSON hosts' key.
-    expect(written).toContain("[mcp_servers.datalab]");
+    expect(written).toContain("[mcp_servers.datalab-extension-mcp]");
     expect(written).toContain('command = "npx"');
     expect(out.join("\n")).toContain("새로 만들었어요");
   });
@@ -203,7 +203,7 @@ describe("TOML host (Codex config without the CLI)", () => {
     expect(after).toContain('model = "o4"');
     expect(after).toContain("[profiles.default]");
     expect(after).toContain('approval = "never"');
-    expect(after).toContain("[mcp_servers.datalab]");
+    expect(after).toContain("[mcp_servers.datalab-extension-mcp]");
     expect(after).toContain(`DATALAB_MCP_TOKEN = "${VALID_TOKEN}"`);
     // The original bytes are recoverable, as with every other direct write.
     expect((await fs.readdir(codexDir)).some((n) => n.includes("backup"))).toBe(
@@ -221,7 +221,7 @@ describe("TOML host (Codex config without the CLI)", () => {
     const codexDir = join(home, ".codex");
     await fs.mkdir(codexDir, { recursive: true });
     const tomlPath = join(codexDir, "config.toml");
-    const toml = '[mcp_servers]\ndatalab = { command = "npx" }\n';
+    const toml = '[mcp_servers]\ndatalab-extension-mcp = { command = "npx" }\n';
     await fs.writeFile(tomlPath, toml, "utf8");
 
     const { io, out } = createTempIo({ home });
@@ -232,7 +232,7 @@ describe("TOML host (Codex config without the CLI)", () => {
     expect((await fs.readdir(codexDir)).sort()).toEqual(["config.toml"]);
 
     const text = out.join("\n");
-    expect(text).toContain("[mcp_servers.datalab]");
+    expect(text).toContain("[mcp_servers.datalab-extension-mcp]");
     expect(text).toContain(`DATALAB_MCP_TOKEN = "${VALID_TOKEN}"`);
   });
 
@@ -258,7 +258,7 @@ describe("TOML host (Codex config without the CLI)", () => {
 
     expect(code).toBe(0);
     // The CLI host handled it, so no snippet block appears.
-    expect(out.join("\n")).not.toContain("[mcp_servers.datalab]");
+    expect(out.join("\n")).not.toContain("[mcp_servers.datalab-extension-mcp]");
     expect(spawns.some((s) => s.startsWith("codex mcp add"))).toBe(true);
   });
 

@@ -9,6 +9,7 @@ export * from "./deadlines.js";
 export * from "./negotiate.js";
 export * from "./auth.js";
 export * from "./credential.js";
+export * from "./pairing-wire.js";
 export * from "./allowlist.js";
 export * from "./annotations.js";
 export * from "./errors.js";
