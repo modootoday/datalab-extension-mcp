@@ -55,7 +55,7 @@ Claude 같은 AI 앱을 데이터랩툴즈에 연결해 주는 작은 무료 프
 2. **아래 명령을 붙여넣고 Enter를 눌러요.** 도우미는 이 버전의 연결 프로그램을 이 컴퓨터에 설치(`npm install -g`)하고, AI 앱이 그 설치본을 바로 실행하도록 등록해요. 그래서 AI 앱이 시작할 때 연결 프로그램을 다시 내려받지 않아요. 연결이 열린 뒤 정본 릴리스를 확인해 새 버전이 있으면 설치해 두고, 다음 시작부터 그 버전을 써요. 진단 환경에서는 `--no-self-update`로 이 업데이트를 끌 수 있어요.
 
    ```
-   npx -y @modootoday/datalab-extension-mcp@1.18.0 install
+   npx -y @modootoday/datalab-extension-mcp@1.18.1 install
    ```
 
    영어 글자가 여러 줄 올라오는 건 정상이에요. 이 명령은 연결 프로그램을 설치하고 AI 앱 설정에 우리 항목만 더할 뿐, 다른 건 건드리지 않아요. npm 전역 설치 권한이 없으면 예전처럼 AI 앱이 시작할 때마다 내려받아 실행하도록 연결해요(시작이 조금 느려요).
@@ -231,7 +231,7 @@ AI가 "그런 기능은 없다" 고 답하면, **"숨은 도구를 찾아보고 
 - **연결이 사라졌을 때** — 처음 실행했던 그 명령을 한 번 더 실행하면 안전하게 다시 등록돼요. (일부 AI 앱이 설정 파일을 정리하며 연결을 지우기도 해요.)
 
   ```
-  npx -y @modootoday/datalab-extension-mcp@1.18.0 install
+  npx -y @modootoday/datalab-extension-mcp@1.18.1 install
   ```
 
 - **`'npx'을(는) 내부 또는 외부 명령...`** — Node.js가 없는 거예요. 위 2단계의 "Node.js가 없다면"을 따라 설치한 뒤 다시 실행해요.
@@ -261,7 +261,7 @@ AI가 "그런 기능은 없다" 고 답하면, **"숨은 도구를 찾아보고 
 1. 터미널에서 아래 명령을 실행해요(AI 앱에 `datalab-extension-mcp` 이름으로 등록된 설정을 지워 줘요. 예전 버전이 `datalab` 이름으로 등록한 설정도 함께 지워요).
 
    ```
-   npx -y @modootoday/datalab-extension-mcp@1.18.0 uninstall
+   npx -y @modootoday/datalab-extension-mcp@1.18.1 uninstall
    ```
 
 2. 확장 설정에서 **MCP 연결을 꺼요.** 패널이 브릿지라, 꺼 두면 어딘가 설정 줄이 남아 있어도 AI 앱이 아무것도 조회할 수 없어요.

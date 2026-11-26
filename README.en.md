@@ -61,7 +61,7 @@ One command finds **every** AI app on your computer and connects them automatica
 2. **Paste this command and press Enter.** The helper installs this version of the connector on your computer (`npm install -g`) and registers that installed copy with your AI apps, so an app does not download the connector again each time it starts. Once connected, the connector checks the canonical release and installs a newer version for the next start. Diagnostic environments can opt out with `--no-self-update`.
 
    ```
-   npx -y @modootoday/datalab-extension-mcp@1.18.0 install
+   npx -y @modootoday/datalab-extension-mcp@1.18.1 install
    ```
 
    Lines of English scrolling by is normal. This installs the connector and adds only our entry to your AI apps' settings — it touches nothing else. Without permission for global npm installs, it falls back to having each app download and run the connector at start (a slower start).
@@ -263,7 +263,7 @@ Start it again after a full quit and it picks the tools up. If they still aren't
 - **When the connection disappears** — run the very command you used at the start once more; it safely re-registers. (Some AI apps clean up their settings file and drop the connection.)
 
   ```
-  npx -y @modootoday/datalab-extension-mcp@1.18.0 install
+  npx -y @modootoday/datalab-extension-mcp@1.18.1 install
   ```
 
 - **`'npx' is not recognized...`** — Node.js isn't installed. Follow "No Node.js?" in Step 2, then run the command again.
@@ -293,7 +293,7 @@ Start it again after a full quit and it picks the tools up. If they still aren't
 1. Run this in a terminal (it removes the `datalab-extension-mcp` entries registered in your AI apps, and any `datalab` entry an earlier version registered).
 
    ```
-   npx -y @modootoday/datalab-extension-mcp@1.18.0 uninstall
+   npx -y @modootoday/datalab-extension-mcp@1.18.1 uninstall
    ```
 
 2. Turn **MCP 연결** off in the extension settings. The panel is the bridge, so with it off a leftover config line can look nothing up.
