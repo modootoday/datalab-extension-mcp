@@ -1,0 +1,9 @@
+title: 데이터랩툴즈 커넥터
+description: AI 앱에서 데이터랩툴즈 도구를 쓰게 해 주는 연결 프로그램의 설치 안내
+lang: ko
+url: https://mcp.datalab.tools
+remote_theme: modootoday/jekyll-theme-modootoday@v1.7.1
+plugins: [jekyll-remote-theme]
+markdown: kramdown
+kramdown: { input: GFM }
+sass: { style: compressed, silence_deprecations: [import, global-builtin] }
