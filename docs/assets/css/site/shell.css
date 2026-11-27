@@ -1,0 +1,30 @@
+/* The theme's main element holds the site's own header and page; the theme's width and padding step aside. */
+[hidden] { display: none !important; }
+.mt-main.dl-main { max-width: none; margin: 0; padding: 0; }
+a[aria-disabled="true"]:not(.dl-btn) { cursor: default; color: var(--dl-muted-foreground); text-decoration: none; }
+.dl-flow-wrap { align-content: center; }
+.dl-stack { display: grid; gap: .6rem; }
+.dl-stack-wide { display: grid; gap: .6rem; max-width: var(--dl-measure); }
+.dl-stack-wide.is-loose { gap: .75rem; }
+.dl-cats-head { display: flex; flex-wrap: wrap; gap: .75rem; justify-content: space-between; align-items: end; }
+.dl-cats-head .dl-filter { flex: 1 1 16rem; max-width: 22rem; }
+.dl-tablist { padding: 0 .5rem; background: var(--dl-muted); }
+.dl-tabs .dl-tabpanel[role="tabpanel"] { padding: 0; }
+.dl-terminal-foot.is-last { border-top: 1px solid var(--dl-border); }
+.dl-list { display: grid; gap: .4rem; }
+.dl-detail { padding-top: 1.5rem; border-top: 1px solid var(--dl-border); }
+.dl-col { display: grid; gap: 1rem; align-content: start; }
+.dl-col .dl-section-head { margin: 0; }
+.dl-cards.is-single { grid-template-columns: 1fr; }
+.dl-prompt-link.is-spaced { margin-top: 1.25rem; }
+.dl-doc.is-wide { max-width: none; }
+
+/* The theme wraps every table in its scroll region and stacks it on phones; the site's bordered table keeps its own layout. */
+.dl-table-wrap > .mt-table { overflow: visible; margin: 0; background: none; }
+.dl-table-wrap table, .dl-table-wrap table[role] { display: table; width: 100%; max-inline-size: none; }
+.dl-table-wrap thead { display: table-header-group; position: static; inline-size: auto; block-size: auto; overflow: visible; clip-path: none; white-space: normal; }
+.dl-table-wrap tbody { display: table-row-group; }
+.dl-table-wrap tr { display: table-row; padding: 0; border: 0; }
+.dl-table-wrap :is(th, td), .dl-table-wrap table[role] :is(th, td) { display: table-cell; position: static; min-inline-size: 0; box-shadow: none; }
+.dl-table-wrap td { background: none; }
+.dl-table-wrap td[data-label]::before { content: none; }

@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: place_search.md
+permalink: /tools/place/place_search/index.md
+---

@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: my_country.md
+permalink: /tools/blog-insights/my_country/index.md
+---

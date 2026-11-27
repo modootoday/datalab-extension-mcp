@@ -1,0 +1,104 @@
+{
+  "toolsets": [
+    {
+      "slug": "blog-brief",
+      "short": "블로그",
+      "label": "오늘의 블로그 브리핑",
+      "summary": "내 블로그가 지금 어떤지, 방문·조회·인기글·실시간"
+    },
+    {
+      "slug": "blog-insights",
+      "label": "블로그 심층 분석",
+      "summary": "왜 그런지, 유입 경로·성별연령·체류·수익·글별 상세"
+    },
+    {
+      "slug": "keyword-research",
+      "short": "키워드",
+      "label": "키워드·글감 리서치",
+      "summary": "검색량, 관심도 추이, 경쟁이 낮은 키워드와 글감"
+    },
+    {
+      "slug": "serp-watch",
+      "label": "네이버 검색결과 확인",
+      "summary": "이 검색어에 지금 네이버가 무엇을 띄우는지"
+    },
+    {
+      "slug": "benchmark",
+      "label": "경쟁자 벤치마킹",
+      "summary": "다른 블로그·카페·인플루언서가 무엇을 하는지"
+    },
+    {
+      "slug": "pumasi",
+      "label": "품앗이",
+      "summary": "다른 사람의 블로그에서 댓글칸·이웃추가 창을 열고 내 공감 상태를 읽어요"
+    },
+    {
+      "slug": "place",
+      "short": "플레이스",
+      "label": "네이버 플레이스 관리",
+      "summary": "내 매장 정보·리뷰·예약·쿠폰·대기"
+    },
+    {
+      "slug": "shopping",
+      "label": "쇼핑 인사이트",
+      "summary": "이 상품이 언제 누구에게 팔리는지"
+    },
+    {
+      "slug": "ad-bidding",
+      "short": "광고",
+      "label": "검색광고 입찰",
+      "summary": "입찰가와 예상 성과, 검색광고 계정 자격 필요"
+    },
+    {
+      "slug": "store-settlement",
+      "label": "스토어 정산·매출",
+      "summary": "정산 예정일과 금액, 일별 매출, 커머스API 자격 필요"
+    },
+    {
+      "slug": "comment-stats",
+      "label": "댓글 반응 통계",
+      "summary": "뉴스 댓글이 언제 누구에게 달리는지"
+    },
+    {
+      "slug": "editor-control",
+      "short": "글쓰기",
+      "label": "글쓰기 창 제어",
+      "summary": "열려 있는 네이버 글쓰기 창의 원고를 읽고 고쳐요"
+    },
+    {
+      "slug": "editor-detail",
+      "label": "글쓰기 창 세부 편집",
+      "summary": "문단 서식·표·이미지·링크 카드·대표 이미지를 하나씩"
+    },
+    {
+      "slug": "photo-editor",
+      "label": "사진 편집기 조작",
+      "summary": "사진 편집기 캔버스에 텍스트·도형·이미지를 넣어요"
+    },
+    {
+      "slug": "video-editor",
+      "label": "영상 편집기 조작",
+      "summary": "영상 편집기의 장면·자막·목소리를 만들어요"
+    },
+    {
+      "slug": "video-timeline",
+      "label": "영상 타임라인 편집",
+      "summary": "장면 자르기, 배경 음악, 화면 속 화면, 자동 편집"
+    },
+    {
+      "slug": "gallery",
+      "label": "이미지 갤러리·파일 주고받기",
+      "summary": "내가 만든 사진 파일을 갤러리에 넣어 편집기에서 쓰고, 내보낸 결과 파일을 받아요"
+    },
+    {
+      "slug": "browser-tabs",
+      "label": "내 브라우저 탭",
+      "summary": "지금 열려 있는 탭을 보고, 열고, 앞으로 가져오고, 닫아요"
+    },
+    {
+      "slug": "connection",
+      "label": "연결 브라우저",
+      "summary": "여러 브라우저·프로필 중 도구를 실행할 곳을 골라요"
+    }
+  ]
+}

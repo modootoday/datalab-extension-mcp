@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: serp_pattern_analyze.md
+permalink: /tools/serp-watch/serp_pattern_analyze/index.md
+---

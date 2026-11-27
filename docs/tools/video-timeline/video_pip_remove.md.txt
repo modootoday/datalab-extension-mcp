@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: video_pip_remove.md
+permalink: /tools/video-timeline/video_pip_remove/index.md
+---

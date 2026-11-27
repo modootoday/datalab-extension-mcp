@@ -1,0 +1,14 @@
+{%- assign dl_count = site.data.tools.size | divided_by: 10 | times: 10 -%}
+<div class="dl-hero">
+  <div>
+    <p class="dl-eyebrow">AI 앱 연결 프로그램 · 무료 오픈소스</p>
+    <h1>AI가 <em>내 블로그 수치</em>를 직접 읽고 답해요</h1>
+    <p class="dl-hero-lead">Claude, Cursor 같은 AI 앱이 데이터랩툴즈의 블로그 통계, 키워드, 광고 성과를 바로 읽어요. 짐작이 아니라 지금 내 계정의 실제 수치로 답해요.</p>
+    <div class="dl-actions">
+      <a class="dl-btn dl-btn-primary" href="#install">내 AI 앱에 설치하기</a>
+      <a class="dl-btn" href="{{ '/tools/' | relative_url }}">도구 둘러보기</a>
+    </div>
+    <ul class="dl-facts"><li>도구 {{ dl_count }}여 개</li><li>AI 앱 10곳 이상</li><li>설정에 비밀번호 없음</li></ul>
+  </div>
+  {% include dl/home/install.html %}
+</div>

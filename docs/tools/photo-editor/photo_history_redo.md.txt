@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: photo_history_redo.md
+permalink: /tools/photo-editor/photo_history_redo/index.md
+---

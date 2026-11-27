@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: editor_insert_draft.md
+permalink: /tools/editor-control/editor_insert_draft/index.md
+---

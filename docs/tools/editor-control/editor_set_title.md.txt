@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: editor_set_title.md
+permalink: /tools/editor-control/editor_set_title/index.md
+---

@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: photo_frame_add.md
+permalink: /tools/photo-editor/photo_frame_add/index.md
+---

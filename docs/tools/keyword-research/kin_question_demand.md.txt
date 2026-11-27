@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: kin_question_demand.md
+permalink: /tools/keyword-research/kin_question_demand/index.md
+---

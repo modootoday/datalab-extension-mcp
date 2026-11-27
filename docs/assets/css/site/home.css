@@ -1,0 +1,44 @@
+.dl-hero { display: grid; gap: 2rem; padding-top: .5rem; }
+.dl-hero > * { min-width: 0; }
+.dl-hero h1 { font-size: clamp(2rem, 1.3rem + 2.6vw, 3.1rem); line-height: 1.15; letter-spacing: -.04em; font-weight: 800; }
+.dl-hero h1 em { font-style: normal; color: var(--dl-primary); }
+.dl-hero-lead { margin-top: 1rem; font-size: 1.125rem; line-height: 1.65; color: var(--dl-muted-foreground); max-width: 34rem; }
+.dl-hero .dl-actions { margin-top: 1.5rem; }
+.dl-facts { display: flex; flex-wrap: wrap; gap: .35rem 1.1rem; margin: 1.25rem 0 0; padding: 0; list-style: none; font-size: .875rem; color: var(--dl-muted-foreground); }
+.dl-facts li { display: inline-flex; gap: .4rem; align-items: center; }
+.dl-facts li::before { content: ""; width: .4rem; height: .4rem; border-radius: 50%; background: var(--dl-brand); }
+@media (min-width: 60rem) { .dl-hero { grid-template-columns: 5fr 6fr; align-items: center; gap: 3rem; padding-top: 1.5rem; } }
+
+.dl-terminal { border: 1px solid var(--dl-border); border-radius: var(--dl-radius-lg); overflow: hidden; background: var(--dl-card); box-shadow: var(--dl-shadow); }
+.dl-terminal-bar { display: flex; align-items: center; gap: .6rem; padding: .5rem .75rem; background: var(--dl-muted); color: var(--dl-muted-foreground); border-bottom: 1px solid var(--dl-border); font-size: .8125rem; }
+.dl-terminal-bar b { flex: 1; min-width: 0; font-weight: 600; }
+.dl-terminal pre { border: 0; border-radius: 0; background: var(--dl-card); color: var(--dl-card-foreground); white-space: pre-wrap; font-size: .8125rem; max-height: 17rem; overflow-y: auto; }
+.dl-terminal-foot { padding: .6rem .9rem; border-top: 1px solid var(--dl-border); font-size: .8125rem; color: var(--dl-muted-foreground); background: var(--dl-muted); }
+.dl-copy { font: inherit; font-size: .75rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; min-height: 1.9rem;
+  padding: .2rem .65rem; border-radius: var(--dl-radius-sm); border: 1px solid var(--dl-border); background: var(--dl-background); color: var(--dl-foreground); }
+.dl-copy:hover { background: var(--dl-accent); }
+.dl-copy[data-done] { color: var(--dl-tip); border-color: color-mix(in srgb, var(--dl-tip) 40%, var(--dl-border)); }
+
+.dl-steps { display: grid; gap: 1rem; list-style: none; padding: 0; margin: 0; counter-reset: st; }
+.dl-steps > li { counter-increment: st; display: grid; grid-template-columns: 2rem 1fr; gap: .25rem .85rem; align-content: start; min-width: 0; margin: 0; }
+.dl-steps > li::before { content: counter(st); grid-row: span 2; width: 2rem; height: 2rem; border-radius: 50%; display: grid; place-items: center;
+  font-weight: 700; font-size: .875rem; background: var(--dl-primary-soft); color: var(--dl-primary); border: 1px solid var(--dl-primary-border); }
+.dl-steps > li > * { min-width: 0; }
+.dl-steps h3 { padding-top: .2rem; }
+.dl-steps p { color: var(--dl-muted-foreground); }
+@media (min-width: 52rem) { .dl-steps.is-row { grid-template-columns: repeat(3, 1fr); gap: 1.5rem; } }
+
+.dl-faq { display: grid; border-top: 1px solid var(--dl-border); max-width: var(--dl-measure); }
+.dl-faq details { border-bottom: 1px solid var(--dl-border); }
+.dl-faq summary { cursor: pointer; padding: .9rem 0; font-weight: 650; list-style-position: outside; }
+.dl-faq details > div { padding: 0 0 1rem; color: var(--dl-muted-foreground); display: grid; gap: .5rem; }
+
+.dl-flow { width: 100%; max-width: 100%; height: auto; display: block; }
+.dl-flow .box { fill: var(--dl-card); stroke: var(--dl-border-strong); }
+.dl-flow .zone { fill: var(--dl-muted); stroke: var(--dl-border); stroke-dasharray: 5 4; }
+.dl-flow .line { stroke: var(--dl-primary); stroke-width: 1.5; fill: none; }
+.dl-flow .out { stroke: var(--dl-muted-foreground); stroke-width: 1.5; fill: none; stroke-dasharray: 4 4; }
+.dl-flow text { fill: var(--dl-foreground); font-family: var(--dl-font-sans); font-size: 13px; }
+.dl-flow .sub { fill: var(--dl-muted-foreground); font-size: 11px; }
+.dl-flow .arrow { fill: var(--dl-primary); }
+.dl-flow .arrow-out { fill: var(--dl-muted-foreground); }

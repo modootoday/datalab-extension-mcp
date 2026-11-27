@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: content_calendar.md
+permalink: /tools/keyword-research/content_calendar/index.md
+---

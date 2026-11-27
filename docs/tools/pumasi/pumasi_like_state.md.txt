@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: pumasi_like_state.md
+permalink: /tools/pumasi/pumasi_like_state/index.md
+---

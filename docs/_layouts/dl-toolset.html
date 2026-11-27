@@ -1,0 +1,28 @@
+---
+layout: dl-site
+---
+{%- assign set = site.data.toolsets.toolsets | where: "slug", page.toolset | first -%}
+<div class="dl-doc-layout">
+  {% include dl/sidebar.html label="문서 메뉴" groups=site.data.sidebars.docs current=set.url %}
+  <div>
+    {% include dl/sidebar-mobile.html label="문서 메뉴" groups=site.data.sidebars.docs current=set.url %}
+    <article class="dl-doc">
+      <ol class="dl-breadcrumb"><li><a href="{{ '/tools/' | relative_url }}">도구 문서</a></li><li aria-current="page">{{ set.label }}</li></ol>
+      <div class="dl-stack">
+        <div class="dl-title-row"><h1>{{ set.label }}</h1>{% include dl/badge.html class=set.grade_badge text=set.grade_text %}</div>
+        <div class="dl-route-meta"><code>{{ set.slug }}</code>{% include dl/badge.html class="b-chip" text=set.scope %}{% if set.needs_tab %}{% include dl/badge.html class="b-chip" text="창을 열어 둬야 해요" %}{% endif %}</div>
+        <p class="dl-lead">{{ set.summary }}</p>
+        <div class="dl-page-actions">{% include dl/twin-actions.html %}</div>
+      </div>
+      <section aria-labelledby="s-tools"><h2 id="s-tools">이 묶음의 도구 {{ set.tools.size }}개</h2>
+        <div class="dl-related">
+          {%- for name in set.tools %}
+          {%- assign tool = site.data.tools[name] %}
+          <a href="{{ tool.url | relative_url }}"><span>{{ tool.label }}</span><code>{{ name }}</code></a>
+          {%- endfor %}
+        </div>
+      </section>
+      <p class="dl-muted dl-small">이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 {{ site.data.install.version }} 기준.</p>
+    </article>
+  </div>
+</div>

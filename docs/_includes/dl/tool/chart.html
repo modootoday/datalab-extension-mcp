@@ -1,0 +1,10 @@
+{%- assign c = include.chart -%}
+<svg class="dl-chart" viewBox="0 0 520 190" role="img" aria-label="{{ c.label }}">
+  <g stroke="var(--dl-chart-grid)" stroke-width="1"><path d="M36 20h470M36 70h470M36 120h470M36 170h470"/></g>
+  <text x="28" y="24" text-anchor="end">100</text><text x="28" y="124" text-anchor="end">33</text><text x="28" y="174" text-anchor="end">0</text>
+  <path d="{{ c.area }}" fill="var(--dl-brand)" fill-opacity=".12"/>
+  <path d="{{ c.line }}" fill="none" stroke="var(--dl-brand)" stroke-width="2.5" stroke-linejoin="round"/>
+  <circle cx="{{ c.peak.x }}" cy="{{ c.peak.y }}" r="4.5" fill="var(--dl-brand)"/>
+  <text x="{{ c.peak.x }}" y="{{ c.peak.y | minus: 8 }}" text-anchor="middle" style="fill:var(--dl-foreground);font-weight:700">{{ c.peak.text }}</text>
+  <g>{% for t in c.ticks %}<text x="{{ t.x }}" y="186" text-anchor="middle">{{ t.label }}</text>{% endfor %}</g>
+</svg>

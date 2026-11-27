@@ -1,0 +1,74 @@
+---
+layout: dl-site
+title: 한 줄 프롬프트
+description: 복사해서 바로 쓰는 한 줄 프롬프트와 AI가 부르는 도구
+nav: guides
+twin: false
+css: [steps]
+---
+<div class="dl-doc-layout has-toc">
+{% include dl/sidebar.html label="가이드 메뉴" groups=site.data.sidebars.guide current="/guides/#g-gallery" %}
+<div>
+{% include dl/sidebar-mobile.html label="가이드 메뉴" groups=site.data.sidebars.guide current="/guides/#g-gallery" %}
+<article class="dl-doc">
+  <ol class="dl-breadcrumb"><li><a href="{{ '/guides/' | relative_url }}">사용 가이드</a></li><li aria-current="page">한 줄 프롬프트</li></ol>
+  <div class="dl-stack">
+    <h1>한 줄 프롬프트로 일을 끝내요</h1>
+    <p class="dl-lead">한 번 붙여넣으면 AI가 필요한 도구를 차례로 불러 일을 끝까지 해요. 복사해서 내 키워드와 기간만 바꿔 쓰세요.</p>
+    <div class="dl-route-meta"><span class="dl-badge g-read">바로 조회</span><span class="dl-small dl-muted">묻지 않고 바로 써요</span><span class="dl-badge g-ask">매번 물어봄</span><span class="dl-small dl-muted">실행 전에 사이드패널에서 허용을 받아요</span></div>
+  </div>
+  {%- capture _before %}브라우저에서 네이버에 로그인하고 데이터랩툴즈 사이드패널을 열어 두세요. 연결이 안 되면 <a href="{{ '/#install' | relative_url }}">설치 안내</a>를 먼저 봐요.{% endcapture %}
+  {% include dl/callout.html type="tip" title="시작 전에" body=_before %}
+
+  <section aria-labelledby="g-gallery"><h2 id="g-gallery">프롬프트 모음</h2>
+    {% include dl/guide/gallery.html %}
+  </section>
+
+  <section aria-labelledby="g-tips"><h2 id="g-tips">좋은 한 줄 프롬프트 쓰는 법</h2>
+    <ul class="dl-list">
+      <li><b>끝낼 일을 말해요.</b> "보여 줘"보다 "정리하고 3개 추천해 줘"처럼 마지막 결과를 적어요.</li>
+      <li><b>대상과 기간을 넣어요.</b> 키워드, 매장, "이번 주"나 "11월 1일부터 7일까지"처럼요.</li>
+      <li><b>원하는 모양을 말해요.</b> 표, 목록, 3개처럼 받고 싶은 형태를 적으면 바로 쓸 수 있어요.</li>
+      <li><b>바꾸는 일은 한 번 더 확인해요.</b> 글쓰기 창에 넣는 일은 사이드패널에서 허용해야 실행되고, 발행은 언제나 직접 해요.</li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="g-weekly" class="dl-detail"><h2 id="g-weekly">자세히: 주간 성과 정리와 다음 주 글감</h2>
+    <p class="dl-muted">첫 번째 프롬프트를 붙여넣으면 AI는 아래 순서로 도구를 불러요. 결과가 마음에 들지 않으면 단계마다 이어서 물어봐도 돼요.</p>
+    <div class="dl-route-meta"><span class="dl-badge b-chip">10분</span><span class="dl-badge g-read">바로 조회 도구만 써요</span></div>
+  </section>
+
+  <section class="mt-section mt-c-steps" data-c="steps" aria-labelledby="g-1"><h2 id="g-1">AI가 거치는 순서</h2>
+    <ol>
+      <li><strong>한 주 전체를 읽어요</strong><p>브리핑으로 방문과 조회를 읽고, 날짜별 흐름으로 지난주와 비교해요.</p><pre>쓰는 도구: my_daily_brief, my_traffic_series</pre></li>
+      <li><strong>키워드별로 나눠요</strong><p>어떤 검색어로 들어왔는지 읽고, 키워드마다 방문과 증감을 표로 만들어요.</p><pre>쓰는 도구: my_inflow</pre></li>
+      <li><strong>잘된 글을 짚어요</strong><p>조회가 많았던 글을 키워드 표 옆에 붙여, 무엇이 통했는지 보여 줘요.</p><pre>쓰는 도구: my_top_content</pre></li>
+      <li><strong>다음 주 글감 3개를 골라요</strong><p>잘된 키워드와 가까우면서 경쟁이 낮은 키워드를 골라 이유와 함께 추천해요.</p><pre>쓰는 도구: keyword_opportunity</pre></li>
+    </ol>
+  </section>
+
+  <section aria-labelledby="g-2"><h2 id="g-2">이 프롬프트를 쓸 때</h2>
+    <ul class="dl-list">
+      <li>오늘 수치는 진행 중이라 어제와 바로 비교하면 낮게 보여요. "이번 주"는 어제까지로 읽어요.</li>
+      <li>글감이 마음에 들지 않으면 "캠핑 말고 요리 쪽으로 다시"처럼 이어서 말하면 돼요.</li>
+    </ul>
+    {% include dl/callout.html type="warning" title="결과를 커뮤니티에 올릴 때" body="블로그 주소, 글 제목, 실제 방문 수는 지우고 올려 주세요. 흐름만 보여도 충분히 도움이 돼요." %}
+  </section>
+
+  <section aria-labelledby="g-3"><h2 id="g-3">다음에 읽을 것</h2>
+    <div class="dl-related">
+      <a aria-disabled="true"><span>글쓰기 창에 초안 넣기</span><code>매번 물어봄 도구</code></a>
+      <a aria-disabled="true"><span>설치 인증키 방식에서 옮기기</span><code>설치</code></a>
+      <a href="{{ '/community/' | relative_url }}"><span>다른 사람의 사용 사례</span><code>커뮤니티</code></a>
+    </div>
+  </section>
+  <div class="dl-pager"><a href="{{ '/troubleshoot/' | relative_url }}"><small>이전</small>문제 해결</a><a class="next" aria-disabled="true"><small>다음</small>글쓰기 창에 초안 넣기</a></div>
+</article>
+</div>
+<nav class="dl-toc" aria-label="이 페이지 목차"><p>이 페이지</p><ol>
+  <li><a href="#g-gallery">프롬프트 모음</a></li>
+  <li><a href="#g-tips">쓰는 법</a></li>
+  <li><a href="#g-weekly">자세히: 주간 성과</a></li>
+  <li><a href="#g-3">다음에 읽을 것</a></li>
+</ol></nav>
+</div>

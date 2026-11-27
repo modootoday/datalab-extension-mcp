@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: editor_read.md
+permalink: /tools/editor-control/editor_read/index.md
+---

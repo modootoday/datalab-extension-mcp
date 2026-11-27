@@ -1,0 +1,13 @@
+<svg class="dl-flow" viewBox="0 0 360 250" role="img" aria-label="AI 앱, 연결 프로그램, 사이드패널이 한 컴퓨터 안에서 이어지고, 바깥으로는 AI 앱이 자기 제공사에 보내는 대화만 나가는 구조">
+  <rect class="zone" x="6" y="8" width="348" height="160" rx="12"/>
+  <text x="20" y="30" class="sub">내 컴퓨터</text>
+  <rect class="box" x="20" y="54" width="92" height="64" rx="10"/><text x="66" y="82" text-anchor="middle">AI 앱</text><text x="66" y="100" text-anchor="middle" class="sub">Claude, Cursor</text>
+  <rect class="box" x="134" y="54" width="92" height="64" rx="10"/><text x="180" y="82" text-anchor="middle">연결 프로그램</text><text x="180" y="100" text-anchor="middle" class="sub">내 컴퓨터 전용</text>
+  <rect class="box" x="248" y="54" width="92" height="64" rx="10"/><text x="294" y="82" text-anchor="middle">사이드패널</text><text x="294" y="100" text-anchor="middle" class="sub">앱별 허용</text>
+  <path class="line" d="M112 86h16"/><path class="arrow" d="M128 81l6 5-6 5z"/>
+  <path class="line" d="M226 86h16"/><path class="arrow" d="M242 81l6 5-6 5z"/>
+  <path class="out" d="M66 118v80"/><path class="arrow-out" d="M61 198l5 7 5-7z"/>
+  <text x="80" y="200" class="sub">AI가 답하려고 요청한 수치만</text>
+  <text x="80" y="216" class="sub">AI 앱이 자기 제공사로 보내요</text>
+  <text x="20" y="242" class="sub">연결 프로그램 자체는 바깥으로 연결하지 않아요.</text>
+</svg>

@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: photo_node_remove.md
+permalink: /tools/photo-editor/photo_node_remove/index.md
+---

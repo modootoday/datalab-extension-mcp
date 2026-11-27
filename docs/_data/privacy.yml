@@ -1,0 +1,9 @@
+# The privacy promises, shown on the start page and on the privacy page.
+lead: "연결 프로그램은 내 컴퓨터 안의 다리예요. AI 앱과 내 브라우저 사이만 이어요."
+cards:
+  - title: "내 컴퓨터 안에서만 연결돼요"
+    text: "다른 컴퓨터나 웹페이지는 닿지 못하고, 연결 프로그램은 컴퓨터 밖으로 아무것도 보내지 않아요."
+  - title: "AI 앱마다 직접 허용해요"
+    text: "허용한 앱 목록은 사이드패널에서 보고 취소할 수 있어요."
+  - title: "아이디·비밀번호를 저장하지 않아요"
+    text: "모든 조회는 내가 로그인해 둔 내 브라우저 안에서 일어나요."

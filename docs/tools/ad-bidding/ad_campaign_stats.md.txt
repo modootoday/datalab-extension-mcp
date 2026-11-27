@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: ad_campaign_stats.md
+permalink: /tools/ad-bidding/ad_campaign_stats/index.md
+---

@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: write_pipeline_step.md
+permalink: /tools/keyword-research/write_pipeline_step/index.md
+---

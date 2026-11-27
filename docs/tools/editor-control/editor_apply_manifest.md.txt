@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: editor_apply_manifest.md
+permalink: /tools/editor-control/editor_apply_manifest/index.md
+---

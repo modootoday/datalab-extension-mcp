@@ -1,0 +1,15 @@
+{%- if page.layout != "redirect" %}
+{%- if page.generated -%}
+{%- assign dl_edit = site.datalab.issues -%}
+{%- else -%}
+{%- assign dl_edit = site.datalab.repo | append: "/edit/main/docs/" | append: page.path -%}
+{%- endif %}
+<footer class="dl-footer"><div class="dl-inner">
+  <div class="dl-footer-cols">
+    <div><p>데이터랩툴즈 MCP</p><ul><li><a href="{{ '/' | relative_url }}">시작하기</a></li><li><a href="{{ '/tools/' | relative_url }}">도구 문서</a></li><li><a href="{{ '/guides/' | relative_url }}">사용 가이드</a></li></ul></div>
+    <div><p>커뮤니티</p><ul><li><a href="{{ '/community/' | relative_url }}">Discussions</a></li><li><a href="{{ site.datalab.issues }}">Issues</a></li><li><a href="{{ site.datalab.repo }}/blob/main/CODE_OF_CONDUCT.md">행동 강령</a></li><li><a href="{{ site.datalab.repo }}/security/policy">보안 신고</a></li></ul></div>
+    <div><p>프로젝트</p><ul><li><a href="{{ site.datalab.repo }}">GitHub</a></li><li><a href="{{ site.datalab.npm }}">npm</a></li><li><a href="{{ dl_edit }}">이 페이지 고치기</a></li></ul></div>
+  </div>
+  <p>MIT 라이선스 오픈소스 · mcp.datalab.tools · 이 사이트는 공개 저장소에서 만들어 GitHub Pages로 제공해요.</p>
+</div></footer>
+{%- endif %}

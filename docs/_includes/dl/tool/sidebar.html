@@ -1,0 +1,16 @@
+{%- capture dl_nav -%}
+<nav class="dl-side-nav">
+<div><p>{{ include.set.label }}</p><ul>
+{%- for name in include.set.tools %}
+{%- assign item = site.data.tools[name] %}
+<li><a href="{{ item.url | relative_url }}"{% if name == include.tool.name %} aria-current="page"{% endif %}>{{ item.label }}</a></li>
+{%- endfor %}
+</ul></div>
+<div><p>다른 묶음</p><ul><li><a href="{{ '/tools/' | relative_url }}">전체 묶음</a></li></ul></div>
+</nav>
+{%- endcapture -%}
+{%- if include.mobile -%}
+<details class="dl-sidebar-mobile"><summary>문서 메뉴</summary>{{ dl_nav }}</details>
+{%- else -%}
+<aside class="dl-sidebar" aria-label="문서 메뉴">{{ dl_nav }}</aside>
+{%- endif -%}

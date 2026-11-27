@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: benchmark_gap.md
+permalink: /tools/benchmark/benchmark_gap/index.md
+---

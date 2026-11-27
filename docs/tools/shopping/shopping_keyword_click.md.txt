@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: shopping_keyword_click.md
+permalink: /tools/shopping/shopping_keyword_click/index.md
+---

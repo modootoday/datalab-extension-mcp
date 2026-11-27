@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: video_preview.md
+permalink: /tools/video-editor/video_preview/index.md
+---

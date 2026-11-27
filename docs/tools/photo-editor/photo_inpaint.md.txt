@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: photo_inpaint.md
+permalink: /tools/photo-editor/photo_inpaint/index.md
+---

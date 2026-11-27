@@ -1,0 +1,15 @@
+.dl-prompts { display: grid; gap: 1rem; }
+.dl-prompt { display: grid; gap: .7rem; padding: 1.1rem 1.15rem; border: 1px solid var(--dl-border); border-radius: var(--dl-radius-lg); background: var(--dl-card); min-width: 0; }
+.dl-prompt > * { min-width: 0; }
+.dl-prompt-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .4rem; align-items: center; }
+.dl-prompt-head h3 { font-size: 1.0625rem; }
+.dl-prompt pre { white-space: pre-wrap; font-family: var(--dl-font-sans); font-size: .9375rem; line-height: 1.6; color: var(--dl-foreground); background: var(--dl-primary-soft); border-color: var(--dl-primary-border); }
+.dl-prompt-tools { display: flex; flex-wrap: wrap; gap: .4rem .5rem; align-items: center; }
+.dl-tool { display: inline-flex; gap: .3rem; align-items: center; padding: .15rem .25rem .15rem .45rem; border: 1px solid var(--dl-border); border-radius: 999px; background: var(--dl-background); }
+.dl-tool code { border: 0; background: none; padding: 0; font-size: .75rem; }
+.dl-prompt-result { font-size: .9rem; color: var(--dl-muted-foreground); }
+.dl-prompt-result b { color: var(--dl-foreground); margin-inline-end: .4rem; }
+.dl-prompt-link { display: flex; flex-wrap: wrap; gap: .5rem 1rem; align-items: center; justify-content: space-between; padding: 1rem 1.15rem; border: 1px solid var(--dl-primary-border); border-radius: var(--dl-radius-lg); background: var(--dl-primary-soft); }
+.dl-prompt-link > * { min-width: 0; }
+.dl-prompt-link p { color: var(--dl-muted-foreground); font-size: .9rem; }
+.dl-prompt-link b { color: var(--dl-foreground); display: block; font-size: 1rem; }

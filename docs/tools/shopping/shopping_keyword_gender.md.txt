@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: shopping_keyword_gender.md
+permalink: /tools/shopping/shopping_keyword_gender/index.md
+---

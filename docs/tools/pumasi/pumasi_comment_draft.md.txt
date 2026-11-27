@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: pumasi_comment_draft.md
+permalink: /tools/pumasi/pumasi_comment_draft/index.md
+---

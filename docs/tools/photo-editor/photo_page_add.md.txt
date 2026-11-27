@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: photo_page_add.md
+permalink: /tools/photo-editor/photo_page_add/index.md
+---

@@ -1,0 +1,16 @@
+<header class="dl-header"><div class="dl-inner">
+  <a class="dl-site-title" href="{{ '/' | relative_url }}" aria-label="데이터랩툴즈 MCP 처음으로">
+    {% include dl/logo.svg %}
+    데이터랩툴즈 <span>MCP</span>
+  </a>
+  <nav class="dl-nav" aria-label="주 메뉴"><ul>
+    {%- for item in site.datalab.nav %}
+    <li><a href="{{ item.url | relative_url }}"{% if page.nav == item.key %} aria-current="page"{% endif %}>{{ item.title }}</a></li>
+    {%- endfor %}
+  </ul></nav>
+  <div class="dl-header-tools">
+    <button class="dl-search-btn" type="button" id="search-btn" data-search="{{ '/tools/' | relative_url }}" aria-label="문서 검색"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span>검색</span><kbd>/</kbd></button>
+    <a class="dl-icon-btn" href="{{ site.datalab.repo }}" aria-label="GitHub 저장소"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 2.9.8.1-.6.4-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.8 1a9.6 9.6 0 0 1 5 0c1.9-1.3 2.8-1 2.8-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.4 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2Z"/></svg></a>
+    <button class="dl-icon-btn" type="button" id="theme-btn" aria-label="밝은 화면과 어두운 화면 바꾸기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg></button>
+  </div>
+</div></header>

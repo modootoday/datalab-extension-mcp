@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: editor_insert_blank_paragraph.md
+permalink: /tools/editor-detail/editor_insert_blank_paragraph/index.md
+---

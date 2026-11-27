@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: place_pet_nearby.md
+permalink: /tools/place/place_pet_nearby/index.md
+---

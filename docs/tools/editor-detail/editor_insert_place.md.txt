@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: editor_insert_place.md
+permalink: /tools/editor-detail/editor_insert_place/index.md
+---

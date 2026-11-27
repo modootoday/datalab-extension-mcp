@@ -1,0 +1,9 @@
+{%- if include.tool.related.size > 0 -%}
+<section aria-labelledby="t-related"><h2 id="t-related">함께 쓰는 도구</h2>
+  <div class="dl-related">
+    {%- for r in include.tool.related %}
+    <a href="{{ r.url | relative_url }}"><span>{{ r.label }}</span><code>{{ r.name }}</code></a>
+    {%- endfor %}
+  </div>
+</section>
+{%- endif -%}

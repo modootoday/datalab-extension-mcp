@@ -1,0 +1,39 @@
+title: "[도구 이름] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        설치, 연결, 도구 사용법을 물어보세요. 도움이 된 답은 채택해 주세요.
+        블로그 주소, 네이버 아이디, 광고 계정 번호, 실제 수치는 지우고 올려 주세요.
+  - type: input
+    id: tool
+    attributes:
+      label: 도구 이름
+      description: 도구 문서 페이지 제목 아래의 영문 이름이에요.
+      placeholder: keyword_trend
+  - type: input
+    id: app
+    attributes:
+      label: 쓰는 AI 앱
+      placeholder: Claude Desktop, Cursor, Codex 등
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: 연결 프로그램 버전
+      description: 터미널에서 npm ls -g @modootoday/datalab-extension-mcp 로 볼 수 있어요.
+  - type: textarea
+    id: question
+    attributes:
+      label: 물어본 말과 궁금한 점
+      description: AI 앱에 어떻게 물었는지, 무엇을 기대했고 실제로는 어땠는지 적어 주세요.
+    validations:
+      required: true
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: 올리기 전에
+      options:
+        - label: 블로그 주소, 계정 번호, 실제 수치가 보이지 않게 지웠어요.
+          required: true

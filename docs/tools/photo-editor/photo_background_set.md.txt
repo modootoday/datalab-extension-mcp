@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: photo_background_set.md
+permalink: /tools/photo-editor/photo_background_set/index.md
+---

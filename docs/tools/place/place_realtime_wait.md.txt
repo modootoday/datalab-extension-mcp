@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: place_realtime_wait.md
+permalink: /tools/place/place_realtime_wait/index.md
+---

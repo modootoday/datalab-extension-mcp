@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: tab_close.md
+permalink: /tools/browser-tabs/tab_close/index.md
+---

@@ -1,0 +1,109 @@
+{
+  "prompts": [
+    {
+      "id": "weekly",
+      "title": "주간 성과 정리와 다음 주 글감",
+      "area": "blog-brief",
+      "prompt": "datalab mcp를 활용해서 이번 주 내 블로그 성과를 키워드별로 정리하고 다음 주 글감 3개 추천해 줘",
+      "tools": [
+        "my_daily_brief",
+        "my_traffic_series",
+        "my_inflow",
+        "my_top_content",
+        "keyword_opportunity"
+      ],
+      "result": "유입 키워드별 방문 표, 지난주 대비 증감, 경쟁이 낮은 글감 3개와 고른 이유",
+      "guide": "/guides/#g-weekly",
+      "reviewed": {
+        "on": "2026-11-27",
+        "app": "Claude Desktop, Claude Code, Codex",
+        "version": "1.18.2"
+      }
+    },
+    {
+      "id": "keyword-title",
+      "title": "키워드 조사부터 제목까지",
+      "area": "keyword-research",
+      "prompt": "datalab mcp를 활용해서 '제습기'로 다음 글을 쓰려고 해. 월간 검색량, 언제 검색이 느는지, 경쟁 낮은 연관 키워드를 보고 제목 3개 뽑아 줘",
+      "tools": [
+        "autocomplete_keywords",
+        "ad_keyword_stats",
+        "keyword_trend",
+        "keyword_opportunity",
+        "title_optimize"
+      ],
+      "result": "연관 키워드별 검색량과 경쟁도, 검색이 느는 달, 검색어를 담은 제목 3개",
+      "reviewed": {
+        "on": "2026-11-27",
+        "app": "Claude Desktop, Claude Code, Codex",
+        "version": "1.18.2"
+      }
+    },
+    {
+      "id": "draft",
+      "title": "상위 글과 비교해 초안 넣기",
+      "area": "editor-control",
+      "prompt": "datalab mcp를 활용해서 '캠핑의자 추천' 상위 글과 비교해서 빠진 내용을 찾고, 그걸 채운 초안을 써서 열려 있는 글쓰기 창에 넣어 줘",
+      "tools": [
+        "benchmark_gap",
+        "write_draft",
+        "editor_read",
+        "editor_place_draft"
+      ],
+      "result": "빈 글쓰기 창에 초안이 들어가요. 넣기 전에 사이드패널이 허용을 묻고, 발행은 직접 해요.",
+      "reviewed": {
+        "on": "2026-11-27",
+        "app": "Claude Desktop, Claude Code, Codex",
+        "version": "1.18.2"
+      }
+    },
+    {
+      "id": "place-review",
+      "title": "매장 리뷰 한눈에 보기",
+      "area": "place",
+      "prompt": "datalab mcp를 활용해서 우리 매장 리뷰를 좋은 말과 아쉬운 말로 나눠 정리하고, 아직 답글 안 단 리뷰를 급한 순서로 보여 줘",
+      "tools": [
+        "place_owner_review_stats",
+        "place_owner_reviews_sentiment",
+        "place_reply_queue"
+      ],
+      "result": "자주 나온 칭찬과 불만, 답글이 필요한 리뷰 목록. 답글은 직접 달아요.",
+      "reviewed": {
+        "on": "2026-11-27",
+        "app": "Claude Desktop, Claude Code, Codex",
+        "version": "1.18.2"
+      }
+    },
+    {
+      "id": "ad-bid",
+      "title": "검색광고 입찰가 점검",
+      "area": "ad-bidding",
+      "prompt": "datalab mcp를 활용해서 이번 달 검색광고 캠페인 성과를 보고, 클릭당 비용이 높은 키워드마다 적정 입찰가를 알려 줘",
+      "tools": ["ad_campaign_stats", "ad_keyword_spend", "ad_estimate_bid"],
+      "result": "비용이 큰 키워드와 순위별 예상 입찰가. 입찰가 변경은 열리지 않아서 광고 관리 화면에서 직접 바꿔요.",
+      "reviewed": {
+        "on": "2026-11-27",
+        "app": "Claude Desktop, Claude Code, Codex",
+        "version": "1.18.2"
+      }
+    },
+    {
+      "id": "plan",
+      "title": "2주 발행 계획",
+      "area": "blog-brief",
+      "prompt": "datalab mcp를 활용해서 최근 반응이 오른 내 글과 요즘 뜨는 검색어를 보고 다음 2주 발행 계획을 세워 줘",
+      "tools": [
+        "my_soaring",
+        "my_top_content",
+        "keyword_trend",
+        "content_calendar"
+      ],
+      "result": "날짜별 글 주제와 키워드가 담긴 2주 표",
+      "reviewed": {
+        "on": "2026-11-27",
+        "app": "Claude Desktop, Claude Code, Codex",
+        "version": "1.18.2"
+      }
+    }
+  ]
+}

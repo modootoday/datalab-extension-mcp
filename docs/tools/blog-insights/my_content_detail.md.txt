@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: my_content_detail.md
+permalink: /tools/blog-insights/my_content_detail/index.md
+---

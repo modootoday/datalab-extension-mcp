@@ -1,0 +1,98 @@
+/* Generated from the site generator's token table; edits here are replaced. */
+:root {
+  --dl-font-sans: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", "Noto Sans KR", "Segoe UI", Roboto, "Malgun Gothic", sans-serif;
+  --dl-font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  --dl-container: 76rem;
+  --dl-measure: 46rem;
+  --dl-header-height: 3.75rem;
+  --dl-radius: 8px;
+  --dl-radius-lg: 12px;
+  --dl-space-section: 3rem;
+  --dl-radius-sm: 4px;
+  --dl-background: #ffffff;
+  --dl-foreground: #0f172a;
+  --dl-muted: #f8fafc;
+  --dl-muted-foreground: #64748b;
+  --dl-card: #ffffff;
+  --dl-card-foreground: #0f172a;
+  --dl-primary: #046b32;
+  --dl-primary-foreground: #ffffff;
+  --dl-brand: #03c75a;
+  --dl-link: #046b32;
+  --dl-link-hover: #045e2c;
+  --dl-accent: #f1f5f9;
+  --dl-accent-foreground: #0f172a;
+  --dl-border: #e2e8f0;
+  --dl-ring: #03c75a;
+  --dl-note: #1d4ed8;
+  --dl-tip: #047857;
+  --dl-important: #6d28d9;
+  --dl-warning: #c2410c;
+  --dl-caution: #b91c1c;
+  --dl-shadow-sm: 0 1px 2px rgba(15, 23, 42, .04);
+  --dl-shadow: 0 4px 10px rgba(15, 23, 42, .10), 0 1px 2px rgba(15, 23, 42, .04);
+  --dl-primary-soft: #f3faf5;
+  --dl-primary-border: #d9eadf;
+  --dl-border-strong: #cbd5e1;
+  --dl-chart-grid: #e2e8f0;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --dl-background: #0f172a;
+    --dl-foreground: #e2e8f0;
+    --dl-muted: #0b1220;
+    --dl-muted-foreground: #8391a7;
+    --dl-card: #162036;
+    --dl-card-foreground: #e2e8f0;
+    --dl-primary: #4ade80;
+    --dl-primary-foreground: #0f172a;
+    --dl-brand: #03c75a;
+    --dl-link: #4ade80;
+    --dl-link-hover: #86efac;
+    --dl-accent: #1e293b;
+    --dl-accent-foreground: #e2e8f0;
+    --dl-border: #334155;
+    --dl-ring: #4ade80;
+    --dl-note: #60a5fa;
+    --dl-tip: #4ade80;
+    --dl-important: #a78bfa;
+    --dl-warning: #fb923c;
+    --dl-caution: #f87171;
+    --dl-shadow-sm: 0 1px 2px rgba(0, 0, 0, .3);
+    --dl-shadow: 0 8px 24px -6px rgba(0, 0, 0, .5);
+    --dl-primary-soft: #0f2a1d;
+    --dl-primary-border: #1d4d33;
+    --dl-border-strong: #475569;
+    --dl-chart-grid: #334155;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --dl-background: #0f172a;
+  --dl-foreground: #e2e8f0;
+  --dl-muted: #0b1220;
+  --dl-muted-foreground: #8391a7;
+  --dl-card: #162036;
+  --dl-card-foreground: #e2e8f0;
+  --dl-primary: #4ade80;
+  --dl-primary-foreground: #0f172a;
+  --dl-brand: #03c75a;
+  --dl-link: #4ade80;
+  --dl-link-hover: #86efac;
+  --dl-accent: #1e293b;
+  --dl-accent-foreground: #e2e8f0;
+  --dl-border: #334155;
+  --dl-ring: #4ade80;
+  --dl-note: #60a5fa;
+  --dl-tip: #4ade80;
+  --dl-important: #a78bfa;
+  --dl-warning: #fb923c;
+  --dl-caution: #f87171;
+  --dl-shadow-sm: 0 1px 2px rgba(0, 0, 0, .3);
+  --dl-shadow: 0 8px 24px -6px rgba(0, 0, 0, .5);
+  --dl-primary-soft: #0f2a1d;
+  --dl-primary-border: #1d4d33;
+  --dl-border-strong: #475569;
+  --dl-chart-grid: #334155;
+  color-scheme: dark;
+}

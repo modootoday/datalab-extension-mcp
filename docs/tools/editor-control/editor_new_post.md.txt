@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: editor_new_post.md
+permalink: /tools/editor-control/editor_new_post/index.md
+---

@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: photo_upscale.md
+permalink: /tools/photo-editor/photo_upscale/index.md
+---

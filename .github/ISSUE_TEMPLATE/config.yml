@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 사용법 질문
+    url: https://github.com/modootoday/datalab-extension-mcp/discussions/new?category=%EC%A7%88%EB%AC%B8%EA%B3%BC-%EB%8B%B5
+    about: 설치, 연결, 도구 사용법은 Discussions의 질문과 답에 물어봐 주세요.
+  - name: 도구 제안
+    url: https://github.com/modootoday/datalab-extension-mcp/discussions/new?category=%EB%8F%84%EA%B5%AC-%EC%A0%9C%EC%95%88
+    about: 있었으면 하는 도구는 Discussions의 도구 제안에 남겨 주세요.

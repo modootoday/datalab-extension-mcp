@@ -1,0 +1,8 @@
+<div class="dl-two">
+  <div class="dl-cards is-single">
+    {%- for card in site.data.privacy.cards %}
+    <div class="dl-card"><h3>{{ card.title }}</h3><p>{{ card.text }}</p></div>
+    {%- endfor %}
+  </div>
+  <div class="dl-card dl-flow-wrap">{% include dl/home/flow.svg %}</div>
+</div>

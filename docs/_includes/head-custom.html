@@ -1,0 +1,5 @@
+{%- comment -%}Applies the visitor's saved scheme before the first paint; the theme's own toggle is off.{%- endcomment -%}
+<script>try{var t=localStorage.getItem("mt-theme");if(t=="light"||t=="dark")document.documentElement.dataset.theme=t}catch(e){}</script>
+{%- for name in site.datalab.scripts %}
+<script src="{{ '/assets/js/site/' | append: name | append: '.js' | relative_url }}" defer></script>
+{%- endfor %}

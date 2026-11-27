@@ -1,0 +1,29 @@
+---
+layout: "dl-tool"
+title: "미답글 리뷰 큐"
+description: "공개 플레이스의 최근 방문자 리뷰에서 사장님 답글이 보이지 않는 항목을 추린다. 사업자 관리함이나 전체 미답글 큐가 아니라 공개 최근 페이지 기반 근사치이며, 각 리뷰 본문을 근거로 답글 초안 후보를 만들 때 사용한다. placeId로 식별."
+nav: "tools"
+tool: "place_reply_queue"
+generated: true
+---
+
+# 미답글 리뷰 큐
+
+`place_reply_queue` · 바로 조회 · 내 데이터
+
+공개 플레이스의 최근 방문자 리뷰에서 사장님 답글이 보이지 않는 항목을 추린다. 사업자 관리함이나 전체 미답글 큐가 아니라 공개 최근 페이지 기반 근사치이며, 각 리뷰 본문을 근거로 답글 초안 후보를 만들 때 사용한다. placeId로 식별.
+
+## AI가 넘기는 값
+
+| 이름 | 형식 | 필수 | 설명 |
+| --- | --- | --- | --- |
+| `placeId` | 문자열 | O | 대상 장소 ID (place_search 결과의 id) |
+
+## 함께 쓰는 도구
+
+- [플레이스 검색](/tools/place/place_search/) `place_search`
+- [플레이스 자동완성](/tools/place/place_autocomplete/) `place_autocomplete`
+- [장소 정보](/tools/place/place_info/) `place_info`
+- [리뷰 통계](/tools/place/place_review_stats/) `place_review_stats`
+
+이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.2 기준.

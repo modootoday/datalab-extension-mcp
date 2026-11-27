@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: comment_device.md
+permalink: /tools/comment-stats/comment_device/index.md
+---

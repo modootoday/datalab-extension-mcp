@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: blog_visit_series.md
+permalink: /tools/benchmark/blog_visit_series/index.md
+---

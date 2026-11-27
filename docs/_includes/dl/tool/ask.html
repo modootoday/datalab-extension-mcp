@@ -1,0 +1,14 @@
+<section aria-labelledby="t-community"><h2 id="t-community">이 도구에 대해 묻기</h2>
+  <div class="dl-ask-box">
+    <p>쓰다가 막히거나 더 좋은 사용법을 찾았다면 커뮤니티에 남겨 주세요. 도구 이름이 미리 채워진 질문과 답 글쓰기 화면이 열려요.</p>
+    <div class="dl-actions"><a class="dl-btn dl-btn-primary dl-btn-sm" href="{{ site.datalab.ask }}&amp;title={{ '[' | append: include.tool.name | append: '] ' | url_encode }}">질문과 답에 물어보기</a><a class="dl-btn dl-btn-sm" href="{{ site.datalab.discussions }}?discussions_q={{ include.tool.name | url_encode }}">이 도구의 다른 질문 보기</a></div>
+    <details><summary>미리 채워지는 내용</summary><pre>제목: [{{ include.tool.name }}]
+본문:
+도구: {{ include.tool.name }} ({{ include.tool.label }})
+쓰는 AI 앱:
+물어본 말:
+기대한 결과와 실제 결과:
+
+블로그 주소, 광고 계정 번호, 실제 수치는 지우고 올려 주세요.</pre></details>
+  </div>
+</section>

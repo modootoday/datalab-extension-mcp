@@ -1,0 +1,45 @@
+---
+layout: dl-site
+---
+<div class="dl-doc-layout">
+  {% include dl/sidebar.html label="문서 메뉴" groups=site.data.sidebars.docs current="/tools/" %}
+  <div>
+    {% include dl/sidebar-mobile.html label="문서 메뉴" groups=site.data.sidebars.docs current="/tools/" %}
+    <article class="dl-doc is-wide">
+      <div class="dl-stack-wide">
+        <h1>도구 문서</h1>
+        <p class="dl-lead">AI 앱이 쓸 수 있는 도구를 하려는 일별로 묶었어요. AI는 질문에 맞는 도구를 스스로 찾아 쓰니, 여기서는 어떤 일이 되는지와 무엇을 물어봐야 하는지를 확인하면 돼요.</p>
+      </div>
+      <div class="dl-prompt-link">
+        <div><b>무엇을 물어볼지 모르겠다면</b><p>복사해서 바로 쓰는 한 줄 프롬프트 {{ site.data.prompts.prompts.size }}개부터 시작해 보세요. 어떤 도구를 쓰고 무엇을 돌려주는지 함께 적혀 있어요.</p></div>
+        <a class="dl-btn dl-btn-primary dl-btn-sm" href="{{ '/guides/' | relative_url }}">한 줄 프롬프트 모음</a>
+      </div>
+      <section aria-labelledby="h-grades">
+        <h2 id="h-grades">도구의 세 가지 등급</h2>
+        <div class="dl-grades">
+          {%- for grade in site.data.grades.grades %}
+          <div class="dl-grade">{% include dl/badge.html class=grade.badge text=grade.text %}<p>{{ grade.meaning }}</p></div>
+          {%- endfor %}
+        </div>
+      </section>
+      <section aria-labelledby="h-cats">
+        <div class="dl-cats-head">
+          <h2 id="h-cats">하려는 일로 찾기</h2>
+          <label class="dl-filter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="cat-filter" type="search" placeholder="예: 검색량, 리뷰, 자막" aria-label="묶음 찾기"></label>
+        </div>
+        <div class="dl-cards" id="cat-grid">
+          {%- for set in site.data.toolsets.toolsets %}
+          {%- capture dl_text %}{{ set.label }} {{ set.summary }} {{ set.slug }}{% endcapture %}
+          <a class="dl-card" href="{{ set.url | relative_url }}" data-text="{{ dl_text | downcase | escape }}">
+            <div class="dl-route-meta">{% include dl/badge.html class=set.grade_badge text=set.grade_text %}{% include dl/badge.html class="b-chip" text=set.scope %}{% if set.needs_tab %}{% include dl/badge.html class="b-chip" text="창을 열어 둬야 해요" %}{% endif %}</div>
+            <h3>{{ set.label }}</h3>
+            <p>{{ set.summary }}</p>
+            <div class="dl-card-foot"><code>{{ set.slug }}</code><span>도구 보기</span></div>
+          </a>
+          {%- endfor %}
+        </div>
+        <p class="dl-muted dl-small" id="cat-empty" hidden>맞는 묶음이 없어요. 다른 말로 찾아보거나 커뮤니티 질문과 답에 물어보세요.</p>
+      </section>
+    </article>
+  </div>
+</div>

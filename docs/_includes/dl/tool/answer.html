@@ -1,0 +1,20 @@
+{%- assign answer = include.tool.answer -%}
+{%- if answer -%}
+<section aria-labelledby="t-answer"><h2 id="t-answer">답변 예시</h2>
+  <div class="dl-chat">
+    <div class="dl-chat-head"><span>AI 앱 대화</span>{% include dl/badge.html class="b-plan" text="예시" %}</div>
+    <div class="dl-chat-body">
+      <div class="dl-bubble-user">{{ answer.ask }}</div>
+      <div class="dl-call">{{ answer.call }}</div>
+      <div class="dl-bubble-ai">
+        {%- if answer.chart %}{% include dl/tool/chart.html chart=answer.chart %}{% endif %}
+        <p>{{ answer.reply }}</p>
+      </div>
+    </div>
+  </div>
+  {%- if answer.note %}
+  {%- capture _note %}{% for part in answer.note %}{% if part.url %}<a href="{{ part.url | relative_url }}">{{ part.text }}</a>{% else %}{{ part.text }}{% endif %}{% endfor %}{% endcapture %}
+  {% include dl/callout.html type="note" title="알아 두세요" body=_note %}
+  {%- endif %}
+</section>
+{%- endif -%}

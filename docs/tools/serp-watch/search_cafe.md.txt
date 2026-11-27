@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: search_cafe.md
+permalink: /tools/serp-watch/search_cafe/index.md
+---

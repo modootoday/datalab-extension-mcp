@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: pumasi_neighbor_state.md
+permalink: /tools/pumasi/pumasi_neighbor_state/index.md
+---

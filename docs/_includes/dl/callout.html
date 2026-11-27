@@ -1,0 +1,4 @@
+{%- comment -%}The theme's alert markup, for HTML pages: type is note, tip, important, warning or caution.{%- endcomment -%}
+<blockquote class="mt-callout mt-callout-{{ include.type }}" data-variant="{{ include.type }}" role="note"{% if include.id %} id="{{ include.id }}"{% endif %}>
+  <p class="mt-callout-title">{% include modootoday/brand/icon.html name=include.type size=16 %}{{ include.title }}</p><p>{{ include.body }}</p>
+</blockquote>

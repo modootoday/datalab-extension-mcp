@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: video_narration_generate.md
+permalink: /tools/video-editor/video_narration_generate/index.md
+---

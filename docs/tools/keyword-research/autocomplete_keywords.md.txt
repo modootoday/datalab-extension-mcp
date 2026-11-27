@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: autocomplete_keywords.md
+permalink: /tools/keyword-research/autocomplete_keywords/index.md
+---

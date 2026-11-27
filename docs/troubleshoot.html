@@ -1,0 +1,44 @@
+---
+layout: dl-site
+title: 문제 해결
+description: 사이드패널 카드와 AI 앱에 보이는 문장별로 해결하는 방법
+nav: home
+twin: false
+css: [accordion]
+---
+{%- assign data = site.data.troubleshoot -%}
+<div class="dl-doc-layout has-toc">
+{% include dl/sidebar.html label="문서 메뉴" groups=site.data.sidebars.docs current="/troubleshoot/" %}
+<div>
+{% include dl/sidebar-mobile.html label="문서 메뉴" groups=site.data.sidebars.docs current="/troubleshoot/" %}
+<article class="dl-doc">
+  <ol class="dl-breadcrumb"><li><a href="{{ '/start/' | relative_url }}">시작하기</a></li><li aria-current="page">문제 해결</li></ol>
+  <div class="dl-stack">
+    <h1>문제 해결</h1>
+    <p class="dl-lead">{{ data.lead }}</p>
+  </div>
+  {%- for group in data.groups %}
+  <section class="mt-section mt-c-accordion" data-c="accordion" aria-labelledby="{{ group.id }}"><h2 id="{{ group.id }}">{{ group.title }}</h2>
+    {%- for item in group.items %}
+    <h3 id="{{ item.id }}">{{ item.title }}</h3>
+    <p>{{ item.body }}</p>
+    {%- if item.install %}
+    <div class="dl-terminal"><pre>{{ site.data.install[item.install] }}</pre></div>
+    {%- endif %}
+    {%- if item.code %}
+    <div class="dl-terminal"><pre>{{ item.code }}</pre></div>
+    {%- endif %}
+    {%- endfor %}
+  </section>
+  {%- endfor %}
+  {%- capture _ask %}<a href="{{ '/community/' | relative_url }}">커뮤니티 질문과 답</a>에 카드 문장과 기록 파일의 마지막 부분을 함께 올려 주세요.{% endcapture %}
+  {% include dl/callout.html type="tip" title="그래도 안 되면" body=_ask %}
+  <div class="dl-pager"><a href="{{ '/start/' | relative_url }}"><small>이전</small>처음 연결하기</a><a class="next" href="{{ '/guides/' | relative_url }}"><small>다음</small>한 줄 프롬프트</a></div>
+</article>
+</div>
+<nav class="dl-toc" aria-label="이 페이지 목차"><p>이 페이지</p><ol>
+  {%- for group in data.groups %}
+  <li><a href="#{{ group.id }}">{{ group.title }}</a></li>
+  {%- endfor %}
+</ol></nav>
+</div>

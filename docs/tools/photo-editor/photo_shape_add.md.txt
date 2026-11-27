@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: photo_shape_add.md
+permalink: /tools/photo-editor/photo_shape_add/index.md
+---

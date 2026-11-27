@@ -1,0 +1,140 @@
+---
+layout: dl-site
+title: 처음 연결하기
+description: 확장에서 켜고, 연결 프로그램을 설치하고, 사이드패널에서 허용하는 세 단계
+nav: home
+twin: false
+css: [features, steps, tabs]
+---
+{%- assign install = site.data.install -%}
+<div class="dl-doc-layout has-toc">
+{% include dl/sidebar.html label="문서 메뉴" groups=site.data.sidebars.docs current="/start/" %}
+<div>
+{% include dl/sidebar-mobile.html label="문서 메뉴" groups=site.data.sidebars.docs current="/start/" %}
+<article class="dl-doc">
+  <ol class="dl-breadcrumb"><li><a href="{{ '/start/' | relative_url }}">시작하기</a></li><li aria-current="page">처음 연결하기</li></ol>
+  <div class="dl-stack">
+    <h1>처음 연결하기</h1>
+    <p class="dl-lead">확장에서 켜고, 연결 프로그램을 설치하고, 사이드패널에서 허용하면 끝나요. 처음이어도 보통 10분이면 돼요.</p>
+  </div>
+
+  <section class="mt-section mt-c-features" data-c="features" aria-labelledby="s-prep"><h2 id="s-prep">준비물</h2>
+    <p>컴퓨터마다 한 번씩만 준비하면 돼요.</p>
+    <ul>
+      <li><strong>데이터랩툴즈 확장</strong>크롬, 엣지, 웨일 같은 크로미움 브라우저에 <a href="https://app.datalab.tools/">app.datalab.tools</a>에서 설치해요.</li>
+      <li><strong>컴퓨터에 설치하는 AI 앱</strong>Claude Desktop, ChatGPT 데스크톱, Claude Code, Codex 같은 앱이에요. 웹사이트로 쓰는 AI는 아직 연결되지 않아요.</li>
+      <li><strong>Node.js 22 이상</strong>연결 프로그램을 실행하는 무료 프로그램이에요. 없다면 <a href="#s-node">아래 설치 방법</a>을 따라 해요.</li>
+    </ul>
+  </section>
+  {% include dl/callout.html type="warning" title="회사 컴퓨터라면" body="보안 정책 때문에 설치가 막혀 있을 수 있어요. 시작하기 전에 IT 담당자와 먼저 상의하면 시간을 아낄 수 있어요." %}
+
+  <section class="mt-section mt-c-steps" data-c="steps" aria-labelledby="s-on"><h2 id="s-on">1단계: 확장에서 켜기</h2>
+    <ol>
+      <li><strong>사이드패널 열기</strong><p>브라우저 오른쪽 위의 데이터랩툴즈 아이콘을 눌러요. 안 보이면 퍼즐 조각 아이콘에서 찾아요.</p></li>
+      <li><strong>설정 열기</strong><p>패널 아래쪽 <b>설정</b>을 눌러요.</p></li>
+      <li><strong>스위치 켜기</strong><p><b>다른 AI 앱에 연결 (MCP)</b> 스위치를 켜고, 동의 화면의 문장을 읽고 동의해요.</p></li>
+    </ol>
+  </section>
+  {% include dl/callout.html type="note" id="consent" title="동의 화면 문장" body="연결된 AI 앱이 요청하면 네이버 데이터가 해당 앱과 그 AI 제공사 서버로 전달돼요." %}
+
+  <section aria-labelledby="s-install"><h2 id="s-install">2단계: 연결 프로그램 설치하기</h2>
+    <p>방법은 둘이에요. 편한 쪽 하나만 하면 돼요.</p>
+    {% include dl/home/install.html %}
+  </section>
+  <section class="mt-section mt-c-features" data-c="features" aria-label="설치 방법 비교">
+    <ul>
+      <li><strong>명령어로 설치하면</strong>컴퓨터에 있는 AI 앱을 모두 찾아 한 번에 등록해요. "연결할까요?"라고 물으면 엔터를 눌러요.</li>
+      <li><strong>AI에게 맡기면</strong>Claude Code, Codex, Gemini CLI처럼 명령을 실행할 수 있는 앱이 설치와 등록을 해 줘요.</li>
+      <li><strong>터미널 여는 법</strong>Windows는 검색창에 <code>cmd</code>, Mac은 <kbd>⌘</kbd>+<kbd>스페이스</kbd>로 <code>터미널</code>을 찾아 열어요.</li>
+    </ul>
+  </section>
+  <p class="dl-muted dl-small">AI 앱 설정에는 데이터랩툴즈 항목만 더하고, 다른 항목은 건드리지 않아요.</p>
+
+  <section aria-labelledby="s-node"><h3 id="s-node">Node.js가 없다면</h3>
+    <p>설치 명령이 <code>npx</code>를 찾을 수 없다고 하면 Node.js가 없는 거예요. <a href="https://nodejs.org/">nodejs.org</a>의 LTS 버튼으로 받거나, 아래 명령으로 설치한 뒤 설치 명령을 다시 실행해요.</p>
+    <section class="mt-c-tabs" data-c="tabs" data-tabs data-tabs-label="운영체제">
+      <h3 id="s-node-win">Windows</h3>
+      <div class="dl-terminal highlighter-rouge"><pre>winget install OpenJS.NodeJS.LTS</pre></div>
+      <h3 id="s-node-unix">Mac · Linux</h3>
+      <div class="dl-terminal highlighter-rouge"><pre>curl -fsSL https://app.datalab.tools/install/mcp.sh | sh</pre></div>
+    </section>
+    <p class="dl-muted dl-small">Mac · Linux 명령은 Node.js를 관리자 권한 없이 설치하고 연결까지 이어서 해요. 실행하기 전에 주소를 브라우저로 열면 스크립트 원문을 볼 수 있어요.</p>
+  </section>
+
+  <section aria-labelledby="s-plugin"><h3 id="s-plugin">AI 앱의 플러그인으로 설치하기</h3>
+    <section class="mt-c-tabs" data-c="tabs" data-tabs data-tabs-label="AI 앱">
+      <h3 id="s-plugin-claude">Claude Code</h3>
+      <div class="dl-terminal highlighter-rouge"><pre>claude plugin marketplace add modootoday/datalab-extension-mcp
+claude plugin install datalab-extension-mcp@modootoday</pre></div>
+      <h3 id="s-plugin-copilot">Copilot CLI</h3>
+      <div class="dl-terminal highlighter-rouge"><pre>copilot plugin install modootoday/datalab-extension-mcp</pre></div>
+      <h3 id="s-plugin-gemini">Gemini CLI</h3>
+      <div class="dl-terminal highlighter-rouge"><pre>gemini extensions install https://github.com/modootoday/datalab-extension-mcp</pre></div>
+      <h3 id="s-plugin-agy">Antigravity</h3>
+      <div class="dl-terminal highlighter-rouge"><pre>agy plugin install https://github.com/modootoday/datalab-extension-mcp</pre></div>
+    </section>
+    <p class="dl-muted dl-small">VS Code는 명령 팔레트의 "Chat: Install Plugin from Source"에 저장소 주소를 넣어요.</p>
+  </section>
+
+  <section class="mt-section mt-c-features" data-c="features" aria-labelledby="s-apps"><h3 id="s-apps">연결되는 AI 앱</h3>
+    <ul>
+      <li><strong>자동으로 등록돼요</strong>Claude Desktop, Claude Code, ChatGPT 데스크톱, Codex CLI, Gemini CLI, Cursor, Windsurf, Amazon Q Developer, JetBrains Junie, Kiro</li>
+      <li><strong>화면 안내를 따라 등록해요</strong>VS Code, Zed, Cline, Roo Code, LM Studio, Warp</li>
+    </ul>
+  </section>
+
+  <section class="mt-section mt-c-steps" data-c="steps" aria-labelledby="s-allow"><h2 id="s-allow">3단계: 사이드패널에서 허용하기</h2>
+    <ol>
+      <li><strong>AI 앱을 완전히 종료했다 켜기</strong><p>창만 닫으면 뒤에서 계속 실행돼요. Windows는 트레이 아이콘에서 종료, Mac은 <kbd>⌘</kbd>+<kbd>Q</kbd>, Linux는 앱 메뉴의 Quit으로 종료해요.</p></li>
+      <li><strong>허용하기 누르기</strong><p>사이드패널을 열어 둔 채 AI 앱에서 데이터랩툴즈를 처음 쓰면 패널이 허용할지 물어요. 10분 안에 <b>[허용하기]</b>를 눌러요. 직접 시작한 연결이 아니라면 <b>[거절하기]</b>를 눌러요.</p></li>
+      <li><strong>초록색 카드 확인하기</strong><p>카드가 초록색이고 "연결됨"이 보이면 된 거예요. AI 앱에 "지난주 내 블로그 어땠어?"처럼 물어보세요.</p></li>
+    </ol>
+  </section>
+  {%- capture _green %}초록색이 아니면 <a href="{{ '/troubleshoot/' | relative_url }}">문제 해결</a>에서 카드에 보이는 문장을 찾아요.{% endcapture %}
+  {% include dl/callout.html type="tip" title="카드가 초록색이 아니라면" body=_green %}
+
+  <section class="mt-section mt-c-steps" data-c="steps" aria-labelledby="s-browser"><h2 id="s-browser">브라우저 프로필 하나 더 연결하기</h2>
+    <p>처음 <b>[허용하기]</b>를 누른 브라우저 프로필이 이 컴퓨터의 연결 프로그램과 연결돼요. 같은 컴퓨터의 다른 프로필도 쓰려면 이렇게 해요.</p>
+    <ol>
+      <li><strong>연결 키 복사하기</strong><p>연결된 프로필의 확장 설정에서 <b>다른 AI 앱에 연결 (MCP)</b>의 <b>연결 키</b>를 복사해요.</p></li>
+      <li><strong>새 프로필에 붙여넣기</strong><p>새 프로필의 같은 화면에 붙여넣어요.</p></li>
+    </ol>
+  </section>
+  {% include dl/callout.html type="note" title="한 컴퓨터 안에서만 돼요" body="연결 프로그램은 이 컴퓨터 안에서만 연결을 받고, 연결 키는 다른 사람에게 보내는 것이 아니에요. AI 앱이 지금 어느 프로필에 닿는지는 <code>datalab_browsers</code>로 물어보면 돼요." %}
+
+  <section class="mt-section mt-c-features" data-c="features" aria-labelledby="s-skills"><h2 id="s-skills">스킬 카탈로그</h2>
+    <p>설치할 때 스킬 카탈로그(skills.modoo.today)도 함께 연결돼요. 스킬 파일을 컴퓨터에 복사하지 않고, AI 앱이 필요할 때 받아 써요.</p>
+    <ul>
+      <li><strong>연결</strong>Claude Code와 Codex는 자동으로 연결돼요. 다른 앱은 설치가 끝날 때 보여 주는 안내대로 원격 서버 <code>https://skills.modoo.today/mcp</code>를 추가해요.</li>
+      <li><strong>로그인</strong>처음 쓸 때 modoo.today 로그인 창이 한 번 열려요.</li>
+      <li><strong>빼고 설치하기</strong>설치 명령 끝에 <code>--no-skills</code>를 붙이면 확장만 연결해요.</li>
+    </ul>
+  </section>
+
+  <section class="mt-section mt-c-features" data-c="features" aria-labelledby="s-notes"><h2 id="s-notes">알아 두면 좋은 것</h2>
+    <ul>
+      <li><strong>사이드패널이 열려 있는 동안 연결돼요</strong>패널을 닫으면 연결도 끊기고, 다시 열면 자동으로 이어져요.</li>
+      <li><strong>새 버전은 알아서 받아요</strong>안전한 최신 버전을 확인해 두고, 다음에 AI 앱을 켤 때부터 써요.</li>
+      <li><strong>아이디와 비밀번호를 저장하지 않아요</strong>조회는 내가 로그인해 둔 내 브라우저 안에서 일어나요. 자세한 내용은 <a href="{{ '/privacy/' | relative_url }}">개인정보와 안전</a>에 있어요.</li>
+    </ul>
+  </section>
+
+  <section class="mt-section mt-c-steps" data-c="steps" aria-labelledby="s-remove"><h2 id="s-remove">연결 해지하기</h2>
+    <ol>
+      <li><strong>AI 앱 설정에서 지우기</strong><p>터미널에서 아래 명령을 실행하면 AI 앱에 등록한 데이터랩툴즈 설정을 지워요.</p><div class="dl-terminal"><pre>npx -y {{ install.package }}@{{ install.version }} uninstall</pre></div></li>
+      <li><strong>확장에서 끄기</strong><p>확장 설정에서 <b>다른 AI 앱에 연결 (MCP)</b>을 꺼요. 설정이 어딘가 남아 있어도 AI 앱이 아무것도 조회할 수 없어요.</p></li>
+    </ol>
+  </section>
+  <div class="dl-pager"><a href="{{ '/' | relative_url }}"><small>이전</small>홈</a><a class="next" href="{{ '/troubleshoot/' | relative_url }}"><small>다음</small>문제 해결</a></div>
+</article>
+</div>
+<nav class="dl-toc" aria-label="이 페이지 목차"><p>이 페이지</p><ol>
+  <li><a href="#s-prep">준비물</a></li>
+  <li><a href="#s-on">1단계: 켜기</a></li>
+  <li><a href="#s-install">2단계: 설치</a></li>
+  <li><a href="#s-allow">3단계: 허용</a></li>
+  <li><a href="#s-browser">브라우저 프로필 추가</a></li>
+  <li><a href="#s-skills">스킬 카탈로그</a></li>
+  <li><a href="#s-remove">연결 해지</a></li>
+</ol></nav>
+</div>

@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: web_read.md
+permalink: /tools/keyword-research/web_read/index.md
+---

@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: photo_ungroup.md
+permalink: /tools/photo-editor/photo_ungroup/index.md
+---

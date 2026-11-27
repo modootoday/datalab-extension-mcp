@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: editor_set_image_caption.md
+permalink: /tools/editor-detail/editor_set_image_caption/index.md
+---

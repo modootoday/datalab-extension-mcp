@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: editor_capture_document.md
+permalink: /tools/editor-detail/editor_capture_document/index.md
+---

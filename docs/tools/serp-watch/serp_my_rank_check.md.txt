@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: serp_my_rank_check.md
+permalink: /tools/serp-watch/serp_my_rank_check/index.md
+---

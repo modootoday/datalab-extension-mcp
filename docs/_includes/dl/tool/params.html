@@ -1,0 +1,11 @@
+<section aria-labelledby="t-params"><h2 id="t-params">AI가 넘기는 값</h2>
+  {%- if include.tool.params.size == 0 %}
+  <p class="dl-muted">AI가 넘기는 값이 없어요.</p>
+  {%- else %}
+  <p class="dl-muted">직접 입력할 일은 없어요. AI가 질문에서 골라 넘기는 값이에요.</p>
+  <div class="dl-table-wrap"><table><thead><tr><th>이름</th><th>형식</th><th>필수</th><th>설명</th></tr></thead>
+    <tbody>
+    {%- for p in include.tool.params %}<tr><td><code>{{ p.name }}</code></td><td>{{ p.type }}</td><td>{{ p.required }}</td><td>{{ p.description | escape }}</td></tr>{% endfor %}
+    </tbody></table></div>
+  {%- endif %}
+</section>

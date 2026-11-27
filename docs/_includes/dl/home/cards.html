@@ -1,0 +1,15 @@
+<div class="dl-section">
+  <div class="dl-section-head"><h2>연결하면 할 수 있는 일</h2><p>브라우저에 로그인해 둔 네이버 계정을 기준으로, 데이터랩툴즈가 보여 주는 수치를 AI가 직접 읽어요.</p></div>
+  <div class="dl-cards">
+    {%- for card in site.data.home.cards %}
+    {%- assign set = site.data.toolsets.toolsets | where: "slug", card.toolset | first %}
+    <a class="dl-card" href="{{ set.url | relative_url }}"><div class="dl-route-meta">{% include dl/badge.html class=set.grade_badge text=set.grade_text %}</div><h3>{{ set.label }}</h3><p>{{ card.text }}</p></a>
+    {%- endfor %}
+  </div>
+  {%- assign lead = site.data.prompts.prompts[0] %}
+  {%- assign lead_count = lead.tools | size %}
+  <div class="dl-prompt-link is-spaced">
+    <div><b>한 줄이면 일이 끝나요</b><p>"{{ lead.prompt }}" 한 줄에 AI가 도구 {{ site.data.home.count_words[lead_count] }} 개를 차례로 불러요.</p></div>
+    <a class="dl-btn dl-btn-primary dl-btn-sm" href="{{ '/guides/' | relative_url }}">한 줄 프롬프트 모음</a>
+  </div>
+</div>

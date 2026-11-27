@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: photo_project_rename.md
+permalink: /tools/photo-editor/photo_project_rename/index.md
+---

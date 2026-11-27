@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: internal_links.md
+permalink: /tools/editor-control/internal_links/index.md
+---

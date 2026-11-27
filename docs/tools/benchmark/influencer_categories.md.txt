@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: influencer_categories.md
+permalink: /tools/benchmark/influencer_categories/index.md
+---

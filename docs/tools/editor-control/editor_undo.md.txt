@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: editor_undo.md
+permalink: /tools/editor-control/editor_undo/index.md
+---

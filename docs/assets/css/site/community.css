@@ -1,0 +1,21 @@
+.dl-cat { display: grid; grid-template-columns: 2.5rem 1fr; gap: .25rem .85rem; padding: 1rem 1.1rem; border: 1px solid var(--dl-border); border-radius: var(--dl-radius-lg); background: var(--dl-card); min-width: 0; }
+.dl-cat > * { min-width: 0; }
+.dl-cat-icon { grid-row: span 3; width: 2.5rem; height: 2.5rem; border-radius: 10px; display: grid; place-items: center; background: var(--dl-primary-soft); color: var(--dl-primary); }
+.dl-cat-icon svg { width: 1.25rem; height: 1.25rem; }
+.dl-cat h3 { font-size: 1rem; padding-top: .1rem; }
+.dl-cat p { font-size: .875rem; color: var(--dl-muted-foreground); }
+.dl-cat.is-out .dl-cat-icon { background: var(--dl-accent); color: var(--dl-muted-foreground); }
+.dl-threads { list-style: none; padding: 0; margin: 0; border: 1px solid var(--dl-border); border-radius: var(--dl-radius-lg); overflow: hidden; background: var(--dl-card); }
+.dl-threads li { display: grid; grid-template-columns: 1fr auto; gap: .2rem 1rem; padding: .85rem 1rem; border-bottom: 1px solid var(--dl-border); }
+.dl-threads li:last-child { border-bottom: 0; }
+.dl-threads li > * { min-width: 0; }
+.dl-threads b { font-weight: 650; font-size: .9375rem; }
+.dl-threads .dl-route-meta { grid-column: 1; font-size: .8125rem; color: var(--dl-muted-foreground); }
+.dl-threads .dl-count { grid-row: span 2; align-self: center; font-size: .8125rem; color: var(--dl-muted-foreground); font-variant-numeric: tabular-nums; text-align: end; }
+.dl-two { display: grid; gap: 1.5rem; }
+.dl-two > * { min-width: 0; }
+@media (min-width: 56rem) { .dl-two { grid-template-columns: 1fr 1fr; gap: 2.5rem; } }
+.dl-rules { display: grid; gap: .6rem; list-style: none; padding: 0; }
+.dl-rules li { display: grid; grid-template-columns: 1.4rem 1fr; gap: .5rem; }
+.dl-rules li::before { content: "O"; font-weight: 800; color: var(--dl-tip); font-size: .85rem; padding-top: .15rem; }
+.dl-rules li.no::before { content: "X"; color: var(--dl-caution); }

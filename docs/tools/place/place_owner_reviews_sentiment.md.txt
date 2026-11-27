@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: place_owner_reviews_sentiment.md
+permalink: /tools/place/place_owner_reviews_sentiment/index.md
+---

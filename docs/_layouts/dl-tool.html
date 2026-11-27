@@ -1,0 +1,38 @@
+---
+layout: dl-site
+---
+{%- assign tool = site.data.tools[page.tool] -%}
+{%- assign set = site.data.toolsets.toolsets | where: "slug", tool.toolset | first -%}
+{%- assign prompts = site.data.prompts.prompts | where_exp: "p", "tool.prompts contains p.id" -%}
+<div class="dl-doc-layout has-toc">
+  {% include dl/tool/sidebar.html set=set tool=tool %}
+  <div>
+    {% include dl/tool/sidebar.html set=set tool=tool mobile=true %}
+    <article class="dl-doc">
+      <ol class="dl-breadcrumb"><li><a href="{{ '/tools/' | relative_url }}">도구 문서</a></li><li><a href="{{ set.url | relative_url }}">{{ set.label }}</a></li><li aria-current="page">{{ tool.label }}</li></ol>
+      <div class="dl-stack">
+        <div class="dl-title-row"><h1>{{ tool.label }}</h1>{% include dl/badge.html class=tool.grade_badge text=tool.grade_text %}</div>
+        <div class="dl-route-meta"><code>{{ tool.name }}</code>{% include dl/badge.html class="b-chip" text=tool.scope %}{% if tool.needs_tab %}{% include dl/badge.html class="b-chip" text="창을 열어 둬야 해요" %}{% else %}{% include dl/badge.html class="b-chip" text="탭 없이 동작" %}{% endif %}</div>
+        <p class="dl-lead">{{ tool.summary }}</p>
+        <div class="dl-page-actions">{% include dl/twin-actions.html %}</div>
+      </div>
+      {%- if tool.grade == "ask" %}
+      {% include dl/callout.html type="note" title="매번 물어봄" body="원고를 고치거나 청구가 생기는 도구예요. 실행할 때마다 사이드패널에서 허용을 받아요." %}
+      {%- endif %}
+      {% include dl/tool/prompts.html tool=tool prompts=prompts %}
+      {% include dl/tool/params.html tool=tool %}
+      {% include dl/tool/answer.html tool=tool %}
+      {% include dl/tool/related.html tool=tool %}
+      {% include dl/tool/ask.html tool=tool %}
+      <p class="dl-muted dl-small">이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 {{ site.data.install.version }} 기준.</p>
+      <div class="dl-pager">{% if tool.prev %}<a href="{{ tool.prev.url | relative_url }}"><small>이전</small>{{ tool.prev.label }}</a>{% endif %}{% if tool.next %}<a class="next" href="{{ tool.next.url | relative_url }}"><small>다음</small>{{ tool.next.label }}</a>{% endif %}</div>
+    </article>
+  </div>
+  <nav class="dl-toc" aria-label="이 페이지 목차"><p>이 페이지</p><ol>
+    {%- if prompts.size > 0 %}<li><a href="#t-ask">한 줄 프롬프트</a></li>{% endif %}
+    <li><a href="#t-params">AI가 넘기는 값</a></li>
+    {%- if tool.answer %}<li><a href="#t-answer">답변 예시</a></li>{% endif %}
+    {%- if tool.related.size > 0 %}<li><a href="#t-related">함께 쓰는 도구</a></li>{% endif %}
+    <li><a href="#t-community">이 도구에 대해 묻기</a></li>
+  </ol></nav>
+</div>

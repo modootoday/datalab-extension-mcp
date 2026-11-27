@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: editor_set_cover_image.md
+permalink: /tools/editor-detail/editor_set_cover_image/index.md
+---

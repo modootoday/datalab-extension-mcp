@@ -1,0 +1,30 @@
+title: "[사용 사례] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        이렇게 물었더니 이렇게 쓰였다는 경험을 나눠 주세요. 수치는 가리고 흐름만 보여 주세요.
+  - type: input
+    id: app
+    attributes:
+      label: 쓰는 AI 앱
+  - type: textarea
+    id: prompt
+    attributes:
+      label: 물어본 말
+    validations:
+      required: true
+  - type: textarea
+    id: result
+    attributes:
+      label: 어떻게 쓰였나요
+      description: 결과로 무엇을 정했거나 바꿨는지 적어 주세요.
+    validations:
+      required: true
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: 올리기 전에
+      options:
+        - label: 블로그 주소, 계정 번호, 실제 수치가 보이지 않게 지웠어요.
+          required: true

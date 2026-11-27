@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: cafe_volume.md
+permalink: /tools/benchmark/cafe_volume/index.md
+---

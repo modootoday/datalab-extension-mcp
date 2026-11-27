@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: seo_scorecard.md
+permalink: /tools/editor-control/seo_scorecard/index.md
+---

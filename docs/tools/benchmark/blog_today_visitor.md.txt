@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: blog_today_visitor.md
+permalink: /tools/benchmark/blog_today_visitor/index.md
+---

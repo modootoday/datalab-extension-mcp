@@ -1,0 +1,5 @@
+<div class="dl-faq">
+  {%- for item in site.data.faq.items %}
+  <details><summary>{{ item.q }}</summary><div><p>{{ item.a }}</p></div></details>
+  {%- endfor %}
+</div>

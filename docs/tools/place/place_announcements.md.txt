@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: place_announcements.md
+permalink: /tools/place/place_announcements/index.md
+---

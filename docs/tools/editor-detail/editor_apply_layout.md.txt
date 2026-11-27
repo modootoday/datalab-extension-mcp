@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: editor_apply_layout.md
+permalink: /tools/editor-detail/editor_apply_layout/index.md
+---

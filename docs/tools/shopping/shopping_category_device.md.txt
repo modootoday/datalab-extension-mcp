@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: shopping_category_device.md
+permalink: /tools/shopping/shopping_category_device/index.md
+---

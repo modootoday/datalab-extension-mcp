@@ -1,0 +1,101 @@
+{
+  "docs": [
+    {
+      "title": "시작하기",
+      "items": [
+        {
+          "title": "설치",
+          "url": "/#install"
+        },
+        {
+          "title": "처음 연결하기",
+          "url": "/start/"
+        },
+        {
+          "title": "문제 해결",
+          "url": "/troubleshoot/"
+        }
+      ]
+    },
+    {
+      "title": "도구 문서",
+      "items": [
+        {
+          "title": "전체 묶음",
+          "url": "/tools/"
+        },
+        {
+          "title": "오늘의 블로그 브리핑",
+          "url": "/tools/blog-brief/"
+        },
+        {
+          "title": "키워드·글감 리서치",
+          "url": "/tools/keyword-research/"
+        },
+        {
+          "title": "글쓰기 창 제어",
+          "url": "/tools/editor-control/"
+        },
+        {
+          "title": "검색광고 입찰",
+          "url": "/tools/ad-bidding/"
+        }
+      ]
+    },
+    {
+      "title": "커뮤니티",
+      "items": [
+        {
+          "title": "묻고 답하기",
+          "url": "/community/"
+        }
+      ]
+    }
+  ],
+  "guide": [
+    {
+      "title": "한 줄 프롬프트",
+      "items": [
+        {
+          "title": "프롬프트 모음",
+          "url": "/guides/#g-gallery"
+        },
+        {
+          "title": "좋은 프롬프트 쓰는 법",
+          "url": "/guides/#g-tips"
+        }
+      ]
+    },
+    {
+      "title": "처음",
+      "items": [
+        {
+          "title": "처음 연결하기",
+          "url": "/start/"
+        },
+        {
+          "title": "문제 해결",
+          "url": "/troubleshoot/"
+        },
+        {
+          "title": "설치 인증키 방식에서 옮기기"
+        }
+      ]
+    },
+    {
+      "title": "자세한 가이드",
+      "items": [
+        {
+          "title": "주간 성과 정리",
+          "url": "/guides/#g-weekly"
+        },
+        {
+          "title": "글쓰기 창에 초안 넣기"
+        },
+        {
+          "title": "플레이스 리뷰 살펴보기"
+        }
+      ]
+    }
+  ]
+}

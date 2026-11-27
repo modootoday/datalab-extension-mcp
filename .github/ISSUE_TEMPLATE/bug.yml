@@ -1,0 +1,35 @@
+name: 오류 신고
+description: 도구가 틀린 값을 주거나 멈췄을 때 남겨 주세요.
+title: "[오류] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        블로그 주소, 네이버 아이디, 광고 계정 번호, 실제 수치, 설치 인증키는 지우고 올려 주세요.
+        보안 문제는 여기 대신 Security 탭의 비공개 신고로 알려 주세요.
+  - type: input
+    id: version
+    attributes:
+      label: 연결 프로그램 버전
+      description: 터미널에서 npm ls -g @modootoday/datalab-extension-mcp 로 볼 수 있어요.
+    validations:
+      required: true
+  - type: input
+    id: app
+    attributes:
+      label: 쓰는 AI 앱과 운영체제
+      placeholder: Claude Desktop, Windows 11
+    validations:
+      required: true
+  - type: input
+    id: tool
+    attributes:
+      label: 도구 이름
+      placeholder: keyword_trend
+  - type: textarea
+    id: what
+    attributes:
+      label: 무슨 일이 있었나요
+      description: 물어본 말, 기대한 결과, 실제 결과나 오류 문구를 적어 주세요.
+    validations:
+      required: true

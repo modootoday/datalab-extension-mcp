@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: photo_history_undo.md
+permalink: /tools/photo-editor/photo_history_undo/index.md
+---

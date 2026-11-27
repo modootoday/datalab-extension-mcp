@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: cafe_menus.md
+permalink: /tools/benchmark/cafe_menus/index.md
+---

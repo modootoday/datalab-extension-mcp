@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: keyword_trend_batch.md
+permalink: /tools/keyword-research/keyword_trend_batch/index.md
+---

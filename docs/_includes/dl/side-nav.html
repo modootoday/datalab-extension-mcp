@@ -1,0 +1,10 @@
+{%- comment -%}groups: [{title, items: [{title, url?, current?}]}]; an item without url is not written yet.{%- endcomment -%}
+<nav class="dl-side-nav">
+{%- for group in include.groups %}
+<div><p>{{ group.title }}</p><ul>
+{%- for item in group.items %}
+<li>{% if item.url %}<a href="{{ item.url | relative_url }}"{% if item.url == include.current %} aria-current="page"{% endif %}>{{ item.title }}</a>{% else %}<a aria-disabled="true">{{ item.title }}</a>{% endif %}</li>
+{%- endfor %}
+</ul></div>
+{%- endfor %}
+</nav>

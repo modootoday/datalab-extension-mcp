@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: place_shop_window.md
+permalink: /tools/place/place_shop_window/index.md
+---

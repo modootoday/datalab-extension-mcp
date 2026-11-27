@@ -1,0 +1,18 @@
+{%- assign install = site.data.install -%}
+<div class="dl-terminal dl-tabs" id="install">
+  <div role="tablist" aria-label="설치 방법" class="dl-tablist">
+    <button role="tab" type="button" id="tab-cmd" aria-controls="panel-cmd" aria-selected="true" tabindex="0">명령어로 설치</button>
+    <button role="tab" type="button" id="tab-ai" aria-controls="panel-ai" aria-selected="false" tabindex="-1">AI에게 맡기기</button>
+  </div>
+  <div role="tabpanel" id="panel-cmd" aria-labelledby="tab-cmd" class="dl-tabpanel">
+    <div class="dl-terminal-bar"><b>터미널에 붙여넣을 명령</b><button class="dl-copy" type="button" data-copy="install-cmd">복사</button></div>
+    <pre id="install-cmd">{{ install.installer }}</pre>
+    <div class="dl-terminal-foot">이 컴퓨터에 연결 프로그램을 설치하고, 설치된 AI 앱을 찾아 한 번에 등록해요. Node.js 22 이상이 필요해요.</div>
+  </div>
+  <div role="tabpanel" id="panel-ai" aria-labelledby="tab-ai" class="dl-tabpanel" hidden>
+    <div class="dl-terminal-bar"><b>AI 앱에 붙여넣을 설치 지시</b><button class="dl-copy" type="button" data-copy="prompt-text">복사</button></div>
+    <pre id="prompt-text">{{ install.prompt | escape }}</pre>
+    <div class="dl-terminal-foot">AI는 설치와 등록만 해요. 연결 허용은 사이드패널에서 내가 직접 해요.</div>
+  </div>
+  <div class="dl-terminal-foot is-last">한 번 설치하면 새 버전은 알아서 받아 두고, 다음에 AI 앱을 켤 때부터 써요.</div>
+</div>

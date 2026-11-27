@@ -1,0 +1,5 @@
+---
+layout: twin
+twin_of: commerce_orders.md
+permalink: /tools/store-settlement/commerce_orders/index.md
+---

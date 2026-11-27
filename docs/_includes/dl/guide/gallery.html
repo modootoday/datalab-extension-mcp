@@ -1,0 +1,14 @@
+<div class="dl-prompts">
+  {%- for entry in site.data.prompts.prompts %}
+  {%- assign area = site.data.toolsets.toolsets | where: "slug", entry.area | first %}
+  <div class="dl-prompt" id="p-{{ entry.id }}">
+    <div class="dl-prompt-head"><h3>{{ entry.title }}</h3>{% include dl/badge.html class="b-chip" text=area.short %}</div>
+    <div class="dl-cmd"><pre id="pt-{{ entry.id }}">{{ entry.prompt | escape }}</pre><button class="dl-copy" type="button" data-copy="pt-{{ entry.id }}">복사</button></div>
+    <div class="dl-prompt-tools"><span class="dl-small dl-muted">쓰는 도구</span>{% for name in entry.tools %}{% assign tool = site.data.tools[name] %}<span class="dl-tool"><code>{{ name }}</code>{% include dl/badge.html class=tool.grade_badge text=tool.grade_text %}</span>{% endfor %}</div>
+    <p class="dl-prompt-result"><b>결과</b> {{ entry.result }}</p>
+    {%- if entry.guide %}
+    <a class="dl-small" href="{{ entry.guide | relative_url }}">자세한 순서 보기</a>
+    {%- endif %}
+  </div>
+  {%- endfor %}
+</div>

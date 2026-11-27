@@ -1,0 +1,18 @@
+{%- if include.prompts.size > 0 or include.tool.answer -%}
+<section aria-labelledby="t-ask"><h2 id="t-ask">이 도구를 쓰는 한 줄 프롬프트</h2>
+  {%- if include.prompts.size > 0 %}
+  <div class="dl-prompts">
+    {%- for entry in include.prompts %}
+    <div class="dl-prompt">
+      <div class="dl-prompt-head"><h3>{{ entry.title }}</h3><a class="dl-small" href="{{ '/guides/' | relative_url }}#p-{{ entry.id }}">모음에서 보기</a></div>
+      <div class="dl-cmd"><pre id="tp-{{ entry.id }}">{{ entry.prompt | escape }}</pre><button class="dl-copy" type="button" data-copy="tp-{{ entry.id }}">복사</button></div>
+      <p class="dl-prompt-result"><b>결과</b> {{ entry.result }}</p>
+    </div>
+    {%- endfor %}
+  </div>
+  {%- endif %}
+  {%- if include.tool.answer %}
+  <p class="dl-muted dl-small">짧게 물어도 돼요: "{{ site.datalab.prompt_lead }}{{ include.tool.answer.ask }}"</p>
+  {%- endif %}
+</section>
+{%- endif -%}

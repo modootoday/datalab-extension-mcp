@@ -1,0 +1,13 @@
+# The start page's toolset cards. Labels and grades come from the catalog; only the sentence is written here.
+cards:
+  - toolset: blog-brief
+    text: "방문, 조회, 인기글, 실시간 흐름을 한 번에 읽어요."
+  - toolset: keyword-research
+    text: "검색량과 관심도 추이를 보고 다음 글의 키워드를 함께 골라요."
+  - toolset: ad-bidding
+    text: "입찰가와 예상 성과를 읽어요. 광고비 집행은 어떤 경우에도 열리지 않아요."
+  - toolset: editor-control
+    text: "열린 원고에 제목과 본문을 넣어요. 실행 전에 매번 사이드패널에서 물어보고, 발행은 직접 해요."
+# Korean count words by number, for "도구 다섯 개".
+count_words:
+  ["영", "한", "두", "세", "네", "다섯", "여섯", "일곱", "여덟", "아홉", "열"]

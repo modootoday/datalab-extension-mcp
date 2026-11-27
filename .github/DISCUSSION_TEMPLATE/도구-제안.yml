@@ -1,0 +1,23 @@
+title: "[도구 제안] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        있었으면 하는 도구나 묶음을 제안해 주세요. 공감 표시가 많은 제안부터 검토해요.
+  - type: textarea
+    id: need
+    attributes:
+      label: 하고 싶은 일
+      description: 어떤 수치를 보고 무엇을 정하고 싶은지 적어 주세요.
+    validations:
+      required: true
+  - type: textarea
+    id: prompt
+    attributes:
+      label: AI 앱에 이렇게 묻고 싶어요
+      placeholder: 지난달 내 글 중 검색 유입이 줄어든 글을 찾아 줘
+  - type: textarea
+    id: today
+    attributes:
+      label: 지금은 어떻게 하고 있나요
+      description: 데이터랩툴즈 화면이나 다른 도구로 대신하고 있다면 적어 주세요.
