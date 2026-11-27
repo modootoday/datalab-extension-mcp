@@ -54,8 +54,11 @@ describe("the two listener lookups agree", () => {
   const theirs = connectorSource();
   for (const name of [
     "parseNetstatListeners",
-    "parseLsofPids",
+    "parseLsofListeners",
     "listenerQuery",
+    "identityQuery",
+    "isOwnConnector",
+    "soleListener",
   ]) {
     it(`${name} is the same text in both`, () => {
       expect(fn(MINE, name)).toBe(fn(theirs, name));

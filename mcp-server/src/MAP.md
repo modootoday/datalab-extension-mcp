@@ -11,7 +11,7 @@ process entry an adapter spawns; `index.ts` is the surface.
 | --------------- | -------------------------------------------------------------------------- |
 | `daemon.ts`     | the entry that wires the modules below and adds only their glue            |
 | `config.ts`     | configuration resolved purely; the published extension id is the default   |
-| `pairing/`      | the root credential, the approved AI apps, and the desk the panel asks     |
+| `pairing/`      | the root credential, handshake refusals, the approved AI apps, the desk    |
 | `singleton.ts`  | one daemon per machine: the TCP bind is the lock                           |
 | `owner-file/`   | writes private state files readable by the local user alone                |
 | `takeover.ts`   | the proof a local adapter presents to retire a running daemon              |

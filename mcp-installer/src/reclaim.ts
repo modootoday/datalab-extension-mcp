@@ -12,13 +12,21 @@
  * more than the token gate protects against. Asking politely first is still
  * right, and a stranger on the port is never touched.
  */
-import { endPortListener } from "./port-listener.js";
+import { joinPath } from "./hosts/paths.js";
+import {
+  endPortListener,
+  type ListenerDeps,
+  ownListener,
+} from "./port-listener.js";
 import type { Io } from "./types.js";
 
 /** Where the connector listens, and how it identifies itself there. */
 const DEFAULT_PORT = 8765;
 const HOST = "127.0.0.1";
 const CONNECTOR_NAME = "datalab-extension-mcp-server";
+/** Where a running connector leaves its takeover secret, readable only by this user. */
+const STATE_DIR = ".datalab-mcp";
+const TAKEOVER_FILE = "takeover";
 const PROBE_TIMEOUT_MS = 2_000;
 /** Polls after a kill: 20 x 150ms = 3s, well past a socket close. */
 const RELEASE_ATTEMPTS = 20;
@@ -101,25 +109,40 @@ async function post(
 
 /**
  * Free, ours, or somebody else's — the last of which we never touch — plus
- * the version it reports, which decides whether ours is worth keeping.
+ * the version and pid it reports, which decide whether ours is worth keeping
+ * and which process may be ended.
  */
 export async function probePort(
   fetchImpl: typeof fetch,
   port: number,
-): Promise<{ state: "free" | "ours" | "foreign"; version: string | null }> {
+): Promise<{
+  state: "free" | "ours" | "foreign";
+  version: string | null;
+  pid: number | null;
+}> {
   const res = await get(fetchImpl, url(port, "/bridge/health"));
-  if (res === null) return { state: "free", version: null };
-  if (!res.ok) return { state: "foreign", version: null };
+  if (res === null) return { state: "free", version: null, pid: null };
+  if (!res.ok) return { state: "foreign", version: null, pid: null };
   try {
-    const body = (await res.json()) as { name?: unknown; version?: unknown };
-    if (body.name !== CONNECTOR_NAME)
-      return { state: "foreign", version: null };
+    const body = (await res.json()) as {
+      name?: unknown;
+      version?: unknown;
+      pid?: unknown;
+    };
+    if (body.name !== CONNECTOR_NAME) {
+      return { state: "foreign", version: null, pid: null };
+    }
+    const pid =
+      typeof body.pid === "number" && Number.isInteger(body.pid)
+        ? body.pid
+        : null;
     return {
       state: "ours",
       version: typeof body.version === "string" ? body.version : null,
+      pid,
     };
   } catch {
-    return { state: "foreign", version: null };
+    return { state: "foreign", version: null, pid: null };
   }
 }
 
@@ -128,11 +151,12 @@ export async function probePort(
  *
  * Order is deliberate: a connector that accepts this token and is not older
  * than the one being installed is left running, since ending it would drop the
- * sessions it is serving for no gain.
+ * sessions it is serving for no gain. Without a token only the version decides,
+ * and the takeover secret goes only to a listener proven to be ours.
  */
 export async function reclaimPort(
   io: Io,
-  token: string,
+  token: string | undefined,
   deps: ReclaimDeps = {},
 ): Promise<ReclaimOutcome> {
   const asked = typeof deps.port === "string" ? Number(deps.port) : deps.port;
@@ -148,31 +172,106 @@ export async function reclaimPort(
   if (probe.state === "free") return { kind: "not-needed" };
   if (probe.state === "foreign") return { kind: "foreign" };
 
+  const older = olderThan(probe.version, deps.version);
+  if (token === undefined) {
+    if (!older) return { kind: "not-needed" };
+    return retireWithoutToken(io, port, probe.pid, fetchImpl, sleep);
+  }
+
   const authorised = await post(fetchImpl, url(port, "/mcp/authority"), {
     token,
   });
   // Accepting this token is not on its own a reason to keep it: install is how
   // the version on a machine moves, and a connector that answers holds the one
   // it was started with for the life of the session.
-  if (authorised?.status === 204 && !olderThan(probe.version, deps.version)) {
+  if (authorised?.status === 204 && !older) {
     return { kind: "not-needed" };
   }
 
   const stood = await post(fetchImpl, url(port, "/mcp/shutdown"), { token });
-  const gone = async (): Promise<boolean> => {
-    for (let i = 0; i < RELEASE_ATTEMPTS; i += 1) {
-      await sleep(RELEASE_INTERVAL_MS);
-      if ((await probePort(fetchImpl, port)).state === "free") return true;
-    }
-    return false;
-  };
-  if (stood?.status === 200 && (await gone())) return { kind: "retired" };
+  if (stood?.status === 200 && (await released(fetchImpl, port, sleep))) {
+    return { kind: "retired" };
+  }
+  return endListener(io, port, probe.pid, fetchImpl, sleep);
+}
 
-  const ended = await endPortListener(io.platform, port, {
+/** Ask with the takeover secret, then end it, both only once it is proven ours. */
+async function retireWithoutToken(
+  io: Io,
+  port: number,
+  reportedPid: number | null,
+  fetchImpl: typeof fetch,
+  sleep: (ms: number) => Promise<void>,
+): Promise<ReclaimOutcome> {
+  const pid = await ownListener(
+    io.platform,
+    port,
+    reportedPid,
+    listenerDeps(io),
+  );
+  if (pid === null) return { kind: "failed" };
+  const secret = await readTakeover(io);
+  if (secret !== null) {
+    const stood = await post(fetchImpl, url(port, "/mcp/shutdown"), {
+      token: secret,
+    });
+    if (stood?.status === 200 && (await released(fetchImpl, port, sleep))) {
+      return { kind: "retired" };
+    }
+  }
+  return endListener(io, port, reportedPid, fetchImpl, sleep);
+}
+
+/** The secret a running connector leaves for this user, or null. */
+async function readTakeover(io: Io): Promise<string | null> {
+  try {
+    const raw = await io.readFile(
+      joinPath(io, io.homedir(), STATE_DIR, TAKEOVER_FILE),
+    );
+    const secret = raw.trim();
+    return secret === "" ? null : secret;
+  } catch {
+    return null;
+  }
+}
+
+function listenerDeps(io: Io): ListenerDeps {
+  return {
     capture: io.capture,
     killPid: io.killPid,
     selfPid: process.pid,
-  });
+    uid: io.uid,
+  };
+}
+
+async function released(
+  fetchImpl: typeof fetch,
+  port: number,
+  sleep: (ms: number) => Promise<void>,
+): Promise<boolean> {
+  for (let i = 0; i < RELEASE_ATTEMPTS; i += 1) {
+    await sleep(RELEASE_INTERVAL_MS);
+    if ((await probePort(fetchImpl, port)).state === "free") return true;
+  }
+  return false;
+}
+
+/** Ends the holder only when the gate in port-listener proves it ours. */
+async function endListener(
+  io: Io,
+  port: number,
+  reportedPid: number | null,
+  fetchImpl: typeof fetch,
+  sleep: (ms: number) => Promise<void>,
+): Promise<ReclaimOutcome> {
+  const ended = await endPortListener(
+    io.platform,
+    port,
+    reportedPid,
+    listenerDeps(io),
+  );
   if (!ended) return { kind: "failed" };
-  return (await gone()) ? { kind: "forced" } : { kind: "failed" };
+  return (await released(fetchImpl, port, sleep))
+    ? { kind: "forced" }
+    : { kind: "failed" };
 }

@@ -77,6 +77,8 @@ export interface Io {
   capture(command: string, args: string[]): Promise<string>;
   /** Ends a process by id. Throws when it is already gone or not ours. */
   killPid(pid: number): void;
+  /** This user's numeric id; absent where the platform has none. */
+  uid?: number;
   /** Asks the one yes/no question. Receives the bare question text. */
   ask(question: string): Promise<string>;
   /**

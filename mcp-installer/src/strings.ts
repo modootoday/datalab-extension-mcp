@@ -7,7 +7,6 @@ export const INSTALL_TITLE = "데이터랩툴즈 연결 도우미";
 export const UNINSTALL_TITLE = "데이터랩툴즈 연결 정리";
 
 export const INSTALL_STEPS = {
-  key: "연결 키",
   find: "AI 프로그램 찾기",
   connect: "연결하기",
   finish: "마무리",
@@ -23,27 +22,7 @@ export const SURFACE_NOTE = {
   catalog: "마케팅·기획·법무 업무 요령",
 } as const;
 
-// --- 1. connection key ----------------------------------------------------
-
-export const TOKEN_PROMPT_GUIDE: readonly string[] = [
-  "크롬 확장 설정 › 다른 AI 앱에 연결 (MCP)",
-  "› 1번 [연결 키]를 복사해 붙여넣어 주세요.",
-];
-export const TOKEN_PROMPT_QUESTION = "  연결 키:";
-export const TOKEN_PROMPT_RETRY =
-  "연결 키 형식이 맞지 않아요. 다시 복사해 붙여넣어 주세요.";
-export const TOKEN_CONFIRMED = "연결 키를 확인했어요.";
-export const TOKEN_REQUIRED = "연결 키가 필요해요.";
-export const TOKEN_REQUIRED_CARD = {
-  title: "이렇게 해 주세요",
-  lines: [
-    "크롬 확장 설정 › 다른 AI 앱에 연결 (MCP)",
-    "› 2번 명령의 [복사]를 눌러, 복사된 명령을 그대로",
-    "  붙여넣어 실행해 주세요.",
-  ],
-} as const;
-
-// --- 2. finding programs ----------------------------------------------------
+// --- 1. finding programs ----------------------------------------------------
 
 export function foundPrograms(count: number): string {
   return `${String(count)}개를 찾았어요.`;
@@ -89,7 +68,7 @@ export function cliInstalledRetry(name: string): string {
   return `${name}을(를) 설치했어요. 터미널을 새로 열고 같은 명령을 다시 실행해 주세요.`;
 }
 
-// --- 3. connecting -----------------------------------------------------------
+// --- 2. connecting -----------------------------------------------------------
 
 const FALLBACK_TAIL = [
   "AI 프로그램이 시작할 때마다 내려받아 실행해요.",
@@ -127,8 +106,9 @@ export const RECLAIM = {
     "그 프로그램을 끄고 다시 실행해 주세요.",
   ],
   failed: [
-    "예전 연결 프로그램을 정리하지 못했어요.",
-    "AI 프로그램을 모두 종료한 뒤 다시 실행해 주세요.",
+    "설치는 끝났어요. 예전 연결 프로그램이 아직 포트 8765를 쓰고 있어요.",
+    "AI 앱을 모두 종료하고 5분쯤 기다린 뒤 다시 켜면 새 버전으로 연결돼요.",
+    "그래도 연결되지 않으면 설치 명령을 한 번 더 실행해 주세요.",
   ],
 } as const;
 
@@ -148,7 +128,7 @@ export const PERMISSION_DENIED_HINT =
 export const UNEXPECTED_ERROR =
   "예상하지 못한 문제가 생겼어요. 다시 실행해 보고, 그래도 안 되면 알려 주세요.";
 
-// --- 4. finishing ------------------------------------------------------------
+// --- 3. finishing ------------------------------------------------------------
 
 export function summaryAllConnected(count: number): string {
   return `${String(count)}개 프로그램에 연결했어요.`;
@@ -164,6 +144,10 @@ export const MUST_DO_TITLE = "꼭 해 주세요";
 export const RESTART_LINES: readonly string[] = [
   "AI 프로그램을 완전히 종료했다가 다시 실행해 주세요.",
   "   Windows 는 작업 표시줄 트레이 아이콘에서 종료해요.",
+];
+export const PAIRING_LINES: readonly string[] = [
+  "AI 프로그램에서 데이터랩툴즈를 처음 쓰면 크롬 확장 창이",
+  "   연결을 허용할지 물어요. [허용하기]를 눌러 주세요.",
 ];
 export const CATALOG_LOGIN_LINES: readonly string[] = [
   "스킬 카탈로그를 처음 쓸 때 modoo.today 로그인 창이",

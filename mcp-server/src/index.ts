@@ -89,9 +89,12 @@ export {
   type RootCredential,
 } from "./pairing/index.js";
 export {
+  identityQuery,
+  isOwnConnector,
   killPortOwner,
-  listenerPids,
   listenerQuery,
-  parseLsofPids,
+  ownListener,
+  parseLsofListeners,
   parseNetstatListeners,
+  soleListener,
 } from "./port-owner.js";

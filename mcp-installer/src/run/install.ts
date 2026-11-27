@@ -1,7 +1,7 @@
 /**
- * The install run in four steps: connection key, finding programs, connecting
- * both surfaces to each, and the cards the person acts on. One program failing
- * never stops the others; each gets its own verdict.
+ * The install run in three steps: finding programs, connecting both surfaces
+ * to each, and the cards the person acts on. One program failing never stops
+ * the others; each gets its own verdict.
  */
 import { catalogCommand, type ServerEntryOptions } from "../hosts.js";
 import { installGlobally } from "../global-install.js";
@@ -17,11 +17,11 @@ import {
   MUST_DO_TITLE,
   NOTHING_CHANGED,
   ONE_SURFACE,
+  PAIRING_LINES,
   RECLAIM,
   RESTART_LINES,
   SURFACE,
   SURFACE_NOTE,
-  TOKEN_CONFIRMED,
   TWO_SURFACES,
   cliInstalledRetry,
   foundPrograms,
@@ -32,15 +32,14 @@ import {
 } from "../strings.js";
 import type { Io, RunOptions } from "../types.js";
 import { createUi, terminalCaps, type Status, type Ui } from "../ui.js";
-import { validateInstallOptions } from "../validate.js";
 import { answeredNo } from "./answer.js";
 import { installCatalog } from "./catalog.js";
-import { resolveCredentials } from "./credentials.js";
 import {
   detectHosts,
   filterByRequestedHosts,
   type DetectedHost,
 } from "./detect.js";
+import { resolveEntryOptions } from "./entry-options.js";
 import { installExtension } from "./extension.js";
 import { cleanupLegacySkills } from "./legacy-skills.js";
 import { installCli, offerCliInstall, printSupportedApps } from "./offer.js";
@@ -54,17 +53,20 @@ import {
   type Tally,
 } from "./report.js";
 
-const STEPS = 4;
+const STEPS = 3;
 
 export async function runInstall(opts: RunOptions, io: Io): Promise<number> {
   const ui = createUi((line) => io.out(line), terminalCaps(io));
   ui.banner(INSTALL_TITLE, `v${opts.version}`);
 
-  ui.step(1, STEPS, INSTALL_STEPS.key);
-  const entryOpts = await confirmKey(opts, io, ui);
-  if (entryOpts === null) return 1;
+  const resolved = resolveEntryOptions(opts);
+  if (!resolved.ok) {
+    ui.notice("실패", [resolved.refusal]);
+    return 1;
+  }
+  const entryOpts = resolved.entry;
 
-  ui.step(2, STEPS, INSTALL_STEPS.find);
+  ui.step(1, STEPS, INSTALL_STEPS.find);
   const found = await findPrograms(opts, io, ui);
   if (typeof found === "number") return found;
   const withCatalog = opts.skills !== false;
@@ -78,35 +80,12 @@ export async function runInstall(opts: RunOptions, io: Io): Promise<number> {
     return 0;
   }
 
-  ui.step(3, STEPS, INSTALL_STEPS.connect);
+  ui.step(2, STEPS, INSTALL_STEPS.connect);
   const reports = await connect(opts, io, ui, found, entryOpts, withCatalog);
   printHostReports(ui, reports);
 
-  ui.step(4, STEPS, INSTALL_STEPS.finish);
-  return finish(ui, reports);
-}
-
-async function confirmKey(
-  opts: RunOptions,
-  io: Io,
-  ui: Ui,
-): Promise<ServerEntryOptions | null> {
-  const resolved = await resolveCredentials(opts, io, ui);
-  if (resolved === null) return null;
-  // Validation gates every spawn and write: these values reach shell argv and
-  // config files, so a pasted key passes the same checks as a passed one.
-  const refusal = validateInstallOptions(resolved);
-  if (refusal !== null) {
-    ui.notice("실패", [refusal]);
-    return null;
-  }
-  ui.notice("완료", [TOKEN_CONFIRMED]);
-  return {
-    version: resolved.version,
-    token: resolved.token as string,
-    extensionId: resolved.extensionId as string,
-    ...(resolved.port === undefined ? {} : { port: resolved.port }),
-  };
+  ui.step(3, STEPS, INSTALL_STEPS.finish);
+  return finish(ui, reports, entryOpts.token === undefined);
 }
 
 /** The detected programs, or the exit code when there are none to connect. */
@@ -196,8 +175,8 @@ async function connect(
     reports.push(hostReport(host, outcomes));
   }
 
-  // The configs now name this key; a connector already running does not, and
-  // left alone it refuses every one of them. Cleared here, with a shell in hand.
+  // A connector already running keeps the credential and version it started
+  // with, which the configs just written may not share. Cleared here.
   const reclaimed = await reclaimPort(io, entryOpts.token, {
     version: entryOpts.version,
     ...(entryOpts.port === undefined ? {} : { port: entryOpts.port }),
@@ -232,7 +211,8 @@ const RECLAIM_NOTICE: Readonly<Partial<Record<string, Notice>>> = {
   retired: { status: "정리", lines: RECLAIM.retired },
   forced: { status: "정리", lines: RECLAIM.retired },
   foreign: { status: "안내", lines: RECLAIM.foreign },
-  failed: { status: "실패", lines: RECLAIM.failed },
+  // The entries are written either way; only the moment the new version runs waits.
+  failed: { status: "안내", lines: RECLAIM.failed },
 };
 
 function printSummary(ui: Ui, counts: Tally): void {
@@ -247,7 +227,11 @@ function printSummary(ui: Ui, counts: Tally): void {
   ui.summary("ok", summaryAllConnected(counts.connected));
 }
 
-function finish(ui: Ui, reports: readonly HostReport[]): number {
+function finish(
+  ui: Ui,
+  reports: readonly HostReport[],
+  pairs: boolean,
+): number {
   const counts = tally(reports);
   printSummary(ui, counts);
 
@@ -257,15 +241,18 @@ function finish(ui: Ui, reports: readonly HostReport[]): number {
         (row) => row.label === SURFACE.catalog && row.status === "완료",
       ),
     );
-    const lines = [`1. ${RESTART_LINES[0] ?? ""}`, ...RESTART_LINES.slice(1)];
-    if (catalogConnected) {
-      lines.push(
-        `2. ${CATALOG_LOGIN_LINES[0] ?? ""}`,
-        ...CATALOG_LOGIN_LINES.slice(1),
-      );
-    }
-    ui.card("attention", MUST_DO_TITLE, lines);
+    const groups = [RESTART_LINES];
+    if (pairs) groups.push(PAIRING_LINES);
+    if (catalogConnected) groups.push(CATALOG_LOGIN_LINES);
+    ui.card("attention", MUST_DO_TITLE, numbered(groups));
   }
   printCards(ui, reports);
   return counts.failed > 0 ? 1 : 0;
+}
+
+function numbered(groups: readonly (readonly string[])[]): string[] {
+  return groups.flatMap((group, index) => [
+    `${String(index + 1)}. ${group[0] ?? ""}`,
+    ...group.slice(1),
+  ]);
 }

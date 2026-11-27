@@ -127,6 +127,7 @@ export function createNodeIo(): Io {
     killPid(pid) {
       process.kill(pid, "SIGKILL");
     },
+    uid: process.getuid?.(),
     async ask(question) {
       const rl = createInterface({
         input: process.stdin,

@@ -24,11 +24,14 @@ export interface RootCredential {
   windowEndsAt(): number | null;
   /** Whether a claim could still pair this connector right now. */
   acceptsClaim(): boolean;
+  /** Where the token came from: the environment, or a side panel's claim. */
+  readonly source: "environment" | "side_panel";
 }
 
 /** A credential given up front; it never changes and never accepts a claim. */
 export function fixedRoot(token: string): RootCredential {
   return {
+    source: "environment",
     current: () => token,
     claim: () => "already_paired",
     windowEndsAt: () => null,
@@ -50,6 +53,7 @@ export function pairingRoot(options: PairingRootOptions = {}): RootCredential {
   let token = readPairingRecord(options.home)?.token ?? null;
 
   return {
+    source: "side_panel",
     current: () => token,
     windowEndsAt: () => (token === null ? startedAt + windowMs : null),
     acceptsClaim: () => token === null && now() - startedAt <= windowMs,

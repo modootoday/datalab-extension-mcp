@@ -1,0 +1,15 @@
+{
+  "name": "modootoday",
+  "owner": {
+    "name": "modootoday",
+    "url": "https://github.com/modootoday"
+  },
+  "description": "Use the DataLab Tools browser extension from an AI app, inside your own browser session.",
+  "plugins": [
+    {
+      "name": "datalab-extension-mcp",
+      "source": "./",
+      "description": "Use the DataLab Tools browser extension from an AI app, inside your own browser session."
+    }
+  ]
+}

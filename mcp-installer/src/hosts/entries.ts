@@ -32,7 +32,8 @@ export interface DirectLaunch {
 
 export interface ServerEntryOptions {
   version: string;
-  token: string;
+  /** Absent means the connector pairs with the side panel instead. */
+  token?: string;
   extensionId: string;
   port?: string;
   launch?: DirectLaunch;
@@ -58,10 +59,11 @@ function isCustomPort(port: string | undefined): port is string {
 }
 
 export function buildEnv(opts: ServerEntryOptions): Record<string, string> {
-  const env: Record<string, string> = {
-    DATALAB_MCP_TOKEN: opts.token,
-    DATALAB_MCP_EXTENSION_ID: opts.extensionId,
-  };
+  const env: Record<string, string> = {};
+  if (opts.token !== undefined) {
+    env["DATALAB_MCP_TOKEN"] = opts.token;
+  }
+  env["DATALAB_MCP_EXTENSION_ID"] = opts.extensionId;
   if (isCustomPort(opts.port)) {
     env["DATALAB_MCP_PORT"] = opts.port;
   }
@@ -70,14 +72,9 @@ export function buildEnv(opts: ServerEntryOptions): Record<string, string> {
 
 /** The same values as {@link buildEnv}, in the `KEY=value` shape CLIs take. */
 export function envPairs(opts: ServerEntryOptions): string[] {
-  const pairs = [
-    `DATALAB_MCP_TOKEN=${opts.token}`,
-    `DATALAB_MCP_EXTENSION_ID=${opts.extensionId}`,
-  ];
-  if (isCustomPort(opts.port)) {
-    pairs.push(`DATALAB_MCP_PORT=${opts.port}`);
-  }
-  return pairs;
+  return Object.entries(buildEnv(opts)).map(
+    ([key, value]) => `${key}=${value}`,
+  );
 }
 
 /** A host spawns our stdio adapter. */

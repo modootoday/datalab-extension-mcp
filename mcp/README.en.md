@@ -22,16 +22,15 @@ Set this up once per computer.
 
 > A work computer may block installs by policy. Check with your IT team first to avoid wasting time.
 
-## Four steps
+## Three steps
 
-| Step              | What                                          | Where              |
-| ----------------- | --------------------------------------------- | ------------------ |
-| **1. Turn it on** | Flip a switch and copy the **connection key** | Extension settings |
-| **2. Install**    | Run one command and paste the key             | Terminal           |
-| **3. Connect**    | Open the side panel                           | Extension          |
-| **4. Verify**     | Ask a test question in your AI app            | Your AI app        |
+No connection key is needed. The first time an app connects, you allow it once in the side panel.
 
-Steps 1 and 2 are driven from the same screen, which tells you how far along you are — leave it open and follow it down.
+| Step              | What                                                     | Where              |
+| ----------------- | -------------------------------------------------------- | ------------------ |
+| **1. Turn it on** | Flip a switch and copy the install command               | Extension settings |
+| **2. Install**    | Run the command, or hand the install to your AI app      | Terminal           |
+| **3. Allow**      | Restart the AI app and press **[허용하기]** in the panel | Extension          |
 
 Feel free to read [Safety](#safety) first if you'd like reassurance before starting.
 
@@ -45,53 +44,50 @@ Feel free to read [Safety](#safety) first if you'd like reassurance before start
    >
    > _(When a connected AI app asks, your Naver data is sent to that app and its AI provider's servers.)_
 
-4. A **numbered 1 · 2 · 3 walkthrough** unfolds below. In box **1 [연결 키]** (connection key), press **[복사]** (copy) to put the value on the clipboard. ([보기] reveals it if you want to see it.)
-
-> "이 값은 이 컴퓨터 전용 비밀번호예요. 다른 사람에게 보내지 마세요."
->
-> _(This value is a password for this computer only. Don't send it to anyone.)_
-
-Avoid sharing a screenshot or the copied setup. This one key is what goes into the AI app's configuration and into every other browser on this computer.
+4. In the guide that opens, press **[명령 복사하기]** (copy the command). It is the same command as in Step 2.
 
 ## Step 2 — Install
+
+There are two ways. Pick one.
+
+### Install with the command
 
 One command finds **every** AI app on your computer and connects them automatically. Nothing to do per app.
 
 1. **Open a terminal** — on Windows type `cmd` in the search box → "Command Prompt"; on Mac press `⌘+Space` and type `Terminal`; on Linux open your terminal app (often `Ctrl+Alt+T`).
-2. **Paste this command and press Enter.** The helper installs this version of the connector on your computer (`npm install -g`) and registers that installed copy with your AI apps, so an app does not download the connector again each time it starts. Once connected, the connector checks the canonical release and installs a newer version for the next start. Diagnostic environments can opt out with `--no-self-update`.
+2. **Paste this command and press Enter.**
 
    ```
-   npx -y @modootoday/datalab-extension-mcp@1.18.1 install
+   npx -y @modootoday/datalab-extension-mcp@1.18.2 install
    ```
 
-   Lines of English scrolling by is normal. This installs the connector and adds only our entry to your AI apps' settings — it touches nothing else. Without permission for global npm installs, it falls back to having each app download and run the connector at start (a slower start).
+   The helper installs this version of the connector on your computer (`npm install -g`) and registers that installed copy with your AI apps. Lines of English scrolling by is normal. It adds only our entry to your AI apps' settings and touches nothing else. Without permission for global npm installs, it falls back to having each app download and run the connector at start (a slower start).
 
-   The helper runs in four chapters — `[1/4]` check the connection key, `[2/4]` find AI programs, `[3/4]` connect, `[4/4] 결과` (results).
+   The helper runs in three chapters — `1/3` find AI programs, `2/3` connect, `3/3` finish.
 
-3. **Paste the connection key.** The helper asks:
+3. **Confirm.** It asks exactly one question:
 
-   > "복사한 연결 키를 붙여넣어 주세요:"
+   > "연결할까요?" (엔터 = 예 / n = 아니오)
    >
-   > _(Paste the connection key you copied here:)_
-
-   Paste the value from step 1 and press Enter. A malformed paste is asked for once more.
-
-4. **Confirm.** It asks exactly one question:
-
-   > "위 N개 프로그램에 연결할까요?" (엔터 = 예 / n = 아니오)
-   >
-   > _(Connect to the N programs above? Enter = yes / n = no)_
+   > _(Connect? Enter = yes / n = no)_
 
    Press Enter. Per-app results follow, then a count: `N개 프로그램에 연결했어요.` If it found 0 apps, install an AI app first and run the same command again.
 
-5. When you see this, you're done:
+### Hand the install to your AI app
 
-   > 마지막 한 단계: AI 앱을 완전히 종료했다가 다시 실행해 주세요.
-   > (Windows: 작업 표시줄 트레이 아이콘에서 종료)
-   >
-   > _(One last step: fully quit your AI app and start it again. Windows: quit from the taskbar tray icon.)_
+If you'd rather not use a terminal yourself, paste this into an AI app that can run commands (Claude Code, Codex, Gemini CLI and the like). It is in Korean on purpose; the app follows it either way.
 
-   Just closing the window can leave it running in the background, so a **full quit** matters (Windows: tray icon → quit; Mac: `⌘+Q`; Linux: Quit from the app menu).
+```
+데이터랩툴즈 연결 프로그램을 설치하고 이 앱에 등록해 줘.
+1. node --version 으로 Node.js 22 이상인지 확인해. 없거나 낮으면 설치 방법만 알려 주고 멈춰.
+2. npm install -g @modootoday/datalab-extension-mcp@1.18.2 을 실행해.
+3. 이 앱의 MCP 설정에 datalab-extension-mcp 라는 이름으로 서버를 추가해.
+   명령은 전역 설치된 datalab-extension-mcp 이고, Windows 에서는 cmd /c datalab-extension-mcp 야.
+   npx 는 쓰지 말고, 키나 환경 변수는 넣지 마.
+4. 끝나면 이 앱을 완전히 종료했다가 다시 켜라고 알려 줘.
+```
+
+_(Install the DataLab Tools connector and register it with this app: check Node.js 22 or later and stop with install advice if missing; run the pinned global install; add a server named datalab-extension-mcp that runs the global bin, through cmd /c on Windows, never npx, with no key or environment variables; then ask me to fully restart the app.)_
 
 <details>
 <summary><strong>No Node.js? — install it in one go</strong></summary>
@@ -110,32 +106,42 @@ If the command errors with `'npx' is not recognized`, Node.js isn't installed. O
   curl -fsSL https://app.datalab.tools/install/mcp.sh | sh
   ```
 
-When it asks for the connection key, paste the one from step 1. If you have no AI app yet, you can also pick one to install right there (choosing is optional).
+If you have no AI app yet, you can also pick one to install right there (choosing is optional).
 
 > Want to see what it does before running it? Open that URL in a browser — it serves the script itself, in plain text.
+
+</details>
+
+<details>
+<summary><strong>Install as an AI app plugin</strong></summary>
+
+This repository also installs as a plugin. The app runs the connector at this version, with no key.
+
+- **Claude Code**: `claude plugin marketplace add modootoday/datalab-extension-mcp`, then `claude plugin install datalab-extension-mcp@modootoday`
+- **GitHub Copilot CLI**: `copilot plugin install modootoday/datalab-extension-mcp`
+- **Gemini CLI**: `gemini extensions install https://github.com/modootoday/datalab-extension-mcp`
+- **Antigravity**: `agy plugin install https://github.com/modootoday/datalab-extension-mcp`
+- **VS Code**: run "Chat: Install Plugin from Source" from the Command Palette and enter this repository's URL.
 
 </details>
 
 Apps it **connects automatically**: Claude Desktop, Claude Code, ChatGPT desktop, Codex CLI, Gemini CLI, Cursor, Windsurf, Amazon Q Developer, JetBrains Junie, Kiro.
 Apps it **only prints instructions for** (follow the on-screen guide): VS Code, Zed, Cline, Roo Code, LM Studio, Warp.
 
-## Step 3 — Connect
+## Step 3 — Allow
 
-If you installed from this browser, there is nothing to do. **Open the side
-panel** and this browser attaches with its own key.
+1. **Fully quit your AI app and start it again.** Just closing the window can leave it running in the background (Windows: tray icon → quit; Mac: `⌘+Q`; Linux: Quit from the app menu).
+2. **With the side panel open**, use DataLab Tools in the AI app for the first time. The panel asks:
 
-If you **already installed from another browser on this computer**, copy the
-connection key from box 1 in that browser and paste it here, under box 1 →
-**[이 컴퓨터의 다른 브라우저에서 이미 설치했어요]** (already installed from
-another browser on this computer). See [Putting another browser on this
-computer](#putting-another-browser-on-this-computer).
+   > "'앱 이름' 앱이 연결을 요청했어요"
+   >
+   > _('App name' asked to connect)_
+
+   Press **[허용하기]** (allow) and you're done. If you didn't start this yourself, press **[거절하기]** (decline). A request can be allowed for 10 minutes.
+
+3. If the card at the top of the side panel is **green** and reads "연결됨" (connected), you're set. Ask something like "How did my blog do last week?" in your AI app; if real numbers come back, everything's done. If it isn't green, go to [Troubleshooting](#troubleshooting).
 
 The connection itself lives only while the side panel is open.
-
-## Step 4 — Verify
-
-- If the card at the top of the side panel is **green** and reads "연결됨" (connected), you're set. If it isn't green, go to [Troubleshooting](#troubleshooting).
-- Ask something like "How did my blog do last week?" in your AI app; if real numbers come back, everything's done.
 
 ## Good to know
 
@@ -157,10 +163,10 @@ copied to your machine; the AI app fetches them from the catalog when it needs t
 
 ## Putting another browser on this computer
 
-There is **one connection key per computer**. To add a browser, copy the key
-from an already connected browser (extension settings → **다른 AI 앱에 연결
-(MCP)** → box 1 → `복사`) and paste it in the new browser under box 1 →
-**[이 컴퓨터의 다른 브라우저에서 이미 설치했어요]**. No registration codes, no
+The first browser to press **[허용하기]** is the one this computer's connector
+pairs with. To use another browser on this computer too, copy the **connection key**
+from the connected browser (extension settings → **다른 AI 앱에 연결 (MCP)**) and
+paste it on the same screen in the other browser. No registration codes, no
 issuing, no roster.
 
 This is one computer only — the connector listens on 127.0.0.1, so no other
@@ -216,6 +222,22 @@ presenting that same old key.
 
 Item 3 is what brings the connector back with the key stored in the AI app.
 
+### "이 컴퓨터의 연결 프로그램은 다른 브라우저와 연결돼 있어요. 그 브라우저 설정에서 연결 키를 복사해 이 브라우저 설정에 붙여넣어 주세요."
+
+_(This computer's connector is paired with another browser. Copy the connection key from that browser's settings into this browser's settings.)_
+
+Another browser on this computer pressed **[허용하기]** first. Put that browser's
+connection key into this one and both work ([Putting another browser on this
+computer](#putting-another-browser-on-this-computer)). If you never connected one,
+someone else may have; disconnect with the command the panel shows and try again.
+
+### "연결 대기 시간이 지났어요. AI 앱을 완전히 껐다 켠 뒤 10분 안에 사이드 패널을 열어 주세요."
+
+_(The wait ran out. Fully restart the AI app, then open the side panel within 10 minutes.)_
+
+A connection request can be allowed for 10 minutes only. Fully quit and restart the
+AI app, open the side panel and press **[허용하기]**.
+
 ### "연결 통로(포트)를 다른 프로그램이 쓰고 있어요."
 
 _(Another program is using the connection path (port).)_
@@ -263,7 +285,7 @@ Start it again after a full quit and it picks the tools up. If they still aren't
 - **When the connection disappears** — run the very command you used at the start once more; it safely re-registers. (Some AI apps clean up their settings file and drop the connection.)
 
   ```
-  npx -y @modootoday/datalab-extension-mcp@1.18.1 install
+  npx -y @modootoday/datalab-extension-mcp@1.18.2 install
   ```
 
 - **`'npx' is not recognized...`** — Node.js isn't installed. Follow "No Node.js?" in Step 2, then run the command again.
@@ -283,9 +305,10 @@ Start it again after a full quit and it picks the tools up. If they still aren't
 - **Lookups just work; editing is asked for, every time.** Looking data up is immediate. Changing your **Naver draft** or a photo/video editor — setting the title, inserting text, undo, replacing the whole body, inserting a photo, closing an editor window, deleting anything — is confirmed in the side panel before it runs. So is anything that costs money. **There is no setting that approves these in advance.** Publishing and ad spend are opened by nothing at all.
 - **It never publishes.** Posting or making a draft public is not connected — edits stay in the draft window, and publishing is yours to do.
 - **The connector stores no logins, passwords, or cookies.** It never contacts Naver directly. Every lookup happens inside your own logged-in browser.
-- **It works only inside your computer.** Nothing outside can connect, and browser sessions use separate registered credentials plus extension identity checks.
+- **It works only inside your computer.** Nothing outside can connect, only a browser you allowed attaches, and every session is checked against the connection key and the extension identity.
 - **How data moves** — "연결된 AI 앱이 요청하면 네이버 데이터가 해당 앱과 그 AI 제공사 서버로 전달돼요." When the AI app asks, the result goes to that AI provider (e.g. Anthropic) — exactly what you agreed to when turning this on. Retention and training are governed by each provider's policy, so check the privacy policy of the AI app you use.
 - **The saved command names an exact bootstrap version.** At startup and while idle, the connector checks the canonical release and promotes itself to the current secure, compatible version. Diagnostic environments can opt out with `--no-self-update`.
+- **You can check the package was built from the public repository.** Run `npm audit signatures`, or `npm view @modootoday/datalab-extension-mcp@1.18.2 dist.attestations` to see its build provenance. If you install through another npm registry, such as a company mirror, this checks what that registry served.
 - **The full source is open.** That said, it can't stop malware already running under your own account — this connector's locks control remote and cross-origin access, not an already-compromised host.
 
 ## Removing it
@@ -293,7 +316,7 @@ Start it again after a full quit and it picks the tools up. If they still aren't
 1. Run this in a terminal (it removes the `datalab-extension-mcp` entries registered in your AI apps, and any `datalab` entry an earlier version registered).
 
    ```
-   npx -y @modootoday/datalab-extension-mcp@1.18.1 uninstall
+   npx -y @modootoday/datalab-extension-mcp@1.18.2 uninstall
    ```
 
 2. Turn **MCP 연결** off in the extension settings. The panel is the bridge, so with it off a leftover config line can look nothing up.
@@ -309,7 +332,7 @@ Deleting the extension also renders any leftover connector inert. A leftover lin
 - **Does the ChatGPT website work?** No. Only the installed desktop app connects.
 - **Do I keep it always on?** No. It connects only while the panel is open.
 - **What data does it read?** Blog stats, keywords, ads — what DataLab Tools shows. Scoped to the Naver account you're logged into in Chrome.
-- **Other computers?** Yes, but set it up once per computer; the connection key is per-computer too.
+- **Other computers?** Yes, but set it up and allow it once per computer.
 
 </details>
 
@@ -323,12 +346,12 @@ Deleting the extension also renders any leftover connector inert. A leftover lin
 
 **Environment variables**
 
-| Variable                   | Required | Default     | Description                                                |
-| -------------------------- | -------- | ----------- | ---------------------------------------------------------- |
-| `DATALAB_MCP_TOKEN`        | required | —           | Pairing token. Issued and replaced in the extension panel. |
-| `DATALAB_MCP_EXTENSION_ID` | required | —           | The extension ID allowed to connect.                       |
-| `DATALAB_MCP_PORT`         | optional | `8765`      | Listen port.                                               |
-| `DATALAB_MCP_HOST`         | optional | `127.0.0.1` | Bind address. Non-loopback values are rejected.            |
+| Variable                   | Required | Default     | Description                                                    |
+| -------------------------- | -------- | ----------- | -------------------------------------------------------------- |
+| `DATALAB_MCP_TOKEN`        | optional | —           | A fixed token. Without one the connector pairs with the panel. |
+| `DATALAB_MCP_EXTENSION_ID` | optional | store build | The extension ID allowed to connect.                           |
+| `DATALAB_MCP_PORT`         | optional | `8765`      | Listen port.                                                   |
+| `DATALAB_MCP_HOST`         | optional | `127.0.0.1` | Bind address. Non-loopback values are rejected.                |
 
 **Rate limit** — `300` calls of burst per connector, refilling at `50` per second. Browsers connected to the same connector **share that budget**. It damps runaway loops rather than enforcing billing, so ordinary use never reaches it.
 

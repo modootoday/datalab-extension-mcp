@@ -186,6 +186,10 @@ export const HelloNackReasonSchema = z.enum([
   "browser_registration_required",
   /** This panel predates mandatory browser routing and file permits. */
   "browser_capability_required",
+  /** The connector is paired with another browser's key; only that key is accepted. */
+  "paired_elsewhere",
+  /** Nothing is paired and the pairing window has ended; a restart reopens it. */
+  "window_closed",
 ]);
 export type HelloNackReason = z.infer<typeof HelloNackReasonSchema>;
 

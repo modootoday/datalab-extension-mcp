@@ -1,0 +1,24 @@
+{
+  "name": "datalab-extension-mcp",
+  "displayName": "DataLab Tools",
+  "version": "1.18.2",
+  "description": "Use the DataLab Tools browser extension from an AI app, inside your own browser session.",
+  "homepage": "https://github.com/modootoday/datalab-extension-mcp#readme",
+  "repository": "https://github.com/modootoday/datalab-extension-mcp",
+  "license": "MIT",
+  "keywords": [
+    "mcp",
+    "modelcontextprotocol",
+    "chrome-extension",
+    "naver"
+  ],
+  "mcpServers": {
+    "datalab-extension-mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modootoday/datalab-extension-mcp@1.18.2"
+      ]
+    }
+  }
+}

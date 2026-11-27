@@ -251,6 +251,8 @@ export function createHttpBridge(opts: HttpBridgeOptions): HttpBridge {
         name: MCP_SERVER_HEALTH_NAME,
         version: opts.identity.version,
         schema: MCP_SERVER_HEALTH_SCHEMA,
+        // Lets a local installer tie this answer to the process it may end.
+        pid: process.pid,
       });
       return;
     }

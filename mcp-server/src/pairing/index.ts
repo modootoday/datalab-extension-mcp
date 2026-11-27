@@ -8,6 +8,7 @@ export {
 export { createAppBook, type AppBook, type AppStanding } from "./app-book.js";
 export { appsPath, readApprovedApps, writeApprovedApps } from "./app-store.js";
 export { createPairingDesk, type PairingDesk } from "./desk.js";
+export { pairingRefusal } from "./refusal.js";
 export {
   CLAIM_WINDOW_MS,
   fixedRoot,

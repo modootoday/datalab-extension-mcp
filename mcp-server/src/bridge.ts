@@ -29,7 +29,11 @@ import {
   type McpTool,
 } from "@modootoday/datalab-extension-app-mcp-core";
 
-import { fixedRoot, type RootCredential } from "./pairing/index.js";
+import {
+  fixedRoot,
+  pairingRefusal,
+  type RootCredential,
+} from "./pairing/index.js";
 import { digestToken } from "./token-digest.js";
 import {
   DEFAULT_TIMEOUT_MS,
@@ -701,6 +705,15 @@ export class Bridge {
     }
 
     const rootToken = this.#rootFor(parsed.data.token, parsed.data.browserId);
+    const explained = pairingRefusal(
+      this.#root,
+      parsed.data.token,
+      parsed.data.browserId,
+    );
+    if (explained !== null) {
+      this.#deps.log?.(`refused a browser handshake: ${explained.reason}`);
+      return explained;
+    }
     if (rootToken === null) {
       return {
         t: "hello_nack",

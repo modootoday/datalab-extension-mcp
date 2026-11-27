@@ -75,12 +75,6 @@ export {
 } from "./validate.js";
 
 export {
-  // The paste prompt is shared, not copied. `browsers` asks for the same
-  // token in the same words, and two wordings for one act would send a person
-  // looking for two different buttons.
-  TOKEN_PROMPT_GUIDE,
-  TOKEN_PROMPT_QUESTION,
-  TOKEN_REQUIRED,
   NOTHING_CHANGED,
   UNINSTALL_DONE,
   PERMISSION_DENIED_HINT,

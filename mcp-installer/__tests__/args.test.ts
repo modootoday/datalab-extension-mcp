@@ -187,6 +187,13 @@ describe("file entry", () => {
     );
   });
 
+  it("leaves the token out of the env when none is given", () => {
+    const keyless = { version: OPTS.version, extensionId: OPTS.extensionId };
+    expect(buildEnv(keyless)).toEqual({
+      DATALAB_MCP_EXTENSION_ID: VALID_EXTENSION_ID,
+    });
+  });
+
   it("builds the package spec from the exact version", () => {
     expect(packageSpec("1.2.3")).toBe(
       "@modootoday/datalab-extension-mcp@1.2.3",

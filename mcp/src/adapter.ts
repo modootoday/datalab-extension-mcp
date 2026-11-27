@@ -264,6 +264,22 @@ async function defaultReadVersion(base: string): Promise<string | null> {
   }
 }
 
+/** The pid our connector reports for itself, or null for anything else. */
+async function defaultReadPid(base: string): Promise<number | null> {
+  try {
+    const res = await (globalThis.fetch as typeof fetch)(
+      `${base}/bridge/health`,
+    );
+    const body = (await res.json()) as { pid?: unknown };
+    if (!isOurConnector(body)) return null;
+    return typeof body.pid === "number" && Number.isInteger(body.pid)
+      ? body.pid
+      : null;
+  } catch {
+    return null;
+  }
+}
+
 /** Ask the running daemon to step aside. True only on an accepted (200) request. */
 export async function defaultShutdown(
   base: string,
@@ -331,9 +347,9 @@ export interface EnsureRunningDeps {
   readTakeover?: () => string | null;
   /**
    * Ends the process holding the port. Injected in tests; defaults to the real
-   * one. Never reached before the holder is confirmed to be our connector.
+   * one, which ends only a listener proven to be our connector.
    */
-  killOwner?: (port: number) => boolean;
+  killOwner?: (port: number) => boolean | Promise<boolean>;
   /**
    * This adapter's own version. When set, a running daemon older than this is
    * replaced; one at this version or newer is left alone, so an older adapter
@@ -379,7 +395,9 @@ export async function ensureDaemonRunning(
   const shutdown = deps.shutdown ?? defaultShutdown;
   const checkAuthority = deps.checkAuthority ?? defaultCheckAuthority;
   const readTakeover = deps.readTakeover ?? (() => readTakeoverSecret());
-  const killOwner = deps.killOwner ?? ((p: number) => killPortOwner(p));
+  const killOwner =
+    deps.killOwner ??
+    (async (p: number) => killPortOwner(p, await defaultReadPid(base)));
 
   /** Stand the holder down with the file only a local user can read. */
   const shutdownWithTakeover = async (): Promise<boolean> => {
@@ -397,7 +415,7 @@ export async function ensureDaemonRunning(
    * it respawns it on the next call (reviveAndRetry).
    */
   const seizePort = async (): Promise<boolean> => {
-    if (!killOwner(port)) return false;
+    if (!(await killOwner(port))) return false;
     log(`ending the connector that holds port ${String(port)}`);
     await waitForPortRelease();
     await spawnAndWait();

@@ -84,15 +84,14 @@ describe("install flow", () => {
     expect(add).toBeGreaterThan(legacy);
   });
 
-  it("draws four steps and groups both surfaces under each program", async () => {
+  it("draws three steps and groups both surfaces under each program", async () => {
     const harness = twoHostSetup();
     await runInstall({ ...INSTALL_OPTS, yes: true }, harness.io);
     const text = harness.out.join("\n");
     for (const heading of [
-      "━━ 1/4  연결 키 ",
-      "━━ 2/4  AI 프로그램 찾기 ",
-      "━━ 3/4  연결하기 ",
-      "━━ 4/4  마무리 ",
+      "━━ 1/3  AI 프로그램 찾기 ",
+      "━━ 2/3  연결하기 ",
+      "━━ 3/3  마무리 ",
     ]) {
       expect(text).toContain(heading);
     }
@@ -294,78 +293,74 @@ describe("uninstall flow", () => {
   });
 });
 
-describe("interactive token flow (bare install)", () => {
-  const HEX_TOKEN = "abcdef0123456789abcdef0123456789";
+describe("install without a key (bare install)", () => {
+  const PAIRING_LINE = "연결을 허용할지 물어요";
 
-  it("prompts for the token when none is passed, then applies", async () => {
-    // The short command a user types, carrying no credentials, with a human at
-    // the keyboard to paste the token.
+  it("asks for nothing and writes no key, even with a person at the keyboard", async () => {
     const harness = createMemIo({
       platform: "linux",
       home: "/home/user",
       cliBins: ["gemini"],
       interactive: true,
-      prompts: [HEX_TOKEN],
       answers: ["y"],
     });
     const code = await runInstall({ version: "1.2.3" }, harness.io);
 
     expect(code).toBe(0);
-    // It asked for the token exactly once.
-    expect(harness.prompts).toHaveLength(1);
-    // Both the pasted token and the defaulted extension id reached the CLI.
-    // Install is remove-then-add, and the token rides the add.
+    expect(harness.prompts).toHaveLength(0);
     const add = harness.spawns.find((s) => s.args.includes("add"));
-    expect(add?.args.join(" ")).toContain(HEX_TOKEN);
+    expect(add?.args.join(" ")).not.toContain("DATALAB_MCP_TOKEN");
     expect(add?.args.join(" ")).toContain("ldoknfkedngbdfgdkeicojmhnojgpdcb");
+    expect(harness.out.some((l) => l.includes(PAIRING_LINE))).toBe(true);
   });
 
-  it("re-asks once on a malformed paste, then accepts", async () => {
-    const harness = createMemIo({
-      platform: "linux",
-      home: "/home/user",
-      cliBins: ["gemini"],
-      interactive: true,
-      prompts: ["not a token", HEX_TOKEN],
-      answers: ["y"],
-    });
-    const code = await runInstall({ version: "1.2.3" }, harness.io);
-
-    expect(code).toBe(0);
-    expect(harness.prompts).toHaveLength(2);
-    expect(harness.out.some((l) => l.includes("다시 복사"))).toBe(true);
-  });
-
-  it("does NOT prompt down a pipe — it tells the user how to pass the token", async () => {
-    // With stdin piped, prompting would hang forever.
+  it("finishes as an install when an older connector without a pid keeps the port", async () => {
     const harness = createMemIo({
       platform: "linux",
       home: "/home/user",
       cliBins: ["gemini"],
       interactive: false,
     });
-    const code = await runInstall({ version: "1.2.3" }, harness.io);
+    const io = {
+      ...harness.io,
+      fetch: (async () =>
+        ({
+          ok: true,
+          status: 200,
+          json: async () => ({
+            name: "datalab-extension-mcp-server",
+            version: "1.2.2",
+          }),
+        }) as Response) as unknown as typeof fetch,
+    };
+    const code = await runInstall({ version: "1.2.3", yes: true }, io);
 
-    expect(code).toBe(1);
-    expect(harness.prompts).toHaveLength(0);
-    // Names where the command lives: the settings page, step 2's copy button.
-    expect(harness.out.some((l) => l.includes("연결 키가 필요해요"))).toBe(
-      true,
-    );
-    expect(harness.out.some((l) => l.includes("다른 AI 앱에 연결"))).toBe(true);
-    // Nothing was mutated.
-    expect(harness.spawns.every((s) => s.args.includes("--version"))).toBe(
-      true,
-    );
+    expect(code).toBe(0);
+    const text = harness.out.join("\n");
+    expect(text).toContain("설치는 끝났어요.");
+    expect(text).toContain("5분쯤 기다린 뒤 다시 켜면");
+    expect(text).not.toContain("실패");
   });
 
-  it("a passed --token skips the prompt (panel copy-button path)", async () => {
+  it("runs down a pipe as well", async () => {
     const harness = createMemIo({
       platform: "linux",
       home: "/home/user",
       cliBins: ["gemini"],
-      interactive: true,
-      answers: ["y"],
+      interactive: false,
+    });
+    const code = await runInstall({ version: "1.2.3", yes: true }, harness.io);
+
+    expect(code).toBe(0);
+    expect(harness.prompts).toHaveLength(0);
+    expect(harness.spawns.some((s) => s.args.includes("add"))).toBe(true);
+  });
+
+  it("writes a passed key and says nothing about allowing the connection", async () => {
+    const harness = createMemIo({
+      platform: "linux",
+      home: "/home/user",
+      cliBins: ["gemini"],
     });
     const code = await runInstall(
       {
@@ -378,6 +373,8 @@ describe("interactive token flow (bare install)", () => {
     );
 
     expect(code).toBe(0);
-    expect(harness.prompts).toHaveLength(0);
+    const add = harness.spawns.find((s) => s.args.includes("add"));
+    expect(add?.args.join(" ")).toContain(`DATALAB_MCP_TOKEN=${VALID_TOKEN}`);
+    expect(harness.out.some((l) => l.includes(PAIRING_LINE))).toBe(false);
   });
 });

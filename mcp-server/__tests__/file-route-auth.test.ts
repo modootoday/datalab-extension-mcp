@@ -434,6 +434,7 @@ describe("health 경로", () => {
       name: MCP_SERVER_HEALTH_NAME,
       version: "0.0.0-test",
       schema: MCP_SERVER_HEALTH_SCHEMA,
+      pid: process.pid,
     });
   });
 });

@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "datalab-extension-mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modootoday/datalab-extension-mcp@1.18.2"
+      ]
+    }
+  }
+}

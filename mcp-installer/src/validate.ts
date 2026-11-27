@@ -33,14 +33,15 @@ export const INVALID_PORT_MESSAGE = `포트 번호 형식이 올바르지 않아
 export const INVALID_VERSION_MESSAGE = `버전 형식이 올바르지 않아요. ${RETRY_HINT}`;
 
 /**
- * Install needs everything the config entry will contain. Returns the refusal
+ * Install needs everything the config entry will contain; a token is optional,
+ * since without one the connector pairs with the side panel. Returns the refusal
  * line to print, or null when every input is safe to use.
  */
 export function validateInstallOptions(opts: RunOptions): string | null {
   if (typeof opts.version !== "string" || !VERSION_RE.test(opts.version)) {
     return INVALID_VERSION_MESSAGE;
   }
-  if (typeof opts.token !== "string" || !TOKEN_RE.test(opts.token)) {
+  if (opts.token !== undefined && !TOKEN_RE.test(opts.token)) {
     return INVALID_TOKEN_MESSAGE;
   }
   if (
