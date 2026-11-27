@@ -1,7 +1,7 @@
 ---
 layout: "dl-tool"
 title: "문단 서식 적용"
-description: "글쓰기 창 본문의 문단 단위 서식(정렬 align, 행간 lineHeight, 첫글자 키우기 dropCap)을 건다. 문단은 editor_read_document 가 돌려준 componentId 와 문단 번호(paragraphIndex, 0부터)로 고르고, 글자 구간은 필요 없다. 규칙마다 요청한 값(requested)과 적용 뒤 문서를 다시 읽은 값(observed), 맞았는지(applied)를 돌려준다. 정렬은 문단이 실제로 보이는 값으로 판단하고 그 값과 출처를 effective.align 에 준다. 편집기는 기본 정렬(left)을 저장하지 않으므로, 테마가 다른 정렬을 정해 둔 문단에 left 를 요청하면 보내지 않고 theme-default-not-storable 로 거절하며 message 를 준다. 글자가 없는 빈 문단에는 걸 수 없다. 인용구는 정렬을 받지 않는다. 인용구의 정렬은 디자인(레이아웃)이 정하므로 정렬을 요청하면 unsupported-in-component 로 답하고, 바꾸려면 editor_update_component 로 디자인을 바꾼다. 인용구는 첫글자 키우기도 받지 않는다. 문단 앞뒤 간격과 들여쓰기 값은 이 도구에 없다. 간격이 필요하면 행간을 키우거나 editor_insert_blank_paragraph 로 빈 문단을 넣는다. 글자 단위 서식은 editor_apply_styles 를 쓴다. 표의 칸 안 문단에도 정렬, 행간, 첫글자 키우기를 걸 수 있다: componentId 에 표 id 를, cell 에 { row, col } 을 준다. 칸 번호 규칙과 거절은 editor_apply_styles 와 같다. 한 번 호출이 되돌리기 한 단계다. applied 가 false 인 규칙은 저장된 것이 아니다."
+description: "글쓰기 창 본문의 문단 단위 서식(정렬, 행간, 첫글자 키우기)을 건다. 문단은 본문 읽기 결과의 componentId 와 paragraphIndex 로 고르고, 표의 칸 안 문단은 componentId 에 표 id 를, cell 에 { row, col } 을 준다. 글자 단위 서식이면 editor_apply_styles 를 쓴다. 문단 앞뒤 간격과 들여쓰기는 없어 간격은 행간이나 빈 문단으로 만든다. 글자가 없는 빈 문단에는 걸 수 없고, 인용구는 정렬과 첫글자 키우기를 받지 않아 unsupported-in-component 로 답하며 인용구 정렬은 editor_update_component 로 디자인을 바꿔야 달라진다. 편집기가 기본 정렬 left 를 저장하지 않아 테마가 다른 정렬을 정한 문단의 left 요청은 theme-default-not-storable 로 거절한다. 한 번 호출이 되돌리기 한 단계다. applied 가 false 인 규칙은 저장되지 않은 것이다."
 nav: "tools"
 tool: "editor_set_paragraph_styles"
 generated: true
@@ -11,7 +11,7 @@ generated: true
 
 `editor_set_paragraph_styles` · 매번 물어봄 · 내 컴퓨터
 
-글쓰기 창 본문의 문단 단위 서식(정렬 align, 행간 lineHeight, 첫글자 키우기 dropCap)을 건다. 문단은 editor_read_document 가 돌려준 componentId 와 문단 번호(paragraphIndex, 0부터)로 고르고, 글자 구간은 필요 없다. 규칙마다 요청한 값(requested)과 적용 뒤 문서를 다시 읽은 값(observed), 맞았는지(applied)를 돌려준다. 정렬은 문단이 실제로 보이는 값으로 판단하고 그 값과 출처를 effective.align 에 준다. 편집기는 기본 정렬(left)을 저장하지 않으므로, 테마가 다른 정렬을 정해 둔 문단에 left 를 요청하면 보내지 않고 theme-default-not-storable 로 거절하며 message 를 준다. 글자가 없는 빈 문단에는 걸 수 없다. 인용구는 정렬을 받지 않는다. 인용구의 정렬은 디자인(레이아웃)이 정하므로 정렬을 요청하면 unsupported-in-component 로 답하고, 바꾸려면 editor_update_component 로 디자인을 바꾼다. 인용구는 첫글자 키우기도 받지 않는다. 문단 앞뒤 간격과 들여쓰기 값은 이 도구에 없다. 간격이 필요하면 행간을 키우거나 editor_insert_blank_paragraph 로 빈 문단을 넣는다. 글자 단위 서식은 editor_apply_styles 를 쓴다. 표의 칸 안 문단에도 정렬, 행간, 첫글자 키우기를 걸 수 있다: componentId 에 표 id 를, cell 에 { row, col } 을 준다. 칸 번호 규칙과 거절은 editor_apply_styles 와 같다. 한 번 호출이 되돌리기 한 단계다. applied 가 false 인 규칙은 저장된 것이 아니다.
+글쓰기 창 본문의 문단 단위 서식(정렬, 행간, 첫글자 키우기)을 건다. 문단은 본문 읽기 결과의 componentId 와 paragraphIndex 로 고르고, 표의 칸 안 문단은 componentId 에 표 id 를, cell 에 { row, col } 을 준다. 글자 단위 서식이면 editor_apply_styles 를 쓴다. 문단 앞뒤 간격과 들여쓰기는 없어 간격은 행간이나 빈 문단으로 만든다. 글자가 없는 빈 문단에는 걸 수 없고, 인용구는 정렬과 첫글자 키우기를 받지 않아 unsupported-in-component 로 답하며 인용구 정렬은 editor_update_component 로 디자인을 바꿔야 달라진다. 편집기가 기본 정렬 left 를 저장하지 않아 테마가 다른 정렬을 정한 문단의 left 요청은 theme-default-not-storable 로 거절한다. 한 번 호출이 되돌리기 한 단계다. applied 가 false 인 규칙은 저장되지 않은 것이다.
 
 ## AI가 넘기는 값
 
@@ -23,9 +23,9 @@ generated: true
 
 ## 함께 쓰는 도구
 
-- [문서 전체 읽기](/tools/editor-control/editor_read_document/) `editor_read_document`
-- [컴포넌트 고치기](/tools/editor-detail/editor_update_component/) `editor_update_component`
-- [빈 줄 넣기](/tools/editor-detail/editor_insert_blank_paragraph/) `editor_insert_blank_paragraph`
 - [글자 서식 적용](/tools/editor-detail/editor_apply_styles/) `editor_apply_styles`
+- [컴포넌트 고치기](/tools/editor-detail/editor_update_component/) `editor_update_component`
+- [간격 맞추기](/tools/editor-detail/editor_apply_layout/) `editor_apply_layout`
+- [이미지 배치](/tools/editor-detail/editor_set_image_layout/) `editor_set_image_layout`
 
 이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.2 기준.

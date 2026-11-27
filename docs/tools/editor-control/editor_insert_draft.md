@@ -1,7 +1,7 @@
 ---
 layout: "dl-tool"
 title: "에디터에 초안 삽입"
-description: "마크다운 초안을 현재 글쓰기 창 에디터 본문에 삽입한다. 글을 작성/추가해 달라는 요청에 사용한다. 이미 작성된 내용이 있으면 사용자 확인을 거친다. write_draft 가 초안 참조(dr_...)를 돌려줬다면 본문을 다시 옮겨 적지 말고 artifactId 로 그 값을 넘겨라 — 제목도 함께 반영되므로 editor_set_title 을 따로 부를 필요가 없다. 결과의 titleApplied 가 제목을 어떻게 했는지 알려 준다(set=넣음 / kept-existing=이미 있어 그대로 / none=안 넣음). 🔴 제목을 본문 마크다운 안에 다시 적지 마라."
+description: "마크다운 초안을 현재 글쓰기 창 에디터 본문에 넣으며, 글을 작성하거나 추가해 달라는 요청에 맞는다. 이미 작성된 내용이 있으면 사용자 확인을 거친다. write_draft 가 초안 참조(dr_...)를 돌려줬다면 본문을 옮겨 적지 않고 artifactId 로 넘기면 되고, 제목도 함께 반영되어 editor_set_title 을 따로 부를 일이 없다. 제목을 본문 마크다운 안에 다시 적으면 본문에도 제목이 한 번 더 들어간다. 결과의 titleApplied 가 kept-existing 이면 이미 있던 제목을 그대로 둔 것이고 none 이면 제목을 넣지 않은 것이다."
 nav: "tools"
 tool: "editor_insert_draft"
 generated: true
@@ -11,7 +11,7 @@ generated: true
 
 `editor_insert_draft` · 매번 물어봄 · 내 컴퓨터
 
-마크다운 초안을 현재 글쓰기 창 에디터 본문에 삽입한다. 글을 작성/추가해 달라는 요청에 사용한다. 이미 작성된 내용이 있으면 사용자 확인을 거친다. write_draft 가 초안 참조(dr_...)를 돌려줬다면 본문을 다시 옮겨 적지 말고 artifactId 로 그 값을 넘겨라 — 제목도 함께 반영되므로 editor_set_title 을 따로 부를 필요가 없다. 결과의 titleApplied 가 제목을 어떻게 했는지 알려 준다(set=넣음 / kept-existing=이미 있어 그대로 / none=안 넣음). 🔴 제목을 본문 마크다운 안에 다시 적지 마라.
+마크다운 초안을 현재 글쓰기 창 에디터 본문에 넣으며, 글을 작성하거나 추가해 달라는 요청에 맞는다. 이미 작성된 내용이 있으면 사용자 확인을 거친다. write_draft 가 초안 참조(dr_...)를 돌려줬다면 본문을 옮겨 적지 않고 artifactId 로 넘기면 되고, 제목도 함께 반영되어 editor_set_title 을 따로 부를 일이 없다. 제목을 본문 마크다운 안에 다시 적으면 본문에도 제목이 한 번 더 들어간다. 결과의 titleApplied 가 kept-existing 이면 이미 있던 제목을 그대로 둔 것이고 none 이면 제목을 넣지 않은 것이다.
 
 ## AI가 넘기는 값
 

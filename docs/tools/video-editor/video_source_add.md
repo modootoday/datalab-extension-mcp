@@ -1,7 +1,7 @@
 ---
 layout: "dl-tool"
 title: "영상 편집기 — 영상 · 음악 파일 넣기"
-description: "연결 프로그램에 올려 봉인한 영상 · 소리 파일(media_stage_commit 의 handle)을 영상 편집기에 넣는 job 을 시작하고 job 을 돌려준다. clip 은 화면 올리기와 같이 10분까지 잘라 화질을 맞춘 뒤 그 장면의 배경 영상으로, bgm 은 배경 음악으로, narration 은 그 장면 대본을 읽은 목소리로 넣는다(대본이 있는 장면만, 장면 길이는 목소리에 맞춰 늘어난다, 대본을 고치면 다시 넣어야 한다). video_job_status 로 끝났는지 확인한다. 되돌리기 한 번으로 돌아간다. clip 은 기본으로 캔버스 전체를 채우고(cover) 넘치는 가장자리는 잘린다. fit·box·anchor 중 하나라도 주면 영상을 box 안에 놓는다: contain 은 원본 화면 전체를 비율대로 보이고 남는 곳은 장면 배경색, cover 는 box 를 채우고 anchor 쪽을 남겨 자른다. 영상이 덮지 않는 곳(contain 의 여백, box 바깥)은 넣기 전 장면 배경색을 이어받고, 넣은 뒤에도 video_background_set 으로 바꿀 수 있다. 영상 자체 색은 바뀌지 않는다. 배경 영상에는 지금처럼 장면 움직임(motion·camera)이 적용되지 않고, 전환은 그대로 적용된다. 결과 배치는 video_timeline_get 의 clipState.placement 로 확인한다."
+description: "연결 프로그램에 올려 봉인한 영상·소리 파일(media_stage_commit 의 handle)을 영상 편집기에 넣는 job 을 시작해 돌려주고, 끝났는지는 video_job_status 로 확인한다. clip 은 10분까지 잘라 화질을 맞춘 뒤 그 장면의 배경 영상으로, bgm 은 배경 음악으로, narration 은 그 장면 대본을 읽은 목소리로 넣는다. narration 은 대본이 있는 장면만 되고, 장면 길이가 목소리에 맞춰 늘어나며, 대본을 고치면 다시 넣어야 한다. 되돌리기 한 번으로 돌아간다. clip 은 기본으로 캔버스 전체를 채워 가장자리가 잘리고, fit·box·anchor 중 하나라도 주면 box 안에 놓으며 영상이 덮지 않는 곳은 장면 배경색이 되고 video_background_set 으로 바꾼다. 배경 영상에는 장면 움직임이 적용되지 않고 전환은 적용된다."
 nav: "tools"
 tool: "video_source_add"
 generated: true
@@ -11,7 +11,7 @@ generated: true
 
 `video_source_add` · 매번 물어봄 · 내 컴퓨터
 
-연결 프로그램에 올려 봉인한 영상 · 소리 파일(media_stage_commit 의 handle)을 영상 편집기에 넣는 job 을 시작하고 job 을 돌려준다. clip 은 화면 올리기와 같이 10분까지 잘라 화질을 맞춘 뒤 그 장면의 배경 영상으로, bgm 은 배경 음악으로, narration 은 그 장면 대본을 읽은 목소리로 넣는다(대본이 있는 장면만, 장면 길이는 목소리에 맞춰 늘어난다, 대본을 고치면 다시 넣어야 한다). video_job_status 로 끝났는지 확인한다. 되돌리기 한 번으로 돌아간다. clip 은 기본으로 캔버스 전체를 채우고(cover) 넘치는 가장자리는 잘린다. fit·box·anchor 중 하나라도 주면 영상을 box 안에 놓는다: contain 은 원본 화면 전체를 비율대로 보이고 남는 곳은 장면 배경색, cover 는 box 를 채우고 anchor 쪽을 남겨 자른다. 영상이 덮지 않는 곳(contain 의 여백, box 바깥)은 넣기 전 장면 배경색을 이어받고, 넣은 뒤에도 video_background_set 으로 바꿀 수 있다. 영상 자체 색은 바뀌지 않는다. 배경 영상에는 지금처럼 장면 움직임(motion·camera)이 적용되지 않고, 전환은 그대로 적용된다. 결과 배치는 video_timeline_get 의 clipState.placement 로 확인한다.
+연결 프로그램에 올려 봉인한 영상·소리 파일(media_stage_commit 의 handle)을 영상 편집기에 넣는 job 을 시작해 돌려주고, 끝났는지는 video_job_status 로 확인한다. clip 은 10분까지 잘라 화질을 맞춘 뒤 그 장면의 배경 영상으로, bgm 은 배경 음악으로, narration 은 그 장면 대본을 읽은 목소리로 넣는다. narration 은 대본이 있는 장면만 되고, 장면 길이가 목소리에 맞춰 늘어나며, 대본을 고치면 다시 넣어야 한다. 되돌리기 한 번으로 돌아간다. clip 은 기본으로 캔버스 전체를 채워 가장자리가 잘리고, fit·box·anchor 중 하나라도 주면 box 안에 놓으며 영상이 덮지 않는 곳은 장면 배경색이 되고 video_background_set 으로 바꾼다. 배경 영상에는 장면 움직임이 적용되지 않고 전환은 적용된다.
 
 ## AI가 넘기는 값
 
@@ -35,7 +35,7 @@ generated: true
 
 - [영상 편집기 — 내보내기 진행 확인](/tools/video-editor/video_job_status/) `video_job_status`
 - [영상 편집기 — 배경 바꾸기](/tools/video-editor/video_background_set/) `video_background_set`
-- [영상 편집기 — 타임라인 확인](/tools/video-editor/video_timeline_get/) `video_timeline_get`
 - [영상 편집기 — 현재 프로젝트 확인](/tools/video-editor/video_project_get/) `video_project_get`
+- [영상 편집기 — 새 프로젝트 만들기](/tools/video-editor/video_project_new/) `video_project_new`
 
 이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.2 기준.

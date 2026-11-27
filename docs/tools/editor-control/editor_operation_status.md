@@ -1,7 +1,7 @@
 ---
 layout: "dl-tool"
 title: "작업 적용 확인"
-description: "operationId 를 받는 글쓰기 도구(스키마에 operationId 가 있는 것 전부, 예:editor_insert_draft·editor_replace·editor_set_title·editor_insert_image·editor_apply_styles·editor_type_text·editor_set_list)로 보낸 작업이 실제로 적용됐는지 확인한다. 응답이 끊겼거나 시간이 초과됐을 때 같은 작업을 다시 보내기 전에 부른다. state: succeeded(적용됨, 다시 보내지 말 것) / not_applied(적용 안 됨, 같은 operationId 로 다시 보내도 안전) / in_progress(실행 중) / unverified(판정 불가, editor_read_document 로 확인) / unknown(기록 없음)."
+description: "operationId 를 받는 글쓰기 도구(스키마에 operationId 가 있는 것 전부)로 보낸 작업이 실제로 적용됐는지 확인한다. 응답이 끊겼거나 시간이 초과됐을 때 같은 작업을 다시 보내기 전에 부르며, 아무것도 바꾸지 않는다. state 가 succeeded 면 이미 적용된 것이라 다시 보낼 일이 아니고, not_applied 면 같은 operationId 로 다시 보내도 안전하다. in_progress 는 아직 실행 중, unknown 은 기록이 없는 것이고, unverified 면 판정할 수 없어 editor_read_document 로 문서를 읽어 확인한다."
 nav: "tools"
 tool: "editor_operation_status"
 generated: true
@@ -11,7 +11,7 @@ generated: true
 
 `editor_operation_status` · 바로 조회 · 내 컴퓨터
 
-operationId 를 받는 글쓰기 도구(스키마에 operationId 가 있는 것 전부, 예:editor_insert_draft·editor_replace·editor_set_title·editor_insert_image·editor_apply_styles·editor_type_text·editor_set_list)로 보낸 작업이 실제로 적용됐는지 확인한다. 응답이 끊겼거나 시간이 초과됐을 때 같은 작업을 다시 보내기 전에 부른다. state: succeeded(적용됨, 다시 보내지 말 것) / not_applied(적용 안 됨, 같은 operationId 로 다시 보내도 안전) / in_progress(실행 중) / unverified(판정 불가, editor_read_document 로 확인) / unknown(기록 없음).
+operationId 를 받는 글쓰기 도구(스키마에 operationId 가 있는 것 전부)로 보낸 작업이 실제로 적용됐는지 확인한다. 응답이 끊겼거나 시간이 초과됐을 때 같은 작업을 다시 보내기 전에 부르며, 아무것도 바꾸지 않는다. state 가 succeeded 면 이미 적용된 것이라 다시 보낼 일이 아니고, not_applied 면 같은 operationId 로 다시 보내도 안전하다. in_progress 는 아직 실행 중, unknown 은 기록이 없는 것이고, unverified 면 판정할 수 없어 editor_read_document 로 문서를 읽어 확인한다.
 
 ## AI가 넘기는 값
 
@@ -21,9 +21,9 @@ operationId 를 받는 글쓰기 도구(스키마에 operationId 가 있는 것 
 
 ## 함께 쓰는 도구
 
-- [에디터에 초안 삽입](/tools/editor-control/editor_insert_draft/) `editor_insert_draft`
-- [본문 전체 교체](/tools/editor-control/editor_replace/) `editor_replace`
-- [제목 설정](/tools/editor-control/editor_set_title/) `editor_set_title`
-- [이미지 삽입](/tools/editor-control/editor_insert_image/) `editor_insert_image`
+- [문서 전체 읽기](/tools/editor-control/editor_read_document/) `editor_read_document`
+- [내부 링크 제안](/tools/editor-control/internal_links/) `internal_links`
+- [글쓰기 창 열기](/tools/editor-control/editor_open_window/) `editor_open_window`
+- [편집기 창 정리 (하나만 남기고 닫기)](/tools/editor-control/editor_reduce_windows/) `editor_reduce_windows`
 
 이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.2 기준.

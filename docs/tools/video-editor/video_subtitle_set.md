@@ -1,7 +1,7 @@
 ---
 layout: "dl-tool"
 title: "영상 편집기 — 자막 넣기"
-description: "한 장면의 자막을 바꾼다. 목소리가 읽는 대본은 video_timeline_get 의 장면 script 다. script.source 가 subtitle 이면(따로 적은 목소리 대본이 없으면) 자막이 곧 대본이다. script.source 가 narration 이면 목소리 대본이 따로 있어서, 자막을 고쳐도 목소리 대본과 이미 만든 목소리는 그대로이고 목소리는 최신으로 남는다. 다만 가져온 목소리 파일이 지금 자막을 대본으로 따르고 있으면, 대본도 같은 되돌리기 한 단계 안에서 새 자막으로 바뀌고 그 목소리는 stale 이 된다. 응답(data)의 narrationStale 은 이번 호출로 최신이던 목소리가 stale 이 되었을 때만 true 이고(같은 글자로 다시 쓰거나, 목소리가 없거나, 이미 stale 이었으면 false), script 는 호출 뒤의 대본이다(둘 다 응답마다 온다). stale 인 목소리는 video_narration_generate 로 다시 만든다. 자막의 글꼴·크기·색·상자·높이는 video_subtitle_style_set 으로 바꾸고, 서식만 바꾸면 목소리는 stale 이 되지 않는다."
+description: "한 장면의 자막을 바꾼다. 장면 script 의 source 가 subtitle 이면 자막이 곧 목소리 대본이고, narration 이면 대본이 따로 있어 자막을 고쳐도 대본과 이미 만든 목소리는 그대로다. 다만 가져온 목소리 파일이 지금 자막을 대본으로 따르고 있으면 대본도 같은 되돌리기 한 단계 안에서 새 자막으로 바뀌고 그 목소리는 stale 이 된다. 결과의 narrationStale 은 이번 호출로 최신이던 목소리가 stale 이 되었을 때만 true 이고, stale 인 목소리는 video_narration_generate 로 다시 만든다. 글꼴·크기·색 같은 서식만 바꾸려면 video_subtitle_style_set 을 쓰며, 그때 목소리는 stale 이 되지 않는다."
 nav: "tools"
 tool: "video_subtitle_set"
 generated: true
@@ -11,7 +11,7 @@ generated: true
 
 `video_subtitle_set` · 매번 물어봄 · 내 컴퓨터
 
-한 장면의 자막을 바꾼다. 목소리가 읽는 대본은 video_timeline_get 의 장면 script 다. script.source 가 subtitle 이면(따로 적은 목소리 대본이 없으면) 자막이 곧 대본이다. script.source 가 narration 이면 목소리 대본이 따로 있어서, 자막을 고쳐도 목소리 대본과 이미 만든 목소리는 그대로이고 목소리는 최신으로 남는다. 다만 가져온 목소리 파일이 지금 자막을 대본으로 따르고 있으면, 대본도 같은 되돌리기 한 단계 안에서 새 자막으로 바뀌고 그 목소리는 stale 이 된다. 응답(data)의 narrationStale 은 이번 호출로 최신이던 목소리가 stale 이 되었을 때만 true 이고(같은 글자로 다시 쓰거나, 목소리가 없거나, 이미 stale 이었으면 false), script 는 호출 뒤의 대본이다(둘 다 응답마다 온다). stale 인 목소리는 video_narration_generate 로 다시 만든다. 자막의 글꼴·크기·색·상자·높이는 video_subtitle_style_set 으로 바꾸고, 서식만 바꾸면 목소리는 stale 이 되지 않는다.
+한 장면의 자막을 바꾼다. 장면 script 의 source 가 subtitle 이면 자막이 곧 목소리 대본이고, narration 이면 대본이 따로 있어 자막을 고쳐도 대본과 이미 만든 목소리는 그대로다. 다만 가져온 목소리 파일이 지금 자막을 대본으로 따르고 있으면 대본도 같은 되돌리기 한 단계 안에서 새 자막으로 바뀌고 그 목소리는 stale 이 된다. 결과의 narrationStale 은 이번 호출로 최신이던 목소리가 stale 이 되었을 때만 true 이고, stale 인 목소리는 video_narration_generate 로 다시 만든다. 글꼴·크기·색 같은 서식만 바꾸려면 video_subtitle_style_set 을 쓰며, 그때 목소리는 stale 이 되지 않는다.
 
 ## AI가 넘기는 값
 
@@ -26,9 +26,9 @@ generated: true
 
 ## 함께 쓰는 도구
 
-- [영상 편집기 — 타임라인 확인](/tools/video-editor/video_timeline_get/) `video_timeline_get`
 - [영상 편집기 — AI 목소리 만들기(요금)](/tools/video-editor/video_narration_generate/) `video_narration_generate`
 - [영상 편집기 — 자막 서식 바꾸기](/tools/video-timeline/video_subtitle_style_set/) `video_subtitle_style_set`
 - [영상 편집기 — 현재 프로젝트 확인](/tools/video-editor/video_project_get/) `video_project_get`
+- [영상 편집기 — 새 프로젝트 만들기](/tools/video-editor/video_project_new/) `video_project_new`
 
 이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.2 기준.

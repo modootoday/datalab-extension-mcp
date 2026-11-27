@@ -18,7 +18,7 @@ generated: true
 | 이름 | 형식 | 필수 | 설명 |
 | --- | --- | --- | --- |
 | `stages` | 목록 | X | 돌릴 단계. 생략하면 caption 을 뺀 전부 |
-| `style` | 문자열 | X | 단계를 마친 뒤 입힐 스타일 팩(색·움직임·전환, 생략하면 입히지 않는다): informative 정보형·차분, review 제품 또렷, vlog 필름·빠른 호흡, mood 감성·느리게, sale 세일·눈에 띄게, tutorial 화면 고정, news 뉴스·또박또박, minimal 흑백·장식 없음. 장면 사이는 대부분 컷이고 팩이 정한 몇 장면마다만 전환이 들어간다 |
+| `style` | 문자열 | X | 단계 뒤 입힐 스타일 팩(색·움직임·전환, 생략 시 없음): informative 정보형·차분, review 제품 또렷, vlog 필름·빠른 호흡, mood 감성·느리게, sale 세일·눈에 띄게, tutorial 화면 고정, news 뉴스·또박또박, minimal 흑백·장식 없음. 전환은 팩이 정한 몇 장면에만 든다 |
 | `editor_session` | 문자열 | X | video_project_get/new/open 응답의 editorSession |
 | `expected_project` | 문자열 | X | 호출 대상 projectRef. 현재 대상과 다르면 실행하지 않는다 |
 | `expected_revision` | 정수 | X | 마지막으로 읽은 revision. 현재 값과 다르면 실행하지 않는다 |

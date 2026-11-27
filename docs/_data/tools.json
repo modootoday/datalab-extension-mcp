@@ -234,7 +234,7 @@
  "ad_estimate_bid": {
   "name": "ad_estimate_bid",
   "label": "입찰가 추정",
-  "summary": "검색광고 키워드의 입찰가 추정치를 조회한다. 이 값은 광고를 낼 때 광고주가 내는 비용이지 블로그 수익이 아니다 — 수익 추정 근거로 쓰지 마라. device=PC|MOBILE(기본 MOBILE). 사용자 SearchAd 인증정보 필요.",
+  "summary": "검색광고 키워드의 입찰가 추정치를 조회한다. 사용자의 SearchAd 인증정보가 있어야 한다. 이 값은 광고주가 광고를 낼 때 내는 비용이지 블로그 수익이 아니다. 수익 추정 근거로 읽으면 틀린 결론이 나온다.",
   "tier": "read",
   "grade": "read",
   "grade_badge": "g-read",
@@ -2309,7 +2309,7 @@
  "editor_apply_layout": {
   "name": "editor_apply_layout",
   "label": "간격 맞추기",
-  "summary": "글쓰기 창 본문에서 여러 컴포넌트 뒤의 빈 문단 수를 한 번에 맞춘다. 이 편집기에는 문단 앞뒤 간격 설정이 없어서 간격은 빈 문단 개수로 만든다. 단계마다 kind: setGap, componentId(editor_read_document 의 id), count(그 컴포넌트 뒤에 있어야 할 빈 문단 수, 0~10)를 준다. 빈 문단 수는 뒤따르는 빈 글 컴포넌트와 다음 글 컴포넌트 맨 앞의 빈 문단을 센 것이고, 그 컴포넌트 자신의 끝에 있는 빈 문단은 세지도 지우지도 않는다. 단계는 결과를 말하는 방식이라 많으면 지우고 모자라면 넣고 이미 맞으면 unchanged 로 지나간다. 단계 순서대로 실행하고 첫 실패에서 멈추며, 단계마다 before·after·state(done, unchanged, failed, not-run)와 실패 이유를 돌려준다. 중간에 멈췄으면 고친 뒤 같은 단계를 그대로 다시 보내면 끝낸 곳은 건너뛰고 이어서 한다. 본문 글, 이미지, 링크, 다른 컴포넌트의 순서가 바뀌면 그 단계를 되돌리고 content-changed 로 멈춘다. 컴포넌트의 첫 문단은 지울 수 없어 그 안의 맨 앞 빈 문단이 한 칸 남을 수 있다.",
+  "summary": "글쓰기 창 본문에서 여러 컴포넌트 뒤의 빈 문단 수를 한 번에 맞춘다. 이 편집기에는 문단 앞뒤 간격 설정이 없어서 간격은 빈 문단 개수로 만든다. 빈 문단 수는 뒤따르는 빈 글 컴포넌트와 다음 글 컴포넌트 맨 앞의 빈 문단을 센 것이고, 그 컴포넌트 자신의 끝에 있는 빈 문단은 세지도 지우지도 않는다. 단계는 결과를 말하는 방식이라 많으면 지우고 모자라면 넣고 이미 맞으면 unchanged 로 지나가므로, 첫 실패에서 멈춘 뒤 같은 단계를 그대로 다시 보내면 끝낸 곳은 건너뛴다. 본문 글·이미지·링크·다른 컴포넌트 순서가 바뀌면 그 단계를 되돌리고 content-changed 로 멈춘다. 컴포넌트의 첫 문단은 지울 수 없어 맨 앞 빈 문단이 한 칸 남을 수 있다.",
   "tier": "write",
   "grade": "ask",
   "grade_badge": "g-ask",
@@ -2342,11 +2342,6 @@
   ],
   "related": [
    {
-    "name": "editor_read_document",
-    "label": "문서 전체 읽기",
-    "url": "/tools/editor-control/editor_read_document/"
-   },
-   {
     "name": "editor_update_component",
     "label": "컴포넌트 고치기",
     "url": "/tools/editor-detail/editor_update_component/"
@@ -2360,6 +2355,11 @@
     "name": "editor_set_image_layout",
     "label": "이미지 배치",
     "url": "/tools/editor-detail/editor_set_image_layout/"
+   },
+   {
+    "name": "editor_move_component",
+    "label": "컴포넌트 이동",
+    "url": "/tools/editor-detail/editor_move_component/"
    }
   ],
   "prev": {
@@ -2439,7 +2439,7 @@
  "editor_apply_styles": {
   "name": "editor_apply_styles",
   "label": "글자 서식 적용",
-  "summary": "글쓰기 창 본문의 글자 구간에 서식을 건다. 한 문단 안에서 구간마다 글꼴·크기·굵게·기울임·밑줄·취소선·글자색·배경색·링크를 다르게 줄 수 있다. 문단 정렬과 행간은 editor_set_paragraph_styles 로 한다. 구간은 editor_read_document 가 돌려준 componentId 와 그 컴포넌트의 문단 번호(paragraphIndex, 0부터), 문단 text 기준 글자 위치 [start, end) 로 고른다. 규칙은 순서대로 적용되고, 각 규칙은 적용 뒤 다시 읽어 실제로 걸렸는지 results 의 applied 로 알려 준다. 글꼴은 저장된 값이 아니라 그 구간 글자가 실제로 보이는 값으로 판단한다: applied 가 true 이면 구간의 모든 글자가 요청한 글꼴로 보인다는 뜻이고, 그 값과 출처는 results 의 effective.fontFamily 에 있다. 편집기는 기본 글꼴(nanumgothic)을 저장하지 않으므로, 테마가 다른 글꼴을 정해 둔 문단에 nanumgothic 을 요청하면 보내지 않고 theme-default-not-storable 로 거절하며 message 와 지금 보이는 effective 를 함께 준다. 글자는 바뀌지 않는다. 표 칸은 일반 본문 테마가 아니라 그 칸이 가진 테마 값으로 판단하고, 거절 판단과 적용 뒤 판정이 같은 값을 읽는다. 처음에 값을 알 수 없던 칸에 편집기가 글꼴을 저장하면 applied: true(source stored)이고, 같은 상태의 소제목처럼 편집기가 값을 버리면 not-applied 로 남는다. 인용구는 글꼴, 취소선, 배경색을 받지 않아 그 서식을 요청하면 보내지 않고 unsupported-in-component 로 답한다. 서식이 섞인 문단은 editor_read_document 의 runs 로 구간별 실제 값을 확인한다. runs 에 fontFamily 가 없으면 저장된 글꼴이 없다는 뜻이고, 실제 글꼴과 출처는 editor_read_document 의 effective.fontFamily 로 본다. 표의 칸 안 글자에도 걸 수 있다: componentId 에 표 id 를, cell 에 { row, col } 을 주고 paragraphIndex 와 [start, end) 는 그 칸 안에서 센다. 칸 번호 규칙은 cell 설명에 있고, 칸 하나라도 잘못되면 어떤 규칙도 적용하지 않고 거절한다. applied 가 false 인 규칙은 저장된 것이 아니다.",
+  "summary": "글쓰기 창 본문의 글자 구간에 글꼴·크기·굵게·기울임·밑줄·취소선·글자색·배경색·링크를 걸며 글자는 바뀌지 않는다. 문단 정렬과 행간이면 editor_set_paragraph_styles 를 쓴다. 구간은 본문 읽기 결과의 componentId 와 paragraphIndex, 문단 text 기준 [start, end) 로 고르고, 표의 칸 안이면 cell 을 주며 칸 하나라도 잘못되면 어떤 규칙도 적용하지 않는다. 인용구는 글꼴·취소선·배경색을 받지 않아 unsupported-in-component 로 답한다. 편집기가 기본 글꼴 nanumgothic 을 저장하지 않아 테마가 다른 글꼴을 정한 문단의 nanumgothic 요청은 theme-default-not-storable 로 거절한다. results 의 applied 는 다시 읽은 글자가 실제로 그렇게 보이는지이고 false 인 규칙은 저장되지 않은 것이며, 실제 글꼴과 출처는 effective.fontFamily 에 있다.",
   "tier": "write",
   "grade": "ask",
   "grade_badge": "g-ask",
@@ -2477,11 +2477,6 @@
     "url": "/tools/editor-detail/editor_set_paragraph_styles/"
    },
    {
-    "name": "editor_read_document",
-    "label": "문서 전체 읽기",
-    "url": "/tools/editor-control/editor_read_document/"
-   },
-   {
     "name": "editor_update_component",
     "label": "컴포넌트 고치기",
     "url": "/tools/editor-detail/editor_update_component/"
@@ -2490,6 +2485,11 @@
     "name": "editor_apply_layout",
     "label": "간격 맞추기",
     "url": "/tools/editor-detail/editor_apply_layout/"
+   },
+   {
+    "name": "editor_set_image_layout",
+    "label": "이미지 배치",
+    "url": "/tools/editor-detail/editor_set_image_layout/"
    }
   ],
   "prev": {
@@ -2507,7 +2507,7 @@
  "editor_capture_document": {
   "name": "editor_capture_document",
   "label": "편집 화면 찍기",
-  "summary": "글쓰기 창의 실제 편집 화면을 사진으로 찍어 이미지로 돌려준다. 탭을 앞으로 가져온 뒤 지금 보이는 화면을 찍는다. componentId 를 주면 그 컴포넌트를 화면 가운데로 스크롤한 뒤 그 부분만 잘라 준다. 응답에는 editorSession, revision, 화면 크기(viewport), 컴포넌트 위치(rect), 마지막 임시저장과 같은 내용인지(draftSaved)가 들어 있다. 찍는 것은 편집 화면이고 발행된 글 화면이 아니다. 글 전체를 한 장으로 이어 붙이지는 않으니 긴 글은 componentId 로 나눠 부른다. 화면 너비는 사용자의 창 그대로라서 바꾸지 않는다. viewportWidth 를 주면 실제 너비와 맞는지만 확인하고, 다르면 찍지 않고 실제 너비를 알려 준다. 글쓰기 창이 하나일 때만 동작한다. 설치된 확장 프로그램이 화면을 찍지 못하면 페이지 내용으로 편집 화면을 다시 그려 돌려준다(method: dom-render). 이 그림은 실제 스크린샷이 아니라서 글꼴, 동영상·지도 같은 삽입물, 일부 이미지가 실제 화면과 다를 수 있고, 불러오지 못한 이미지는 회색 상자로 그린다. 인자 없이({}) 불러도 된다. 결과의 diagnostics 에는 method, 그린 시간(renderMs), 회색 상자 수(placeholders: offscreen 화면 밖이라 안 가져옴, fetchFailed 가져오기 실패, noBridge 가져올 통로 없음), 배포된 파일 이름의 해시(loaderAssetHash, panelAssetHash, git 커밋이 아님)가 있다. 해시를 읽지 못하면 그 대신 이유(loaderAssetHashUnavailable, panelAssetHashUnavailable: unhashed-name 은 파일 이름에 해시가 없음, not-reported 는 이 값을 알려 주기 전의 로더)가 붙는다. 다시 그리기도 실패하면 stage 로 멈춘 단계를 알려 준다: no-matching-tab, no-controller(창은 있지만 편집기가 답하지 않음), loader-predates-op(창이 예전 로더라 새로고침 필요), relay-timeout, relay-failed, 또는 페이지 안 단계(editor-not-found, not-visible, component-missing, timeout, render-failed).",
+  "summary": "글쓰기 창의 편집 화면을 찍어 이미지로 돌려주며, 탭을 앞으로 가져온 뒤 지금 보이는 화면을 찍는다. 찍는 것은 편집 화면이지 발행된 글이 아니고, 글 전체를 한 장으로 잇지 않아 긴 글은 componentId 로 그 컴포넌트를 가운데로 스크롤해 나눠 찍는다. 글쓰기 창이 하나일 때만 동작하고 인자 없이 불러도 된다. 화면 너비는 바꾸지 않으며 viewportWidth 가 실제 너비와 다르면 찍지 않고 실제 너비를 알려 준다. method 가 dom-render 면 실제 스크린샷이 아니라 페이지 내용으로 다시 그린 그림이라 글꼴·삽입물·일부 이미지가 다를 수 있고, 불러오지 못한 이미지는 회색 상자다. diagnostics 의 파일 해시는 git 커밋이 아니다. 실패하면 stage 가 멈춘 단계이고, loader-predates-op 면 창을 새로고침해야 한다.",
   "tier": "write",
   "grade": "ask",
   "grade_badge": "g-ask",
@@ -2569,7 +2569,7 @@
  "editor_debug": {
   "name": "editor_debug",
   "label": "코드 실행(개발용)",
-  "summary": "개발용. 글쓰기 창 페이지 안에서 짧은 자바스크립트를 직접 실행하고 반환값을 돌려준다. 새 도구를 만들기 전에 에디터 내부 객체를 들여다보거나 가설을 시험할 때 쓴다. 코드는 async 함수의 본문이라 await 와 return 을 쓸 수 있고, 인자 하나 ctx 를 받는다. ctx.se 는 에디터 객체, ctx.controller 는 우리 컨트롤러, ctx.json() 은 문서 JSON, ctx.components() 는 컴포넌트 목록, ctx.sleep(ms) 는 기다림, ctx.log(...) 는 결과의 logs 에 줄을 남긴다. 반환값은 순환과 DOM 과 함수를 걸러 JSON 으로 바뀐다. 값마다 상한이 있다: 깊이 6단계(더 깊으면 [Object] 나 [Array(n)]), 객체 키 100개, 배열 항목 100개, 문자열 2000자, DOM 텍스트 노드 60자. 이 상한에 하나라도 걸리면 결과에 clipped 가 붙어 depth, keys, items, strings 별로 걸린 횟수와 처음 걸린 자리(paths, 최대 10개, 예: $.list[3].name)를 알려 준다. 그 뒤 JSON 전체가 maxChars 를 넘으면 잘라서 truncated 를 true 로 한다(truncated 는 maxChars 만 뜻한다). ctx.log 는 50줄, 줄마다 500자까지 남는다. 코드는 글을 바꿀 수도 있으니 읽기만 할 때는 바꾸지 않는 코드를 쓰고, 결과의 revisionBefore 와 revisionAfter 가 다르면 글이 바뀐 것이다. 바뀌었으면 editor_undo 나 editor_read_document 로 확인한다. 페이지가 문자열 코드 실행을 막으면 stage 가 eval-blocked 로 온다. 매번 사용자 확인을 받는다.",
+  "summary": "글쓰기 창 페이지 안에서 짧은 자바스크립트를 실행하고 반환값을 돌려주는 개발용 도구다. 새 도구를 만들기 전에 에디터 내부 객체를 들여다보거나 가설을 시험할 때 쓴다. 매번 사용자 확인을 받고, 코드는 글을 바꿀 수도 있다. 반환값은 순환·DOM·함수를 걸러 JSON 으로 바뀌며, 깊이·키·항목·문자열 상한에 걸리면 clipped 가 붙어 걸린 자리를 알려 주고, JSON 전체가 maxChars 를 넘을 때만 truncated 가 true 다. revisionBefore 와 revisionAfter 가 다르면 글이 바뀐 것이라 editor_undo 나 editor_read_document 로 확인한다. stage 가 eval-blocked 면 페이지가 문자열 코드 실행을 막은 것이다.",
   "tier": "destructive",
   "grade": "ask",
   "grade_badge": "g-ask",
@@ -2585,7 +2585,7 @@
     "name": "code",
     "type": "문자열",
     "required": "O",
-    "description": "실행할 코드. async 함수의 본문이며 return 으로 값을 돌려준다. 예: return ctx.components().length"
+    "description": "실행할 코드. async 함수의 본문이며 return 으로 값을 돌려준다. 인자 ctx 는 se(에디터)·controller·json()·components()·sleep(ms)·log(...) 를 준다. 예: return ctx.components().length"
    },
    {
     "name": "timeoutMs",
@@ -2637,7 +2637,7 @@
  "editor_delete_components": {
   "name": "editor_delete_components",
   "label": "컴포넌트 삭제",
-  "summary": "글쓰기 창 본문에서 컴포넌트를 통째로 지운다. 문단, 이미지, 인용구, 구분선 등 id 로 고른 컴포넌트가 글에서 사라진다. 한 번에 20개까지. id 가 하나라도 없으면 아무것도 지우지 않는다. 제목은 지울 수 없고, 본문이 모두 비게 되는 요청도 거절한다. 응답의 deleted 에 지운 컴포넌트의 id, 종류, 글 앞부분(30자)이 들어 있다. 지우기 전에 복원 지점이 저장되고 editor_undo 로 되돌릴 수 있다. 빈 문단만 지우려면 editor_remove_blank_paragraph 를 쓴다. 지울 id 는 반드시 editor_read_document 로 방금 읽은 것이어야 하고, target.expectedRevision 을 함께 주면 글이 그 사이 바뀐 경우 지우지 않는다.",
+  "summary": "글쓰기 창 본문에서 컴포넌트를 통째로 지운다. 문단, 이미지, 인용구, 구분선 등 id 로 고른 컴포넌트가 글에서 사라진다. 한 번에 20개까지. id 가 하나라도 없으면 아무것도 지우지 않는다. 제목은 지울 수 없고, 본문이 모두 비게 되는 요청도 거절한다. 응답의 deleted 에 지운 컴포넌트의 id, 종류, 글 앞부분(30자)이 들어 있다. 지우기 전에 복원 지점이 저장되고 editor_undo 로 되돌릴 수 있다. 빈 문단만 지우려면 editor_remove_blank_paragraph 를 쓴다. 지울 id 가 방금 읽은 본문의 것이 아니면 엉뚱한 컴포넌트가 지워질 수 있고, target.expectedRevision 을 함께 주면 글이 그 사이 바뀐 경우 지우지 않는다. 다시 부르면 id 가 이미 없어 아무것도 지우지 않는다.",
   "tier": "destructive",
   "grade": "ask",
   "grade_badge": "g-ask",
@@ -2680,14 +2680,14 @@
     "url": "/tools/editor-detail/editor_remove_blank_paragraph/"
    },
    {
-    "name": "editor_read_document",
-    "label": "문서 전체 읽기",
-    "url": "/tools/editor-control/editor_read_document/"
-   },
-   {
     "name": "editor_update_component",
     "label": "컴포넌트 고치기",
     "url": "/tools/editor-detail/editor_update_component/"
+   },
+   {
+    "name": "editor_set_paragraph_styles",
+    "label": "문단 서식 적용",
+    "url": "/tools/editor-detail/editor_set_paragraph_styles/"
    }
   ],
   "prev": {
@@ -2926,7 +2926,7 @@
  "editor_insert_component": {
   "name": "editor_insert_component",
   "label": "인용구·구분선 넣기",
-  "summary": "글쓰기 창 본문의 기준 컴포넌트 앞이나 뒤에 인용구·구분선·소제목을 넣는다. 커서 위치와 상관없이 componentId 로 위치를 정하고, 넣은 뒤 목록을 다시 읽어 그 자리에 있는지 확인하며 어긋나면 되돌리고 거절한다. 기준 컴포넌트는 editor_read_document 가 돌려준 id 이고, 제목 앞에는 넣을 수 없다. 인용구와 소제목은 text 가 필요하고 구분선에는 줄 수 없다. 디자인 값: quotation: default, quotation_line, quotation_bubble, quotation_underline, quotation_postit, quotation_corner. horizontalLine: default, line1, line2, line3, line4, line5, line6, line7. sectionTitle: default kind 가 formula 이면 latex(1~500자)로 수식을 넣는다. 편집기의 수식 창에 넣어 확인한 뒤 넣고, 썸네일 업로드까지 기다린다. 같은 latex 의 수식이 이미 있으면 새로 넣지 않고 그 수식을 idempotent: true 로 돌려준다. 실패하면 수식 창을 취소하고 kind: formula-unconfirmed 와 reason 으로 답한다. 실패 응답의 identityChanged 가 true 이면 다음 쓰기 전에 반드시 editor_read_document 로 다시 읽는다. 응답의 formula 는 latex, 분수 여부(fraction), 텍스트 줄 수(rows), 썸네일 크기와 주소가 있는지(srcPresent)다. 기존 글과 이미지는 건드리지 않는다. 응답의 componentId 는 넣은 컴포넌트의 id 이고, 편집기가 합치는 경우에 대비해 다음 작업 전에 editor_read_document 로 다시 읽는다.",
+  "summary": "글쓰기 창 본문의 기준 컴포넌트 앞이나 뒤에 인용구·구분선·소제목·수식을 넣고, 기존 글과 이미지는 건드리지 않는다. 커서와 상관없이 editor_read_document 가 돌려준 componentId 로 위치를 정하며, 넣은 뒤 다시 읽어 그 자리가 아니면 되돌리고 거절하고, 제목 앞에는 넣을 수 없다. 인용구와 소제목은 text 가 있어야 하고 구분선에는 줄 수 없다. kind 가 formula 면 latex 를 수식 창에서 확인하고 썸네일 업로드까지 기다리며, 같은 latex 수식이 이미 있으면 새로 넣지 않고 idempotent 를 true 로 준다. 다른 종류는 다시 부르면 하나가 더 들어간다. 수식이 실패하면 수식 창을 취소하고 kind 를 formula-unconfirmed 로 답하며, identityChanged 가 true 면 다시 읽기 전의 id 는 어긋난다. 결과의 componentId 는 넣은 컴포넌트지만 편집기가 합칠 수 있어 다음 작업 전에 다시 읽는다.",
   "tier": "write",
   "grade": "ask",
   "grade_badge": "g-ask",
@@ -2966,7 +2966,7 @@
     "name": "design",
     "type": "문자열",
     "required": "X",
-    "description": "디자인 값. 기본 default. quotation: default, quotation_line, quotation_bubble, quotation_underline, quotation_postit, quotation_corner. horizontalLine: default, line1, line2, line3, line4, line5, line6, line7. sectionTitle: default"
+    "description": "디자인 값. 기본이자 공통 값은 default, quotation quotation_line·quotation_bubble·quotation_underline·quotation_postit·quotation_corner / horizontalLine line1·line2·line3·line4·line5·line6·line7"
    },
    {
     "name": "text",
@@ -3024,7 +3024,7 @@
  "editor_insert_draft": {
   "name": "editor_insert_draft",
   "label": "에디터에 초안 삽입",
-  "summary": "마크다운 초안을 현재 글쓰기 창 에디터 본문에 삽입한다. 글을 작성/추가해 달라는 요청에 사용한다. 이미 작성된 내용이 있으면 사용자 확인을 거친다. write_draft 가 초안 참조(dr_...)를 돌려줬다면 본문을 다시 옮겨 적지 말고 artifactId 로 그 값을 넘겨라 — 제목도 함께 반영되므로 editor_set_title 을 따로 부를 필요가 없다. 결과의 titleApplied 가 제목을 어떻게 했는지 알려 준다(set=넣음 / kept-existing=이미 있어 그대로 / none=안 넣음). 🔴 제목을 본문 마크다운 안에 다시 적지 마라.",
+  "summary": "마크다운 초안을 현재 글쓰기 창 에디터 본문에 넣으며, 글을 작성하거나 추가해 달라는 요청에 맞는다. 이미 작성된 내용이 있으면 사용자 확인을 거친다. write_draft 가 초안 참조(dr_...)를 돌려줬다면 본문을 옮겨 적지 않고 artifactId 로 넘기면 되고, 제목도 함께 반영되어 editor_set_title 을 따로 부를 일이 없다. 제목을 본문 마크다운 안에 다시 적으면 본문에도 제목이 한 번 더 들어간다. 결과의 titleApplied 가 kept-existing 이면 이미 있던 제목을 그대로 둔 것이고 none 이면 제목을 넣지 않은 것이다.",
   "tier": "write",
   "grade": "ask",
   "grade_badge": "g-ask",
@@ -3282,7 +3282,7 @@
  "editor_insert_link_card": {
   "name": "editor_insert_link_card",
   "label": "링크 카드 넣기",
-  "summary": "글쓰기 창 본문의 한 컴포넌트 앞이나 뒤에 링크 카드를 넣는다. 주소(url)는 http 나 https 로 시작하는 웹 주소이고, 기준 컴포넌트는 editor_read_document 의 id(componentId)로 고르며 position 은 after(기본)나 before 다. 제목, 설명, 썸네일은 에디터가 그 주소를 네이버 쪽에서 가져온 것으로 채운다 — 서명이 있고 보여 줄 내용(제목이나 도메인이나 설명, 영상이면 html)이 있는 카드만 넣고, 영상 같은 주소는 영상 카드로 바뀔 수 있어 그때 ctype 이 oembed 다. 가져오지 못했거나(not-crawled) 가져온 것이 비어 빈 상자가 될 것이면(empty-card) 문서를 바꾸지 않고, 요청한 자리에 안 들어가면(misplaced) 넣은 것을 지운다. 이유와 복원 여부는 kind: link-card-unconfirmed 로 알린다. 카드 내용은 우리가 정할 수 없고 에디터가 가져온 것이다. 같은 호출을 되풀이하면 카드가 두 번 들어간다.",
+  "summary": "글쓰기 창 본문의 한 컴포넌트 앞이나 뒤에 http·https 주소의 링크 카드를 넣는다. 기준 컴포넌트는 본문 읽기 결과의 componentId 로 고른다. 제목·설명·썸네일은 에디터가 네이버 쪽에서 가져온 것으로 채워 정할 수 없고, 영상 같은 주소는 영상 카드로 바뀌어 ctype 이 oembed 가 될 수 있다. 가져오지 못했거나(not-crawled) 빈 상자가 될 것이면(empty-card) 문서를 바꾸지 않고, 요청한 자리에 안 들어가면(misplaced) 넣은 것을 지우며, 이유와 복원 여부는 kind 를 link-card-unconfirmed 로 해 알린다. 같은 호출을 되풀이하면 카드가 두 번 들어간다.",
   "tier": "write",
   "grade": "ask",
   "grade_badge": "g-ask",
@@ -3327,11 +3327,6 @@
   ],
   "related": [
    {
-    "name": "editor_read_document",
-    "label": "문서 전체 읽기",
-    "url": "/tools/editor-control/editor_read_document/"
-   },
-   {
     "name": "editor_update_component",
     "label": "컴포넌트 고치기",
     "url": "/tools/editor-detail/editor_update_component/"
@@ -3345,6 +3340,11 @@
     "name": "editor_apply_layout",
     "label": "간격 맞추기",
     "url": "/tools/editor-detail/editor_apply_layout/"
+   },
+   {
+    "name": "editor_set_image_layout",
+    "label": "이미지 배치",
+    "url": "/tools/editor-detail/editor_set_image_layout/"
    }
   ],
   "prev": {
@@ -3448,7 +3448,7 @@
  "editor_insert_video": {
   "name": "editor_insert_video",
   "label": "영상 넣기",
-  "summary": "글쓰기 창 본문의 한 컴포넌트 앞이나 뒤에 영상 하나를 넣는다. 파일 이름(fileName)과 내용(contentBase64, base64 문자열, 2MB 이하)을 주면 에디터의 영상 올리기로 블로그에 올리고 영상 칸을 만든다. 기준 컴포넌트는 editor_read_document 의 id(componentId)로 고르며 position 은 after(기본)나 before 다. 에디터가 형식이나 길이를 받지 않으면 문서를 바꾸지 않고 사유를 알린다. 영상 칸은 바로 생기고 업로드는 뒤에서 이어지므로 응답의 phase 가 processing 이면 아직 끝나지 않은 것이다(done 이어야 끝). 올리지 못했거나(upload-failed) 요청한 자리에 안 들어가면(misplaced) 만든 칸을 지우고 이유와 복원 여부를 kind: video-unconfirmed 로 알린다. 올라간 영상은 성공해도 실패해도 블로그 영상 보관함에 남을 수 있다. 같은 호출을 되풀이하면 영상이 두 번 들어간다.",
+  "summary": "글쓰기 창 본문의 한 컴포넌트 앞이나 뒤에 영상 하나를 넣는다. 2MB 이하 파일을 주면 에디터의 영상 올리기로 블로그에 올리고 영상 칸을 만들며, 기준 컴포넌트는 본문 읽기 결과의 componentId 로 고른다. 에디터가 형식이나 길이를 받지 않으면 문서를 바꾸지 않고 사유를 알린다. 영상 칸은 바로 생기고 업로드는 뒤에서 이어지므로 응답의 phase 가 processing 이면 아직 끝나지 않은 것이다(done 이어야 끝). 올리지 못했거나(upload-failed) 요청한 자리에 안 들어가면(misplaced) 만든 칸을 지우고 이유와 복원 여부를 kind 를 video-unconfirmed 로 해 알린다. 올라간 영상은 성공해도 실패해도 블로그 영상 보관함에 남을 수 있다. 같은 호출을 되풀이하면 영상이 두 번 들어간다.",
   "tier": "write",
   "grade": "ask",
   "grade_badge": "g-ask",
@@ -3505,11 +3505,6 @@
   ],
   "related": [
    {
-    "name": "editor_read_document",
-    "label": "문서 전체 읽기",
-    "url": "/tools/editor-control/editor_read_document/"
-   },
-   {
     "name": "editor_update_component",
     "label": "컴포넌트 고치기",
     "url": "/tools/editor-detail/editor_update_component/"
@@ -3523,6 +3518,11 @@
     "name": "editor_apply_layout",
     "label": "간격 맞추기",
     "url": "/tools/editor-detail/editor_apply_layout/"
+   },
+   {
+    "name": "editor_set_image_layout",
+    "label": "이미지 배치",
+    "url": "/tools/editor-detail/editor_set_image_layout/"
    }
   ],
   "prev": {
@@ -3688,7 +3688,7 @@
  "editor_new_post": {
   "name": "editor_new_post",
   "label": "새 글로 전환",
-  "summary": "같은 글쓰기 탭을 빈 새 글로 바꾼다. 마지막으로 확인된 임시저장 뒤에 바뀐 내용이 있으면 바꾸지 않고 kind: unsaved-changes 로 멈춘다 — 먼저 editor_save_draft 로 저장하거나, 사용자가 그대로 넘어가도 된다고 했을 때만 discardUnsaved: true 로 다시 부른다. true 이면 네이버가 지금 원고를 먼저 임시저장한 뒤 전환한다. 결과 읽는 법은 editor_reduce_windows 의 reuse-then-reset 과 같다(newEditorReady 가 true 여야 준비된 것). restorePopup: \"cancel\" 을 주면, 새 글에 작성 중이던 글을 이어 쓸지 묻는 복원 창이 떴을 때 그 창의 취소만 눌러 닫고 결과 restorePopup 으로 알려 준다: 확인하는 동안 창이 뜨지 않았으면 { present: false, dismissed: false }, 취소로 닫았으면 { present: true, dismissed: true }, 떴지만 닫지 못했으면 present: true 와 error. 편집기가 제때 뜨지 않았거나(editor-not-ready) 페이지가 예전 버전이거나(stale-page) 확인 자체가 실패하면(probe-failed) present 는 null 이고 error 에 그 이유가 있다. editor-not-ready 에는 기다린 시간 waitedMs 와 멈춘 단계 stage(tab-loading, loader-not-attached, controller-not-ready)가 함께 온다. 이때는 창이 떴는지 모르는 것이지 없었던 것이 아니다. restorePopup.timeline 은 editor_open_window 의 것과 같은 단계별 밀리초(tabSelectedMs·loaderAnsweredMs·controllerReadyMs·probeSentMs·probeAnsweredMs, 없으면 null)와 lastRelayError·readinessAttempts 다. 확인은 누르지 않는다. 주지 않으면 복원 창을 건드리지 않는다.",
+  "summary": "같은 글쓰기 탭을 빈 새 글로 바꾼다. 마지막으로 확인된 임시저장 뒤에 바뀐 내용이 있으면 바꾸지 않고 kind 를 unsaved-changes 로 하고 멈춘다. 그때는 editor_save_draft 로 먼저 저장하고, 사용자가 그대로 넘어가도 된다고 했을 때만 discardUnsaved 를 true 로 다시 부르며, 그러면 네이버가 지금 원고를 먼저 임시저장한 뒤 전환한다. restorePopup 에 cancel 을 주면 새 글의 복원 창에서 취소만 눌러 닫고 확인은 누르지 않으며, 주지 않으면 복원 창을 건드리지 않는다. 결과의 newEditorReady 가 true 여야 빈 편집기가 준비된 것이다. restorePopup 의 present 가 null 이면 복원 창이 떴는지 모르는 것이지 없었던 것이 아니고, error 에 그 이유가 온다.",
   "tier": "write",
   "grade": "ask",
   "grade_badge": "g-ask",
@@ -3720,9 +3720,9 @@
     "url": "/tools/editor-control/editor_save_draft/"
    },
    {
-    "name": "editor_reduce_windows",
-    "label": "편집기 창 정리 (하나만 남기고 닫기)",
-    "url": "/tools/editor-control/editor_reduce_windows/"
+    "name": "internal_links",
+    "label": "내부 링크 제안",
+    "url": "/tools/editor-control/internal_links/"
    },
    {
     "name": "editor_open_window",
@@ -3730,9 +3730,9 @@
     "url": "/tools/editor-control/editor_open_window/"
    },
    {
-    "name": "internal_links",
-    "label": "내부 링크 제안",
-    "url": "/tools/editor-control/internal_links/"
+    "name": "editor_reduce_windows",
+    "label": "편집기 창 정리 (하나만 남기고 닫기)",
+    "url": "/tools/editor-control/editor_reduce_windows/"
    }
   ],
   "prev": {
@@ -3750,7 +3750,7 @@
  "editor_open_saved_draft": {
   "name": "editor_open_saved_draft",
   "label": "임시저장 글 불러오기",
-  "summary": "임시저장한 글 하나를 지금 글쓰기 창에 불러온다. draftId 는 editor_save_draft 나 editor_list_saved_drafts 가 돌려준 글 번호다. 네이버 임시저장 목록에서 그 글을 누르는 방식이라, 불러온 뒤 저장하면 같은 임시저장 글이 갱신된다. 지금 창에 마지막 저장 뒤 바뀐 내용이 있으면 불러오지 않고 kind: unsaved-changes 로 멈춘다 — 먼저 editor_save_draft 로 저장하거나, 사용자가 그대로 넘어가도 된다고 했을 때만 discardUnsaved: true. true 이면 네이버가 지금 원고를 먼저 임시저장한 뒤 불러온다. 불러온 뒤 revision 이 바뀌므로 editor_read_document 로 다시 읽고 쓴다. unsaved-changes 의 lastSave 는 이 글쓰기 페이지가 마지막으로 확인한 저장(네이버 자동저장 포함)이라 불러오려는 글 번호와 다를 수 있고, revision 이 null 이면 이 도구가 저장한 것이 아니다. 불러오지 못했을 때(open-unconfirmed)는 trace 로 상황을 알린다: pressed(글을 눌렀는지), readObserved(네이버가 그 글을 읽었는지), revisionBefore·revisionNow·revisionChanged. revisionChanged 가 true 이면 편집기 문서가 이미 바뀌었을 수 있어 retryable 이 false 이며, 다시 열기 전에 editor_read_document 로 요청한 글인지 확인한다.",
+  "summary": "임시저장한 글 하나를 지금 글쓰기 창에 불러온다. draftId 는 임시저장이나 임시저장 목록 도구가 돌려준 글 번호이고, 네이버 임시저장 목록에서 그 글을 누르는 방식이라 불러온 뒤 저장하면 같은 임시저장 글이 갱신된다. 지금 창에 마지막 저장 뒤 바뀐 내용이 있으면 불러오지 않고 kind 를 unsaved-changes 로 하고 멈추며, 그때는 editor_save_draft 로 먼저 저장하고 사용자가 그대로 넘어가도 된다고 했을 때만 discardUnsaved 를 true 로 준다. 불러온 뒤에는 revision 이 바뀌어 editor_read_document 로 다시 읽어야 쓸 수 있다. 불러오지 못한 open-unconfirmed 에서 revisionChanged 가 true 면 문서가 이미 바뀌었을 수 있어 retryable 이 false 이고, 다시 열기 전에 요청한 글인지 읽어 확인한다.",
   "tier": "write",
   "grade": "ask",
   "grade_badge": "g-ask",
@@ -3782,11 +3782,6 @@
     "url": "/tools/editor-control/editor_save_draft/"
    },
    {
-    "name": "editor_list_saved_drafts",
-    "label": "임시저장 목록",
-    "url": "/tools/editor-control/editor_list_saved_drafts/"
-   },
-   {
     "name": "editor_read_document",
     "label": "문서 전체 읽기",
     "url": "/tools/editor-control/editor_read_document/"
@@ -3795,6 +3790,11 @@
     "name": "internal_links",
     "label": "내부 링크 제안",
     "url": "/tools/editor-control/internal_links/"
+   },
+   {
+    "name": "editor_open_window",
+    "label": "글쓰기 창 열기",
+    "url": "/tools/editor-control/editor_open_window/"
    }
   ],
   "prev": {
@@ -3812,7 +3812,7 @@
  "editor_open_window": {
   "name": "editor_open_window",
   "label": "글쓰기 창 열기",
-  "summary": "네이버 블로그 글쓰기 창을 새로 연다. 글쓰기 도구가 '창이 열려 있지 않다'고 답했을 때 이것으로 열고 다시 시도한다. title/markdown 을 주면 그 내용을 담은 채로 열리므로, 빈 창을 연 뒤 다시 써넣을 필요가 없다. 이미 창이 열려 있으면 새로 열지 않고 그 사실을 알려 준다. restorePopup: \"cancel\" 을 주면, 글쓰기 창에 작성 중이던 글을 이어 쓸지 묻는 복원 창이 떴을 때 그 창의 취소만 눌러 닫고 결과 restorePopup 으로 알려 준다. 이미 열린 창이 있을 때도 새 창을 열지 않고 그 창에서 같은 준비 확인과 취소 확인을 하고 결과를 restorePopup 으로 준다. 준비된 창이면 보통 { present: false, dismissed: false } 다: 확인하는 동안 창이 뜨지 않았으면 { present: false, dismissed: false }, 취소로 닫았으면 { present: true, dismissed: true }, 떴지만 닫지 못했으면 present: true 와 error. 편집기가 제때 뜨지 않았거나(editor-not-ready) 페이지가 예전 버전이거나(stale-page) 확인 자체가 실패하면(probe-failed) present 는 null 이고 error 에 그 이유가 있다. editor-not-ready 에는 기다린 시간 waitedMs 와 멈춘 단계 stage 가 함께 온다: tab-loading 은 글쓰기 탭 주소가 아직 잡히지 않은 것, loader-not-attached 는 탭은 있지만 확장이 아직 붙지 않은 것, controller-not-ready 는 확장은 붙었지만 편집기가 아직 준비되지 않은 것이다. 이때는 창이 떴는지 모르는 것이지 없었던 것이 아니다. restorePopup.timeline 에는 창 열기 요청을 받은 때부터 잰 밀리초가 있다: tabSelectedMs(글쓰기 탭을 찾은 때), loaderAnsweredMs(확장이 처음 답한 때), controllerReadyMs(편집기가 준비됐다고 처음 답한 때), probeSentMs(취소 확인을 보낸 때), probeAnsweredMs(취소 확인이 답한 때), 일어나지 않은 단계는 null 이다. lastRelayError 는 마지막으로 본 전달 실패 코드(no-agent·no-matching-tab·timeout 등) 또는 null, readinessAttempts 는 준비 확인을 몇 번 했는지다. 확인은 누르지 않는다. 주지 않으면 복원 창을 건드리지 않는다.",
+  "summary": "네이버 블로그 글쓰기 창을 새로 연다. 글쓰기 도구가 '창이 열려 있지 않다'고 답했을 때 이것으로 열고 다시 시도하며, title·markdown 을 주면 그 내용을 담은 채로 열린다. 이미 창이 열려 있으면 새로 열지 않고 그 사실을 알려 준다. restorePopup 에 cancel 을 주면 이어 쓰기를 묻는 복원 창의 취소만 눌러 닫고 확인은 누르지 않으며, 주지 않으면 복원 창을 건드리지 않는다. 결과 restorePopup 의 present 가 null 이면 창이 떴는지 모르는 것이지 없었던 것이 아니고, error 에 editor-not-ready·stale-page·probe-failed 같은 이유가 온다. editor-not-ready 의 stage 는 준비가 멈춘 단계다.",
   "tier": "write",
   "grade": "ask",
   "grade_badge": "g-ask",
@@ -3880,7 +3880,7 @@
  "editor_operation_status": {
   "name": "editor_operation_status",
   "label": "작업 적용 확인",
-  "summary": "operationId 를 받는 글쓰기 도구(스키마에 operationId 가 있는 것 전부, 예:editor_insert_draft·editor_replace·editor_set_title·editor_insert_image·editor_apply_styles·editor_type_text·editor_set_list)로 보낸 작업이 실제로 적용됐는지 확인한다. 응답이 끊겼거나 시간이 초과됐을 때 같은 작업을 다시 보내기 전에 부른다. state: succeeded(적용됨, 다시 보내지 말 것) / not_applied(적용 안 됨, 같은 operationId 로 다시 보내도 안전) / in_progress(실행 중) / unverified(판정 불가, editor_read_document 로 확인) / unknown(기록 없음).",
+  "summary": "operationId 를 받는 글쓰기 도구(스키마에 operationId 가 있는 것 전부)로 보낸 작업이 실제로 적용됐는지 확인한다. 응답이 끊겼거나 시간이 초과됐을 때 같은 작업을 다시 보내기 전에 부르며, 아무것도 바꾸지 않는다. state 가 succeeded 면 이미 적용된 것이라 다시 보낼 일이 아니고, not_applied 면 같은 operationId 로 다시 보내도 안전하다. in_progress 는 아직 실행 중, unknown 은 기록이 없는 것이고, unverified 면 판정할 수 없어 editor_read_document 로 문서를 읽어 확인한다.",
   "tier": "read",
   "grade": "read",
   "grade_badge": "g-read",
@@ -3901,24 +3901,24 @@
   ],
   "related": [
    {
-    "name": "editor_insert_draft",
-    "label": "에디터에 초안 삽입",
-    "url": "/tools/editor-control/editor_insert_draft/"
+    "name": "editor_read_document",
+    "label": "문서 전체 읽기",
+    "url": "/tools/editor-control/editor_read_document/"
    },
    {
-    "name": "editor_replace",
-    "label": "본문 전체 교체",
-    "url": "/tools/editor-control/editor_replace/"
+    "name": "internal_links",
+    "label": "내부 링크 제안",
+    "url": "/tools/editor-control/internal_links/"
    },
    {
-    "name": "editor_set_title",
-    "label": "제목 설정",
-    "url": "/tools/editor-control/editor_set_title/"
+    "name": "editor_open_window",
+    "label": "글쓰기 창 열기",
+    "url": "/tools/editor-control/editor_open_window/"
    },
    {
-    "name": "editor_insert_image",
-    "label": "이미지 삽입",
-    "url": "/tools/editor-control/editor_insert_image/"
+    "name": "editor_reduce_windows",
+    "label": "편집기 창 정리 (하나만 남기고 닫기)",
+    "url": "/tools/editor-control/editor_reduce_windows/"
    }
   ],
   "prev": {
@@ -3936,7 +3936,7 @@
  "editor_place_draft": {
   "name": "editor_place_draft",
   "label": "글쓰기 창에 초안 넣기(빈 본문에만)",
-  "summary": "초안을 글쓰기 창에 배치한다. 창이 없으면 새로 열어 담고, 비어 있으면 그대로 넣는다. 이미 내용이 있으면 지우지 않고 거절하며 어떤 도구를 써야 하는지 알려 준다. write_draft 가 준 초안 참조(dr_...)가 있으면 본문을 옮겨 적지 말고 artifactId 로 넘겨라 — 제목도 같이 반영된다. 결과의 titleApplied 로 제목 처리 결과를 확인하고, 🔴 제목을 본문 마크다운 안에 다시 적지 마라.",
+  "summary": "초안을 글쓰기 창에 배치한다. 창이 없으면 새로 열어 담고, 비어 있으면 그대로 넣는다. 이미 내용이 있으면 지우지 않고 거절하며 어떤 도구를 써야 하는지 알려 준다. write_draft 가 준 초안 참조(dr_...)가 있으면 본문을 옮겨 적지 않고 artifactId 로 넘기면 제목도 같이 반영된다. 제목을 본문 마크다운 안에 다시 적으면 본문에도 제목이 한 번 더 들어간다. 결과의 titleApplied 가 제목을 어떻게 처리했는지 알려 준다.",
   "tier": "write",
   "grade": "ask",
   "grade_badge": "g-ask",
@@ -4063,7 +4063,7 @@
  "editor_read_document": {
   "name": "editor_read_document",
   "label": "문서 전체 읽기",
-  "summary": "현재 글쓰기 창의 문서 전체를 순서대로 읽는다 — 제목, 컴포넌트별 id·종류, 문단별 텍스트·빈 문단(blank)·링크(표시 문구와 URL)·정렬·행간·글자 서식, 문단별 목록 종류(list.kind: decimal·bullet·none·other), 저장된 값이 없을 때 에디터가 보여 주는 값(effective.lineHeight·fontSizeCode 의 value 와 source: stored·theme·default·mixed — 키가 없으면 모르는 값), 일반 본문(text)·소제목(sectionTitle)·표 칸의 글자가 있는 문단의 글꼴과 정렬(effective.fontFamily·effective.align). 문단의 align 이 null 이거나 textStyle 에 fontFamily 가 없으면 그 문단에 저장된 값이 없다는 뜻이고 적용 실패를 뜻하지 않는다. 실제 값과 출처는 effective.fontFamily·effective.align 의 value 와 source 로 본다: stored 는 문단(글꼴은 모든 구간)에 저장된 값, mixed 는 구간마다 달라 value 가 null 이고 values 에 저장된 값 목록(null 은 저장 없는 구간), inherited 는 에디터의 그 컴포넌트 테마 값(표 칸은 일반 본문 테마를 따르지 않고 그 칸의 글자·문단·칸·표가 가진 테마 값), default 는 테마가 값을 주지 않을 때 실측한 기본값(일반 본문 nanumgothic·left), unknown 은 알 수 없어 value 가 null 이다(표 칸은 그 값들이 모두 비어 있으면 unknown). 이 값은 문서만 읽고 요청한 값을 되풀이하지 않으며 revision 에 들어가지 않는다. 이미지 src·캡션, 링크 카드 URL, 표의 행별 셀 값(table.rows[].cells[].text, 병합은 colSpan·rowSpan). 잘라 내지 않고 컴포넌트 단위로 페이지를 나눈다(offset, limit 기본 100, 최대 200). page.nextOffset 이 null 이 아니면 그 값으로 다시 불러 나머지를 읽는다. revision 은 제목과 본문 전체(페이지 무관)의 SHA-256 앞 16자로, 이미지 주소의 쿼리는 빼고 계산한다. 두 읽기의 revision 이 같으면 같은 문서다(새로고침 뒤에도). savedRevision 은 이 페이지에서 확인된 마지막 임시저장의 revision, dirty 는 그 저장 뒤 내용이 바뀌었는지이고, 이 페이지에서 확인된 저장이 없으면 둘 다 null(모름)이다.document.di 는 문서 DI 목록 점검(present, dif, count, 중복 번호 duplicateIndices, valid, reason)이고 원문은 싣지 않는다. document.shoppingConnect 는 쇼핑 커넥트 카드마다 저장될 문서에 들어 있는지(inJson), 상품명·스토어·상품 번호, 제휴 URL·단축 URL·서명이 있는지(boolean)다. document.formulas 는 수식마다 componentId·index·latex·분수 여부(fraction)·텍스트 줄 수(rows)·썸네일 크기와 주소가 있는지(srcPresent)다. 글쓰기 창이 없으면 needs_editor 상태와 reasonCode 로 답한다. 짧은 요약이 필요하면 editor_read 를 쓴다.",
+  "summary": "현재 글쓰기 창의 문서 전체를 순서대로 읽는다. 제목과 컴포넌트별 id·종류, 문단의 텍스트·링크·정렬·행간·글자 서식·목록, 이미지·링크 카드·표 셀·수식·쇼핑 커넥트 카드를 싣고, 짧은 요약이 필요하면 editor_read 를 쓴다. 잘라 내지 않고 컴포넌트 단위로 나눠 읽으며(limit 최대 200) page.nextOffset 이 null 이 아니면 그 값으로 다시 불러 나머지를 읽는다. 아무것도 바꾸지 않고, 글쓰기 창이 없으면 needs_editor 로 답한다. 문단의 align 이 null 이거나 fontFamily 가 없으면 저장된 값이 없다는 뜻이지 적용 실패가 아니며, 에디터가 실제로 보여 주는 값과 출처는 effective 의 value·source 에 있다. 두 읽기의 revision 이 같으면 새로고침 뒤에도 같은 문서다. savedRevision 과 dirty 가 null 이면 이 페이지에서 확인된 저장이 없어 저장 여부를 모르는 것이다.",
   "tier": "read",
   "grade": "read",
   "grade_badge": "g-read",
@@ -4223,7 +4223,7 @@
  "editor_reduce_windows": {
   "name": "editor_reduce_windows",
   "label": "편집기 창 정리 (하나만 남기고 닫기)",
-  "summary": "편집기 창을 정리하거나, 다음 글을 쓰려고 빈 편집기로 되돌린다. mode 는 넷. 🔴 무인으로 돌고 있고 다음 글을 이어서 쓰려는 것이면 reuse-then-reset 을 써라 — 이전 원고에 마지막 임시저장 뒤 바뀐 내용이 있으면 임시저장하고 같은 탭을 빈 글쓰기 편집기로 전환한다. 아무것도 닫지 않으므로 사용자 개입이 필요 없다. keep-one = 기존 창 하나(사용자가 보고 있는 것)를 두고 나머지를 닫는다. close-then-open = 전부 닫은 뒤 새 창을 연다. open-then-close = 새 창을 먼저 열고 기존을 닫는다. 뒤의 셋은 닫기를 시도하는데, 🔴 닫기는 보장되지 않는다 — 사용자가 그 탭에서 여기저기 이동했다면 브라우저가 스크립트의 창 닫기를 거부하고, 그러면 사용자가 직접 닫아야 해서 무인 실행이 거기서 멈춘다. reuse-then-reset / close-then-open / open-then-close 는 글쓰기 창만. 결과 읽는 법: newEditorReady 가 true 여야 빈 편집기가 준비된 것이고, remaining 이 실제 남은 창 수, still_multiple 이면 편집 도구가 아직 막힌다. retryable 이 true 면 다시 시도해도 된다. saveDisposition 은 닫거나 전환하기 전 원고를 어떻게 했는지다: saved = 임시저장함, skipped-unchanged = 마지막 임시저장 뒤 바뀐 내용이 없어 저장하지 않음, not-saveable = 제목이나 본문이 비어 저장할 수 없음, unknown = 창이 여러 개이거나 읽지 못해 알 수 없음.",
+  "summary": "편집기 창을 정리하거나, 다음 글을 쓰려고 빈 편집기로 되돌린다. 무인 실행에서 다음 글을 이어 쓰려면 reuse-then-reset 이 맞다. 아무것도 닫지 않아 사용자 개입이 필요 없기 때문이다. 다른 mode 는 창 닫기를 시도하는데 닫기는 보장되지 않는다. 사용자가 그 탭에서 이리저리 이동했다면 브라우저가 스크립트의 창 닫기를 거부해 사용자가 직접 닫아야 하고, 무인 실행이 거기서 멈춘다. 결과의 newEditorReady 가 true 여야 빈 편집기가 준비된 것이다. still_multiple 이면 창이 아직 여럿이라 편집 도구가 계속 막히고, retryable 이 true 일 때만 다시 시도할 만하다. saveDisposition 이 unknown 이면 닫거나 전환하기 전 원고를 저장했는지 알 수 없다.",
   "tier": "destructive",
   "grade": "ask",
   "grade_badge": "g-ask",
@@ -4245,7 +4245,7 @@
     "name": "mode",
     "type": "문자열",
     "required": "X",
-    "description": "reuse-then-reset = 바뀐 내용이 있으면 임시저장한 뒤 같은 탭을 빈 글쓰기 편집기로 전환한다 — 아무것도 닫지 않아 무인 실행에서 유일하게 막히지 않는다. keep-one = 기존 창 하나를 두고 나머지를 닫는다 (기본). close-then-open = 전부 닫은 뒤 새로 하나 연다. open-then-close = 새로 하나 열고 기존을 닫는다. 앞의 것 외 셋은 글쓰기 창만"
+    "description": "reuse-then-reset 은 바뀐 내용을 임시저장하고 같은 탭을 빈 글쓰기 편집기로 바꾸며 아무것도 닫지 않는다. keep-one(기본)은 보고 있는 창 하나만 남긴다. 나머지 둘은 이름 순서대로 닫고 연다. keep-one 외에는 글쓰기 창만 된다"
    }
   ],
   "related": [
@@ -4638,7 +4638,7 @@
  "editor_set_image_layout": {
   "name": "editor_set_image_layout",
   "label": "이미지 배치",
-  "summary": "글쓰기 창 본문에 이미 있는 이미지의 정렬(align)과 표시 방식(contentMode)을 바꾼다. 이미지는 editor_read_document 가 돌려준 componentId 로 고른다. 규칙마다 요청한 값(requested)과 적용 뒤 문서를 다시 읽은 값(observed), 맞았는지(applied)를 돌려준다. 이미지가 같은 파일로 그대로 남는지 확인하고, 바뀌면 되돌린 뒤 content-changed 로 멈춘다. contentMode 중 어떤 값을 받는지는 계정의 편집기 설정이 정하므로 안 받으면 applied 가 false 다. 이 도구는 캡션을 바꾸지 않는다. 캡션 글자는 editor_set_image_caption 으로 쓰고 지운다. 캡션 글자의 서식(굵게, 색 등)은 바꿀 수 없다. 대체텍스트는 업로드 때 파일 이름으로 채워지고 편집기에 저장되는 설정 방법이 없어 지원하지 않는다. 이미지의 픽셀 크기도 정할 수 없고, 보이는 너비는 contentMode 로만 고른다. 이미지를 새로 넣는 것은 editor_insert_image 를 쓴다.",
+  "summary": "글쓰기 창 본문에 이미 있는 이미지의 정렬(align)과 표시 방식(contentMode)을 바꾼다. 이미지는 본문 읽기 결과의 componentId 로 고르고, 새로 넣으려면 editor_insert_image 를 쓴다. 캡션은 바꾸지 않으며 캡션 글자는 editor_set_image_caption 으로 쓰고 지우고, 캡션 글자 서식과 대체텍스트, 픽셀 크기는 정할 수 없어 보이는 너비는 contentMode 로만 고른다. 이미지가 같은 파일로 남는지 확인하고, 바뀌면 되돌린 뒤 content-changed 로 멈춘다. 어떤 contentMode 를 받는지는 계정의 편집기 설정이 정해, 안 받는 값은 applied 가 false 로 온다.",
   "tier": "write",
   "grade": "ask",
   "grade_badge": "g-ask",
@@ -4671,9 +4671,9 @@
   ],
   "related": [
    {
-    "name": "editor_read_document",
-    "label": "문서 전체 읽기",
-    "url": "/tools/editor-control/editor_read_document/"
+    "name": "editor_insert_image",
+    "label": "이미지 삽입",
+    "url": "/tools/editor-control/editor_insert_image/"
    },
    {
     "name": "editor_set_image_caption",
@@ -4681,14 +4681,14 @@
     "url": "/tools/editor-detail/editor_set_image_caption/"
    },
    {
-    "name": "editor_insert_image",
-    "label": "이미지 삽입",
-    "url": "/tools/editor-control/editor_insert_image/"
-   },
-   {
     "name": "editor_update_component",
     "label": "컴포넌트 고치기",
     "url": "/tools/editor-detail/editor_update_component/"
+   },
+   {
+    "name": "editor_set_paragraph_styles",
+    "label": "문단 서식 적용",
+    "url": "/tools/editor-detail/editor_set_paragraph_styles/"
    }
   ],
   "prev": {
@@ -4780,7 +4780,7 @@
  "editor_set_list": {
   "name": "editor_set_list",
   "label": "목록 바꾸기",
-  "summary": "글쓰기 창 본문의 문단을 번호 목록이나 글머리 목록으로 바꾸거나 목록을 해제한다. 글은 바뀌지 않는다. 문단은 editor_read_document 의 componentId 와 문단 번호(paragraphIndex, 0부터)로 고르고, 규칙마다 kind 는 decimal(번호), bullet(글머리), none(목록 해제) 중 하나다. 이 편집기는 그 밖의 값도 저장은 하지만 목록으로 그려 주지 않아서 세 가지만 받는다. 목록으로 바꿀 문단마다 규칙 하나가 필요하다. 규칙마다 요청한 종류(requested)와 적용 뒤 문단을 다시 읽은 종류(observed), 맞았는지(applied)를 돌려준다. 일반 본문 문단(text)에만 쓸 수 있다. 규칙은 kind 대신 level(0부터 8까지 정수)을 줄 수도 있다: 이미 목록인 문단의 단계(들여쓰기)를 그 값으로 맞춘다. 키보드의 Tab 과 Shift+Tab 으로 한 단계씩 움직이고, 편집기가 멈춘 곳에서 reason 이 level-limit 이 되며 observedLevel 이 지금 단계다. editor_read_document 의 list.level 로도 읽는다. 목록이 아닌 문단의 level 은 not-in-list 로 거절한다. 한 규칙에는 kind 와 level 중 하나만 쓴다.",
+  "summary": "글쓰기 창 본문의 문단을 번호 목록이나 글머리 목록으로 바꾸거나 목록을 해제하며, 글은 바뀌지 않는다. 일반 본문 문단에만 쓸 수 있고, 문단은 본문 읽기 결과의 componentId 와 paragraphIndex 로 고르며 바꿀 문단마다 규칙 하나가 필요하다. 규칙은 kind(decimal·bullet·none)나 level 중 하나만 주고, level 은 이미 목록인 문단의 들여쓰기 단계를 Tab 으로 한 단계씩 맞추며 목록이 아닌 문단이면 not-in-list 로 거절한다. 편집기가 더 못 움직이면 reason 이 level-limit 이고 observedLevel 이 지금 단계다. applied 가 false 인 규칙은 다시 읽은 값이 요청과 다른 것이다.",
   "tier": "write",
   "grade": "ask",
   "grade_badge": "g-ask",
@@ -4813,11 +4813,6 @@
   ],
   "related": [
    {
-    "name": "editor_read_document",
-    "label": "문서 전체 읽기",
-    "url": "/tools/editor-control/editor_read_document/"
-   },
-   {
     "name": "editor_update_component",
     "label": "컴포넌트 고치기",
     "url": "/tools/editor-detail/editor_update_component/"
@@ -4831,6 +4826,11 @@
     "name": "editor_apply_layout",
     "label": "간격 맞추기",
     "url": "/tools/editor-detail/editor_apply_layout/"
+   },
+   {
+    "name": "editor_set_image_layout",
+    "label": "이미지 배치",
+    "url": "/tools/editor-detail/editor_set_image_layout/"
    }
   ],
   "prev": {
@@ -4848,7 +4848,7 @@
  "editor_set_paragraph_styles": {
   "name": "editor_set_paragraph_styles",
   "label": "문단 서식 적용",
-  "summary": "글쓰기 창 본문의 문단 단위 서식(정렬 align, 행간 lineHeight, 첫글자 키우기 dropCap)을 건다. 문단은 editor_read_document 가 돌려준 componentId 와 문단 번호(paragraphIndex, 0부터)로 고르고, 글자 구간은 필요 없다. 규칙마다 요청한 값(requested)과 적용 뒤 문서를 다시 읽은 값(observed), 맞았는지(applied)를 돌려준다. 정렬은 문단이 실제로 보이는 값으로 판단하고 그 값과 출처를 effective.align 에 준다. 편집기는 기본 정렬(left)을 저장하지 않으므로, 테마가 다른 정렬을 정해 둔 문단에 left 를 요청하면 보내지 않고 theme-default-not-storable 로 거절하며 message 를 준다. 글자가 없는 빈 문단에는 걸 수 없다. 인용구는 정렬을 받지 않는다. 인용구의 정렬은 디자인(레이아웃)이 정하므로 정렬을 요청하면 unsupported-in-component 로 답하고, 바꾸려면 editor_update_component 로 디자인을 바꾼다. 인용구는 첫글자 키우기도 받지 않는다. 문단 앞뒤 간격과 들여쓰기 값은 이 도구에 없다. 간격이 필요하면 행간을 키우거나 editor_insert_blank_paragraph 로 빈 문단을 넣는다. 글자 단위 서식은 editor_apply_styles 를 쓴다. 표의 칸 안 문단에도 정렬, 행간, 첫글자 키우기를 걸 수 있다: componentId 에 표 id 를, cell 에 { row, col } 을 준다. 칸 번호 규칙과 거절은 editor_apply_styles 와 같다. 한 번 호출이 되돌리기 한 단계다. applied 가 false 인 규칙은 저장된 것이 아니다.",
+  "summary": "글쓰기 창 본문의 문단 단위 서식(정렬, 행간, 첫글자 키우기)을 건다. 문단은 본문 읽기 결과의 componentId 와 paragraphIndex 로 고르고, 표의 칸 안 문단은 componentId 에 표 id 를, cell 에 { row, col } 을 준다. 글자 단위 서식이면 editor_apply_styles 를 쓴다. 문단 앞뒤 간격과 들여쓰기는 없어 간격은 행간이나 빈 문단으로 만든다. 글자가 없는 빈 문단에는 걸 수 없고, 인용구는 정렬과 첫글자 키우기를 받지 않아 unsupported-in-component 로 답하며 인용구 정렬은 editor_update_component 로 디자인을 바꿔야 달라진다. 편집기가 기본 정렬 left 를 저장하지 않아 테마가 다른 정렬을 정한 문단의 left 요청은 theme-default-not-storable 로 거절한다. 한 번 호출이 되돌리기 한 단계다. applied 가 false 인 규칙은 저장되지 않은 것이다.",
   "tier": "write",
   "grade": "ask",
   "grade_badge": "g-ask",
@@ -4881,9 +4881,9 @@
   ],
   "related": [
    {
-    "name": "editor_read_document",
-    "label": "문서 전체 읽기",
-    "url": "/tools/editor-control/editor_read_document/"
+    "name": "editor_apply_styles",
+    "label": "글자 서식 적용",
+    "url": "/tools/editor-detail/editor_apply_styles/"
    },
    {
     "name": "editor_update_component",
@@ -4891,14 +4891,14 @@
     "url": "/tools/editor-detail/editor_update_component/"
    },
    {
-    "name": "editor_insert_blank_paragraph",
-    "label": "빈 줄 넣기",
-    "url": "/tools/editor-detail/editor_insert_blank_paragraph/"
+    "name": "editor_apply_layout",
+    "label": "간격 맞추기",
+    "url": "/tools/editor-detail/editor_apply_layout/"
    },
    {
-    "name": "editor_apply_styles",
-    "label": "글자 서식 적용",
-    "url": "/tools/editor-detail/editor_apply_styles/"
+    "name": "editor_set_image_layout",
+    "label": "이미지 배치",
+    "url": "/tools/editor-detail/editor_set_image_layout/"
    }
   ],
   "prev": {
@@ -4984,7 +4984,7 @@
  "editor_type_text": {
   "name": "editor_type_text",
   "label": "글 쓰기",
-  "summary": "글쓰기 창 본문의 한 문단 안 원하는 자리에 글을 쓰고, Enter 를 치고, 뒤따르는 글자를 지운다. 커서가 없어도 된다. 문단은 editor_read_document 의 componentId 와 문단 번호(paragraphIndex, 0부터)로 고르고, offset 은 그 문단 글자 기준 자리(0이면 맨 앞)이며 생략하면 문단 맨 뒤다. offset 과 erase 의 count 는 UTF-16 코드 단위로 센다(자바스크립트 문자열 length 와 같다). ops 는 차례대로 적용되고, 쓴 뒤 커서는 그 뒤를 따라간다: { kind: 'text', text } 는 글을 쓰고, { kind: 'enter' } 는 Enter 라서 문단 중간이면 그 자리에서 둘로 나뉘고 맨 앞이면 앞에 빈 문단이, 맨 뒤면 뒤에 빈 문단이 생긴다. 줄을 나누는 방법은 enter 하나다. { kind: 'erase', count } 는 커서에서 앞쪽(뒤따르는 글자)으로 count 글자를 지운다(그 문단 끝을 넘으면 아무것도 바꾸지 않고 거절한다). 글을 바꾸려면 erase 뒤에 text 를 이어 쓴다. 예: 문단 \"안녕하세요\" 전체를 \"반가워요\"로 바꾸려면 offset 0, ops [{ kind: 'erase', count: 5 }, { kind: 'text', text: '반가워요' }]. 한 번에 ops 20개, 글자 2000자까지. text 에는 줄바꿈, 제어 문자, 이모지를 넣을 수 없다(에디터가 이모지가 든 글에서 나머지를 버린다). 일반 본문 문단(text)과 표의 칸에 쓸 수 있고 제목, 소제목, 인용구는 거절한다. 표의 칸에 쓰려면 componentId 에 표 id 를, cell 에 { row, col }(0부터)을 주고 paragraphIndex 는 그 칸 안의 문단 번호다(칸이 비어 있어도 0). 쓴 뒤 그 컴포넌트의 문단 글자를 다시 읽어 요청한 결과와 정확히 같을 때만 성공으로 답하고, 다르면 되돌린다. 되돌린 거절에는 diagnosis(멈춘 단계 stage, 기대와 실제의 문단 수와 길이, 되돌렸는지, revision)가 글자 없이 숫자로만 붙는다. 글자 서식은 바꾸지 않는다. 되풀이 정책: operationId 를 주고 같은 인자로 다시 보내면 이미 적용된 결과를 그대로 돌려주고(replayed: true) 다시 쓰지 않는다. 같은 operationId 에 다른 인자면 operation_conflict, 아직 실행 중이면 operation_in_progress 로 거절한다. 거절되었거나 확인하지 못한 호출은 기록되지 않으므로 같은 operationId 로 다시 보내도 된다. operationId 없이 되풀이하면 글이 정말 두 번 들어가거나 두 번 지워진다. 응답이 끊기거나 불확실하면 다시 보내기 전에 editor_operation_status 로 확인한다.",
+  "summary": "글쓰기 창 본문의 한 문단 안 원하는 자리에 글을 쓰고, Enter 를 치고, 뒤따르는 글자를 지우며 서식은 바꾸지 않는다. 문단은 본문 읽기 결과의 componentId 와 paragraphIndex 로 고르고 offset 은 UTF-16 단위다. 글을 바꾸려면 erase 뒤에 text 를 잇고 줄은 enter 로만 나눈다. 한 번에 ops 20개, 글자 2000자까지, text 에 줄바꿈·제어 문자·이모지는 안 된다. 표의 칸에 쓰고 제목·소제목·인용구는 거절한다. 다시 읽어 요청과 다르면 되돌린다. operationId 없이 되풀이하면 두 번 적용된다. 같은 id·인자면 replayed, 다른 인자면 operation_conflict, 실행 중이면 operation_in_progress 이고, 거절된 호출은 기록되지 않아 같은 id 로 다시 보내도 된다. 응답이 끊기면 editor_operation_status 로 먼저 확인한다.",
   "tier": "write",
   "grade": "ask",
   "grade_badge": "g-ask",
@@ -5018,7 +5018,7 @@
     "name": "cell",
     "type": "객체",
     "required": "X",
-    "description": "선택. 표의 칸을 고를 때: componentId 는 표 id, cell 은 { row, col }(0부터 정수). 번호는 editor_read_document 의 table.rows[row].cells[col] 배열 번호 그대로다. 합친 칸은 남은 칸 하나가 colSpan·rowSpan 을 갖고 합쳐져 사라진 칸은 배열에서 빠지므로, 합친 줄에서는 col 이 화면의 열 번호가 아니라 배열에 남은 칸의 순서다. paragraphIndex 는 그 칸 안의 문단 번호다. 표가 아닌 컴포넌트에 cell 을 주거나 없는 칸이면 아무것도 바꾸지 않고 거절한다."
+    "description": "선택. 표의 칸: componentId 는 표 id, paragraphIndex 는 칸 안 문단 번호. 번호는 본문 읽기의 table.rows[row].cells[col] 그대로라 합친 칸이 빠진 줄의 col 은 화면 열이 아니다. 표가 아니거나 없는 칸이면 거절한다."
    },
    {
     "name": "ops",
@@ -5041,11 +5041,6 @@
   ],
   "related": [
    {
-    "name": "editor_read_document",
-    "label": "문서 전체 읽기",
-    "url": "/tools/editor-control/editor_read_document/"
-   },
-   {
     "name": "editor_operation_status",
     "label": "작업 적용 확인",
     "url": "/tools/editor-control/editor_operation_status/"
@@ -5059,6 +5054,11 @@
     "name": "editor_set_paragraph_styles",
     "label": "문단 서식 적용",
     "url": "/tools/editor-detail/editor_set_paragraph_styles/"
+   },
+   {
+    "name": "editor_apply_layout",
+    "label": "간격 맞추기",
+    "url": "/tools/editor-detail/editor_apply_layout/"
    }
   ],
   "prev": {
@@ -5125,7 +5125,7 @@
  "editor_update_component": {
   "name": "editor_update_component",
   "label": "컴포넌트 고치기",
-  "summary": "글쓰기 창 본문의 기존 컴포넌트를 고친다. 세 가지 중 하나만 한다. (1) convertTo: 문단 하나를 소제목(sectionTitle)이나 인용구(quotation)로 바꾸거나 본문(text)으로 되돌린다. componentId 와 문단 번호(paragraphIndex, 0부터)가 필요하다. (2) design: 인용구·구분선·소제목의 디자인을 바꾼다. 디자인 값: quotation: default, quotation_line, quotation_bubble, quotation_underline, quotation_postit, quotation_corner. horizontalLine: default, line1, line2, line3, line4, line5, line6, line7. sectionTitle: default. (3) aiMark: 이미지 컴포넌트의 'AI 활용' 표시를 켜거나(true) 끈다(false). 이미지가 아니면 거절하고, 이미 그 값이면 바꾸지 않고 idempotent: true 로 답한다. 그 표시 말고 문서의 다른 부분이 바뀌면 되돌리고 거절한다. 본문 글, 이미지, 링크, 컴포넌트 순서는 바뀌지 않아야 하고, 바뀌면 되돌리고 거절한다. 응답의 before 와 after 는 고친 컴포넌트의 전후 모습이고 preserved 는 무엇이 그대로인지 알려 준다. 편집기가 컴포넌트를 새로 만들어 id 가 바뀔 수 있으니 다음 작업 전에 editor_read_document 로 다시 읽는다. 글자가 없는 빈 문단은 바꿀 수 없다.",
+  "summary": "글쓰기 창 본문의 기존 컴포넌트 하나를 고치며, convertTo·design·aiMark 가운데 하나만 한다. convertTo 는 paragraphIndex 의 문단을 소제목·인용구로 바꾸거나 본문으로 되돌리고, design 은 인용구·구분선·소제목의 디자인을 바꾸며, aiMark 는 이미지의 'AI 활용' 표시를 켜고 끄고 이미지가 아니면 거절한다. 글자가 없는 빈 문단은 바꿀 수 없다. 본문 글·이미지·링크·컴포넌트 순서처럼 고친 것 밖의 부분이 바뀌면 되돌리고 거절한다. 이미 그 값이면 바꾸지 않고 idempotent 를 true 로 답해 다시 불러도 같다. 편집기가 컴포넌트를 새로 만들어 id 가 바뀔 수 있어 다음 작업 전에 editor_read_document 로 다시 읽어야 한다.",
   "tier": "write",
   "grade": "ask",
   "grade_badge": "g-ask",
@@ -5159,7 +5159,7 @@
     "name": "design",
     "type": "문자열",
     "required": "X",
-    "description": "바꿀 디자인 값. convertTo 와 함께 줄 수 없다. quotation: default, quotation_line, quotation_bubble, quotation_underline, quotation_postit, quotation_corner. horizontalLine: default, line1, line2, line3, line4, line5, line6, line7. sectionTitle: default"
+    "description": "바꿀 디자인 값. convertTo 와 함께 줄 수 없다. 공통 default, quotation quotation_line·quotation_bubble·quotation_underline·quotation_postit·quotation_corner / horizontalLine line1·line2·line3·line4·line5·line6·line7"
    },
    {
     "name": "aiMark",
@@ -5440,7 +5440,7 @@
  "influencer_category_top": {
   "name": "influencer_category_top",
   "label": "분야 상위 인플루언서",
-  "summary": "특정 분야(카테고리)의 상위/추천 인플루언서 목록을 조회한다. '이 분야에서 누가 잘나가?', 경쟁 인플루언서 발굴에 사용 — 상대 urlId를 몰라도 분야만으로 찾을 수 있다(발굴 진입점). categoryId는 influencer_categories에서 얻고, 각 결과의 urlId로 influencer_profile/influencer_posts를 이어 분석한다. 주의: urlId는 blogId가 아니다 — blog_* 도구가 필요하면 influencer_profile의 blogId(연결된 네이버 블로그)를 거쳐라. 상위 20명까지만 돌려준다 — 분야 전체가 아니다.",
+  "summary": "특정 분야(카테고리)의 상위·추천 인플루언서 목록을 조회한다. 상대 urlId 를 몰라도 분야만으로 경쟁 인플루언서를 찾는 발굴 진입점이고, categoryId 는 influencer_categories 에서 얻는다. 상위 20명까지만 돌려주며 분야 전체가 아니다. 결과의 urlId 는 blogId 가 아니어서 블로그 도구에 그대로 넣으면 엉뚱한 블로그를 찾고, 연결된 네이버 블로그는 influencer_profile 이 주는 blogId 로 얻는다.",
   "tier": "read",
   "grade": "read",
   "grade_badge": "g-read",
@@ -5471,14 +5471,14 @@
     "url": "/tools/benchmark/influencer_profile/"
    },
    {
-    "name": "influencer_posts",
-    "label": "인플루언서 콘텐츠",
-    "url": "/tools/benchmark/influencer_posts/"
-   },
-   {
     "name": "cafe_volume",
     "label": "카페 발행량",
     "url": "/tools/benchmark/cafe_volume/"
+   },
+   {
+    "name": "blog_rank_profile",
+    "label": "블로그 상위글 벤치마크",
+    "url": "/tools/benchmark/blog_rank_profile/"
    }
   ],
   "prev": {
@@ -6600,7 +6600,7 @@
  "my_content_audience": {
   "name": "my_content_audience",
   "label": "글 독자 성별·연령",
-  "summary": "내 블로그 '특정 글'의 독자 성별·연령 분포를 조회한다. '이 글 누가 읽었어?' 질문에 사용. contentId는 my_top_content/my_soaring 등의 결과에서 가져온다. (채널 전체 분포는 my_audience.)",
+  "summary": "내 블로그 '특정 글'의 독자 성별·연령 분포를 조회한다. '이 글 누가 읽었어?' 같은 질문에 맞고, contentId 는 내 글 성과 도구 결과의 contentId(글 URL)다. 채널 전체 분포가 필요하면 my_audience 를 쓴다.",
   "tier": "read",
   "grade": "read",
   "grade_badge": "g-read",
@@ -6621,16 +6621,6 @@
   ],
   "related": [
    {
-    "name": "my_top_content",
-    "label": "인기 콘텐츠",
-    "url": "/tools/blog-brief/my_top_content/"
-   },
-   {
-    "name": "my_soaring",
-    "label": "급상승 콘텐츠",
-    "url": "/tools/blog-brief/my_soaring/"
-   },
-   {
     "name": "my_audience",
     "label": "독자 성별·연령",
     "url": "/tools/blog-insights/my_audience/"
@@ -6639,6 +6629,16 @@
     "name": "my_inflow",
     "label": "유입 검색어",
     "url": "/tools/blog-insights/my_inflow/"
+   },
+   {
+    "name": "my_inflow_domain",
+    "label": "유입 경로",
+    "url": "/tools/blog-insights/my_inflow_domain/"
+   },
+   {
+    "name": "my_country",
+    "label": "독자 국가",
+    "url": "/tools/blog-insights/my_country/"
    }
   ],
   "next": {
@@ -6764,7 +6764,7 @@
  "my_content_info": {
   "name": "my_content_info",
   "label": "글 정보",
-  "summary": "내 블로그 특정 글의 메타정보와 누적 조회수를 조회한다. contentId는 my_top_content/my_soaring/my_revenue_ranks 결과의 contentId(글 URL)를 사용한다.",
+  "summary": "내 블로그 특정 글의 메타정보와 누적 조회수를 조회한다. contentId 는 my_top_content 같은 내 글 성과 도구 결과의 contentId(글 URL)다. 본문이 필요하면 my_content_read 를 쓴다.",
   "tier": "read",
   "grade": "read",
   "grade_badge": "g-read",
@@ -6790,19 +6790,19 @@
     "url": "/tools/blog-brief/my_top_content/"
    },
    {
-    "name": "my_soaring",
-    "label": "급상승 콘텐츠",
-    "url": "/tools/blog-brief/my_soaring/"
-   },
-   {
-    "name": "my_revenue_ranks",
-    "label": "광고 수익 상위",
-    "url": "/tools/blog-insights/my_revenue_ranks/"
+    "name": "my_content_read",
+    "label": "내 발행글 읽기",
+    "url": "/tools/blog-insights/my_content_read/"
    },
    {
     "name": "my_content_audience",
     "label": "글 독자 성별·연령",
     "url": "/tools/blog-insights/my_content_audience/"
+   },
+   {
+    "name": "my_inflow",
+    "label": "유입 검색어",
+    "url": "/tools/blog-insights/my_inflow/"
    }
   ],
   "prev": {
@@ -6820,7 +6820,7 @@
  "my_content_read": {
   "name": "my_content_read",
   "label": "내 발행글 읽기",
-  "summary": "내 블로그의 이미 발행된 글 '본문'을 읽어온다(제목·본문 마크다운·단어수). 성과 데이터로 고른 글을 다시 쓰거나(리라이트) 분석할 때, editor 로 넘기기 전에 사용한다. contentId 는 my_top_content/my_revenue_ranks/my_soaring 결과의 contentId(글 URL)다. (my_content_info 는 메타·조회수만 주므로, 본문이 필요하면 이 도구를 쓴다.)",
+  "summary": "내 블로그의 이미 발행된 글 '본문'을 읽어온다(제목·본문 마크다운·단어수). 성과 데이터로 고른 글을 다시 쓰거나(리라이트) 분석할 때, 편집기로 넘기기 전에 쓴다. contentId 는 my_top_content 같은 내 글 성과 도구 결과의 contentId(글 URL)다. 메타정보와 조회수만 필요하면 my_content_info 를 쓴다.",
   "tier": "read",
   "grade": "read",
   "grade_badge": "g-read",
@@ -6846,19 +6846,19 @@
     "url": "/tools/blog-brief/my_top_content/"
    },
    {
-    "name": "my_revenue_ranks",
-    "label": "광고 수익 상위",
-    "url": "/tools/blog-insights/my_revenue_ranks/"
-   },
-   {
-    "name": "my_soaring",
-    "label": "급상승 콘텐츠",
-    "url": "/tools/blog-brief/my_soaring/"
-   },
-   {
     "name": "my_content_info",
     "label": "글 정보",
     "url": "/tools/blog-insights/my_content_info/"
+   },
+   {
+    "name": "my_content_audience",
+    "label": "글 독자 성별·연령",
+    "url": "/tools/blog-insights/my_content_audience/"
+   },
+   {
+    "name": "my_inflow",
+    "label": "유입 검색어",
+    "url": "/tools/blog-insights/my_inflow/"
    }
   ],
   "prev": {
@@ -8309,7 +8309,7 @@
  "photo_canvas_get": {
   "name": "photo_canvas_get",
   "label": "사진 편집기 — 캔버스 확인",
-  "summary": "현재 캔버스 구성을 확인한다(페이지 목록 + 활성 페이지의 모든 요소를 ref·종류·위치·크기와 함께). 편집 전 항상 먼저 호출해 요소 ref 를 파악한다. measure: true 를 주면 글자 요소마다 렌더러가 실제로 줄바꿈한 줄·실제 글꼴·그려지는 영역·겹치는 요소 ref 를 page.measure 에 함께 준다. 사진 요소는 page.images 에 ref 별로 sourceAssetId·sha256(갤러리에서 넣은 사진만), intrinsicSize, fit·anchor(넣을 때 값), crop(0~1), renderedBounds(페이지 px), aspectPreserved, onPage 와 지금 보이는 모습 look(filter 프리셋 id, adjust 는 0 이 아닌 항목만, grade 는 저장된 레벨·커브·hsl·key 와 lut{ref,name,strength})을 준다. look 의 null 은 설정하지 않았다는 뜻이다. subject 를 주고 넣은 사진은 subjectBounds 와, measure 일 때 그 영역을 가리는 글자 ref(textOverSubject)도 준다. canvasPreset 은 보는 페이지 크기와 같은 크기 프리셋의 id 와 safeAreas(id·label·rect{x,y,w,h}, 캔버스 대비 0~1 비율)이고 같은 프리셋이 없으면 null 이다. safeAreas 는 문서에 저장되지 않고 내보내기에도 나오지 않는 안내 영역이며, 요소가 그 안에 있는지 판정하지는 않는다.",
+  "summary": "현재 캔버스 구성을 확인한다. 페이지 목록과 활성 페이지의 모든 요소를 ref·종류·위치·크기와 함께 주며, 편집 전에 먼저 불러 요소 ref 를 알아 둔다. 아무것도 바꾸지 않는다. 사진 요소는 page.images 에 원본·자르기·그려지는 영역과 지금 보이는 모습 look 을 주고, look 의 null 은 설정하지 않았다는 뜻이다. subject 를 주고 넣은 사진은 subjectBounds 를, measure 일 때는 그 영역을 가리는 글자 ref 도 준다. canvasPreset 의 safeAreas 는 문서에도 내보내기에도 없는 안내 영역이고, 요소가 그 안에 있는지 판정하지 않는다.",
   "tier": "read",
   "grade": "read",
   "grade_badge": "g-read",
@@ -8331,7 +8331,7 @@
     "name": "measure",
     "type": "참/거짓",
     "required": "X",
-    "description": "true 면 글자 배치를 렌더러로 재서 page.measure(ref 별 wrappedLines·lineCount·lineHeight·renderedBounds·overflow·overlaps·actualFont·fontsReady·fallbackGlyphs)를 붙인다. actualFont 는 캔버스가 실제로 그리는 글꼴로, 요청한 글꼴이 글자 일부라도 그리면 그 이름이고 하나도 못 그리면 대체 글꼴(browser-default 등)이다. fallbackGlyphs 는 요청한 글꼴에 없어 다른 글꼴로 그려지는 글자 목록(이모지·드문 한자 등, 빈 배열이면 모두 요청한 글꼴), null 이면 판별하지 못한 것이다. 글꼴 로딩을 기다려 느리므로 배치 확인이 필요할 때만"
+    "description": "true 면 글자 요소마다 렌더러가 잰 줄바꿈·실제 글꼴·영역·넘침·겹침을 page.measure 에 붙인다. fallbackGlyphs 는 다른 글꼴로 그려지는 글자이고 null 이면 판별하지 못한 것이다. 글꼴 로딩을 기다려 느리다"
    },
    {
     "name": "editor_session",
@@ -8395,7 +8395,7 @@
  "photo_canvas_resize": {
   "name": "photo_canvas_resize",
   "label": "사진 편집기 — 캔버스 크기 바꾸기",
-  "summary": "캔버스 크기를 바꾼다. width·height 를 함께 주거나 preset 하나만 준다(둘 다 주면 거절한다). scale_content=true(기본)면 요소도 함께 비율 조정(매직 리사이즈). 결과 detail 에 preset(없으면 null)·width·height 를 준다.",
+  "summary": "캔버스 크기를 바꾼다. width·height 를 함께 주거나 preset 하나만 주고, 둘 다 주면 거절한다. scale_content 가 true(기본)면 요소도 새 비율에 맞춰 함께 조정한다. 결과 detail 에 적용된 preset·width·height 가 온다.",
   "tier": "write",
   "grade": "ask",
   "grade_badge": "g-ask",
@@ -8411,7 +8411,7 @@
     "name": "preset",
     "type": "문자열",
     "required": "X",
-    "description": "크기 프리셋 id. 주면 width·height 는 생략한다. blog-cover(1200x630) · blog-body(900x600) · naver-thumbnail(1200x675) · instagram-square(1080x1080) · instagram-portrait(1080x1350) · instagram-tall(1080x1440) · instagram-story(1080x1920) · youtube-thumbnail(1280x720) · smartstore-square(1000x1000) · smartstore-detail(860x1200) · promo-banner(1080x400)"
+    "description": "크기 프리셋 id. 이름이 쓰임새(블로그·네이버·인스타그램·유튜브·스마트스토어·배너)이고, 주면 width·height 는 생략한다. 실제 px 는 결과 detail 에 온다"
    },
    {
     "name": "width",
@@ -8499,7 +8499,7 @@
  "photo_export": {
   "name": "photo_export",
   "label": "사진 편집기 — 파일로 내보내기",
-  "summary": "현재 디자인을 이미지 파일로 내보내는 작업을 시작하고 job 을 돌려준다. 여러 페이지는 zip 하나로 묶고, pdf 는 페이지마다 한 쪽인 PDF 한 파일로 만든다. svg 는 활성 페이지 한 장만 — 글자·도형은 벡터, 사진은 PNG 로 담는다. 인쇄용이면 dpi 를 준다. 오래 걸리면 state running 인 job 을 먼저 돌려준다. photo_job_status 로 끝났는지 확인한 뒤 gallery_export_save 로 파일을 받는다. 응답을 놓쳤으면 같은 operation_id 로 다시 부른다 — 새로 내보내지 않고 그때 시작한 job 을 돌려준다(replayed true). 그리기 전에 글자에 쓴 글꼴을 정해진 시간 안에서 불러오고(기다리는 시간은 늘지 않는다), 응답과 photo_job_status 의 fonts 에 그 결과를 싣는다: faces 는 글꼴(family·weight·style)마다 캔버스가 그 글꼴로 그렸는지(drawn), 실제로 그린 글꼴(actualFont), 그 글꼴에 없어 다른 글꼴로 그린 글자(fallbackGlyphs, 알 수 없으면 null)이고, status 는 ready(모두 그 글꼴로 그림)·fallback(다른 글꼴로 그린 글자가 있음)·timeout(시간 안에 다 불러오지 못함) 중 하나다. 글자가 없으면 fonts 가 없다. 기본(on_font_fallback continue)은 fallback·timeout 이어도 파일을 만들고 알리기만 한다.",
+  "summary": "현재 디자인을 이미지 파일로 내보내는 작업을 시작하고 job 을 돌려준다. 여러 페이지는 zip 하나로, pdf 는 페이지마다 한 쪽인 한 파일로 만들고, svg 는 활성 페이지 한 장만 담는다. 오래 걸리면 state 가 running 인 job 을 먼저 돌려주므로 photo_job_status 로 끝났는지 확인한 뒤 gallery_export_save 로 파일을 받는다. 응답을 놓쳤으면 같은 operation_id 로 다시 부르면 새로 내보내지 않고 그때의 job 을 replayed 로 돌려준다. 결과 fonts 의 status 가 fallback 이면 다른 글꼴로 그린 글자가 있고 timeout 이면 글꼴을 시간 안에 다 불러오지 못한 것이며, on_font_fallback 이 continue(기본)면 그래도 파일을 만든다.",
   "tier": "read",
   "grade": "read",
   "grade_badge": "g-read",
@@ -8731,7 +8731,7 @@
  "photo_gallery_list": {
   "name": "photo_gallery_list",
   "label": "사진 편집기 — 갤러리 이미지 목록",
-  "summary": "확장 갤러리에 저장된 이미지 목록을 가져온다(사용자가 예전에 만든 이미지). photo_image_add_from_gallery 로 삽입할 때의 gallery_ref 를 얻는다. 항목마다 asset(파일 바이트로 확인한 sha256·format·bytes, EXIF 방향을 적용한 intrinsicWidth·intrinsicHeight·orientation)과 origin(generated=확장이 AI 로 생성, upload=gallery_image_add 로 들어옴, unknown=기록 전 항목), 알 때만 disclosure 를 준다. 같은 바이트의 다른 항목은 duplicateOf 로 알리고 합치지 않는다. caller 는 넣은 쪽이 말한 값(role, aiGenerated, derivedFrom)이고 확인된 사실이 아니다. lineage 는 derivedFrom 을 부모 바이트와 대조한 결과다.",
+  "summary": "확장 갤러리에 저장된 이미지 목록을 가져온다(사용자가 예전에 만든 이미지). photo_image_add_from_gallery 로 삽입할 때의 gallery_ref 를 얻는다. 항목마다 asset(파일 바이트로 확인한 sha256·format·bytes, EXIF 방향을 적용한 intrinsicWidth·intrinsicHeight·orientation)과 origin, 알 때만 disclosure 를 준다. origin 이 generated 면 확장이 AI 로 만든 것, upload 면 gallery_image_add 로 들어온 것, unknown 이면 기록 전 항목이다. 같은 바이트의 다른 항목은 duplicateOf 로 알리고 합치지 않는다. caller 는 넣은 쪽이 말한 값(role, aiGenerated, derivedFrom)이고 확인된 사실이 아니다. lineage 는 derivedFrom 을 부모 바이트와 대조한 결과다.",
   "tier": "read",
   "grade": "read",
   "grade_badge": "g-read",
@@ -10911,7 +10911,7 @@
  "photo_template_apply": {
   "name": "photo_template_apply",
   "label": "사진 편집기 — 템플릿 적용(기존 내용 대체)",
-  "summary": "템플릿을 적용한다. mode='replace'=현재 디자인 교체, 'new_page'=새 페이지로 추가.",
+  "summary": "템플릿을 적용한다. mode 가 replace 면 현재 페이지의 기존 요소를 모두 지우고 바꿔 되돌릴 수 없고, new_page 면 새 페이지를 더해 기존 내용을 남긴다. 실행 전에 사용자 확인을 받는다.",
   "tier": "destructive",
   "grade": "ask",
   "grade_badge": "g-ask",
@@ -10927,7 +10927,7 @@
     "name": "template",
     "type": "문자열",
     "required": "O",
-    "description": "적용할 템플릿. sq-recipe(레시피 카드, 방법·팁) · sq-sale(세일 포스터, 할인·행사) · sq-quote(감성 인용구, 감성) · story-event(여름 이벤트, 할인·행사) · story-newdrop(신제품 소개, 메뉴·상품) · story-checklist(체크리스트, 방법·팁) · yt-vlog(브이로그 썸네일, 일상) · yt-tutorial(튜토리얼, 방법·팁) · yt-review(리뷰 · 비교, 후기) · blog-cover(월간 회고, 일상) · blog-howto(초보자 가이드, 방법·팁) · blog-interview(인터뷰, 일상) · sq-cafe-menu(카페 메뉴판, 메뉴·상품) · sq-promo-percent(대형 할인 프로모션, 할인·행사) · sq-inspire-serif(영감 명언 카드, 감성) · story-hiring(채용 공고, 채용) · sq-realestate(부동산 매물, 메뉴·상품) · story-webinar(웨비나 안내, 공지·안내) · sq-faq(Q&A / FAQ 카드, 공지·안내) · sq-before-after(Before / After, 후기) · yt-stat-number(통계 숫자 강조, 공지·안내) · sq-minimal-brand(미니멀 브랜드 인용, 감성) · yt-newsletter-header(뉴스레터 헤더, 공지·안내) · story-countdown(카운트다운, 할인·행사) · sq-review-card(후기 / 리뷰 카드, 후기) · sq-grid-tips(그리드 팁 모음, 방법·팁)"
+    "description": "적용할 템플릿 id. 앞머리 sq 는 정방형, story 는 스토리, yt 는 유튜브 썸네일, blog 는 블로그 크기다. 이름과 용도는 photo_template_list 가 준다"
    },
    {
     "name": "mode",
@@ -12573,7 +12573,7 @@
  "pumasi_comment_draft": {
   "name": "pumasi_comment_draft",
   "label": "다른 사람의 글 — 댓글칸에 넣기(등록은 안 누름)",
-  "summary": "회원이 그 글 탭을 열어 두었거나(tab_open) 활성화해 둔(tab_focus) 상태여야 한다 — 없으면 도구가 탭을 하나 열어 처리한다. 다른 사람의 블로그 글의 댓글칸에 주어진 글을 그대로 넣으며 문장을 다듬지 않는다. 댓글칸이 열려 있어야 하므로 pumasi_comment_open 을 먼저 부른다. submit 이 true 면 등록까지 누르고 false 면 넣은 뒤 멈춘다. true 는 실제 댓글을 남기므로 회원이 명시적으로 요청한 경우에만 쓴다.",
+  "summary": "다른 사람의 블로그 글의 댓글칸에 주어진 글을 그대로 넣으며 문장을 다듬지 않는다. 댓글칸이 열려 있어야 하므로 pumasi_comment_open 을 먼저 부르고, 그 글의 탭이 없으면 도구가 탭을 하나 열어 처리한다. submit 이 true 면 등록까지 누르고 false 면 넣은 뒤 멈춘다. true 는 실제 댓글을 남기므로 회원이 명시적으로 요청한 경우에만 맞다.",
   "tier": "destructive",
   "grade": "ask",
   "grade_badge": "g-ask",
@@ -12612,16 +12612,6 @@
   ],
   "related": [
    {
-    "name": "tab_open",
-    "label": "내 브라우저 — 새 탭 열기",
-    "url": "/tools/browser-tabs/tab_open/"
-   },
-   {
-    "name": "tab_focus",
-    "label": "내 브라우저 — 그 탭을 앞으로",
-    "url": "/tools/browser-tabs/tab_focus/"
-   },
-   {
     "name": "pumasi_comment_open",
     "label": "다른 사람의 글 — 댓글칸 열기",
     "url": "/tools/pumasi/pumasi_comment_open/"
@@ -12630,6 +12620,16 @@
     "name": "pumasi_like_state",
     "label": "다른 사람의 글 — 내 공감 상태 읽기",
     "url": "/tools/pumasi/pumasi_like_state/"
+   },
+   {
+    "name": "pumasi_neighbor_state",
+    "label": "다른 사람의 블로그 — 이웃 신청 가능 여부 읽기",
+    "url": "/tools/pumasi/pumasi_neighbor_state/"
+   },
+   {
+    "name": "pumasi_reactors",
+    "label": "다른 사람의 글 — 공감한 사람 명단 받기",
+    "url": "/tools/pumasi/pumasi_reactors/"
    }
   ],
   "prev": {
@@ -12647,7 +12647,7 @@
  "pumasi_comment_open": {
   "name": "pumasi_comment_open",
   "label": "다른 사람의 글 — 댓글칸 열기",
-  "summary": "회원이 그 글 탭을 열어 두었거나(tab_open) 활성화해 둔(tab_focus) 상태여야 한다 — 없으면 도구가 탭을 하나 열어 처리한다. 다른 사람의 블로그 글에서 댓글 입력칸을 연다. 댓글칸은 버튼을 누르기 전에는 화면에 없으므로, 댓글을 쓰려면 이것을 먼저 부른다. 여는 것뿐이고 아무것도 남기지 않는다. 글 내용이 필요하면 web_read 를 쓴다.",
+  "summary": "다른 사람의 블로그 글에서 댓글 입력칸을 연다. 댓글칸은 버튼을 누르기 전에는 화면에 없으므로 댓글을 쓰려면 이것을 먼저 부르고, 그 글의 탭이 없으면 도구가 탭을 하나 열어 처리한다. 여는 것뿐이고 아무것도 남기지 않는다. 글 내용이 필요하면 web_read 를 쓴다.",
   "tier": "write",
   "grade": "ask",
   "grade_badge": "g-ask",
@@ -12668,16 +12668,6 @@
   ],
   "related": [
    {
-    "name": "tab_open",
-    "label": "내 브라우저 — 새 탭 열기",
-    "url": "/tools/browser-tabs/tab_open/"
-   },
-   {
-    "name": "tab_focus",
-    "label": "내 브라우저 — 그 탭을 앞으로",
-    "url": "/tools/browser-tabs/tab_focus/"
-   },
-   {
     "name": "web_read",
     "label": "웹문서 읽기",
     "url": "/tools/keyword-research/web_read/"
@@ -12686,6 +12676,16 @@
     "name": "pumasi_like_state",
     "label": "다른 사람의 글 — 내 공감 상태 읽기",
     "url": "/tools/pumasi/pumasi_like_state/"
+   },
+   {
+    "name": "pumasi_neighbor_state",
+    "label": "다른 사람의 블로그 — 이웃 신청 가능 여부 읽기",
+    "url": "/tools/pumasi/pumasi_neighbor_state/"
+   },
+   {
+    "name": "pumasi_reactors",
+    "label": "다른 사람의 글 — 공감한 사람 명단 받기",
+    "url": "/tools/pumasi/pumasi_reactors/"
    }
   ],
   "prev": {
@@ -12861,7 +12861,7 @@
  "pumasi_neighbor_draft": {
   "name": "pumasi_neighbor_draft",
   "label": "다른 사람의 블로그 — 서로이웃 메시지 넣기(신청은 안 누름)",
-  "summary": "회원이 그 글 탭을 열어 두었거나(tab_open) 활성화해 둔(tab_focus) 상태여야 한다 — 없으면 도구가 탭을 하나 열어 처리한다. 다른 사람의 블로그의 서로이웃 신청 메시지칸에 주어진 글을 그대로 넣으며 문장을 다듬지 않는다. 신청 창이 열려 있어야 하므로 pumasi_neighbor_open 을 먼저 부른다. group 을 생략하면 네이버가 첫 그룹을 쓰며, 정원이 찬 그룹이면 넣지 않고 거절한다. submit 이 true 면 신청까지 누르고 false 면 넣은 뒤 멈춘다. true 는 실제 신청을 보내므로 회원이 명시적으로 요청한 경우에만 쓴다.",
+  "summary": "다른 사람의 블로그의 서로이웃 신청 메시지칸에 주어진 글을 그대로 넣으며 문장을 다듬지 않는다. 신청 창이 열려 있어야 하므로 pumasi_neighbor_open 을 먼저 부르고, 그 글의 탭이 없으면 도구가 탭을 하나 열어 처리한다. group 을 생략하면 네이버가 첫 그룹을 쓰며, 정원이 찬 그룹이면 넣지 않고 거절한다. submit 이 true 면 신청까지 누르고 false 면 넣은 뒤 멈춘다. true 는 실제 신청을 보내므로 회원이 명시적으로 요청한 경우에만 맞다.",
   "tier": "destructive",
   "grade": "ask",
   "grade_badge": "g-ask",
@@ -12900,16 +12900,6 @@
   ],
   "related": [
    {
-    "name": "tab_open",
-    "label": "내 브라우저 — 새 탭 열기",
-    "url": "/tools/browser-tabs/tab_open/"
-   },
-   {
-    "name": "tab_focus",
-    "label": "내 브라우저 — 그 탭을 앞으로",
-    "url": "/tools/browser-tabs/tab_focus/"
-   },
-   {
     "name": "pumasi_neighbor_open",
     "label": "다른 사람의 블로그 — 이웃추가 창 열기",
     "url": "/tools/pumasi/pumasi_neighbor_open/"
@@ -12918,6 +12908,16 @@
     "name": "pumasi_like_state",
     "label": "다른 사람의 글 — 내 공감 상태 읽기",
     "url": "/tools/pumasi/pumasi_like_state/"
+   },
+   {
+    "name": "pumasi_neighbor_state",
+    "label": "다른 사람의 블로그 — 이웃 신청 가능 여부 읽기",
+    "url": "/tools/pumasi/pumasi_neighbor_state/"
+   },
+   {
+    "name": "pumasi_reactors",
+    "label": "다른 사람의 글 — 공감한 사람 명단 받기",
+    "url": "/tools/pumasi/pumasi_reactors/"
    }
   ],
   "prev": {
@@ -12935,7 +12935,7 @@
  "pumasi_neighbor_open": {
   "name": "pumasi_neighbor_open",
   "label": "다른 사람의 블로그 — 이웃추가 창 열기",
-  "summary": "회원이 그 글 탭을 열어 두었거나(tab_open) 활성화해 둔(tab_focus) 상태여야 한다 — 없으면 도구가 탭을 하나 열어 처리한다. 다른 사람의 블로그에서 이웃추가 창을 연다. 글 주소와 블로그 첫 화면 주소 둘 다 된다. mode 는 창이 지금 어느 쪽으로 맞춰져 있는지이고 기본값은 one-way 다 — 상대가 서로이웃을 받는지는 pumasi_neighbor_state 가 답한다. 여는 것뿐이고 신청하지 않으며, 서로이웃으로 바꾸는 것은 pumasi_neighbor_draft 가 한다.",
+  "summary": "다른 사람의 블로그에서 이웃추가 창을 연다. 글 주소와 블로그 첫 화면 주소 둘 다 되고, 그 탭이 없으면 도구가 탭을 하나 열어 처리한다. mode 는 창이 지금 어느 쪽으로 맞춰져 있는지이고 기본값은 one-way 다 — 상대가 서로이웃을 받는지는 pumasi_neighbor_state 가 답한다. 여는 것뿐이고 신청하지 않으며, 서로이웃으로 바꾸는 것은 pumasi_neighbor_draft 가 한다.",
   "tier": "write",
   "grade": "ask",
   "grade_badge": "g-ask",
@@ -12956,16 +12956,6 @@
   ],
   "related": [
    {
-    "name": "tab_open",
-    "label": "내 브라우저 — 새 탭 열기",
-    "url": "/tools/browser-tabs/tab_open/"
-   },
-   {
-    "name": "tab_focus",
-    "label": "내 브라우저 — 그 탭을 앞으로",
-    "url": "/tools/browser-tabs/tab_focus/"
-   },
-   {
     "name": "pumasi_neighbor_state",
     "label": "다른 사람의 블로그 — 이웃 신청 가능 여부 읽기",
     "url": "/tools/pumasi/pumasi_neighbor_state/"
@@ -12974,6 +12964,16 @@
     "name": "pumasi_neighbor_draft",
     "label": "다른 사람의 블로그 — 서로이웃 메시지 넣기(신청은 안 누름)",
     "url": "/tools/pumasi/pumasi_neighbor_draft/"
+   },
+   {
+    "name": "pumasi_like_state",
+    "label": "다른 사람의 글 — 내 공감 상태 읽기",
+    "url": "/tools/pumasi/pumasi_like_state/"
+   },
+   {
+    "name": "pumasi_reactors",
+    "label": "다른 사람의 글 — 공감한 사람 명단 받기",
+    "url": "/tools/pumasi/pumasi_reactors/"
    }
   ],
   "prev": {
@@ -13047,7 +13047,7 @@
  "pumasi_reactors": {
   "name": "pumasi_reactors",
   "label": "다른 사람의 글 — 공감한 사람 명단 받기",
-  "summary": "회원이 지목한 글에 공감을 남긴 사람들의 블로그 아이디를 최신순으로 돌려준다. 이름·프로필·글 내용은 돌려주지 않고 아무것도 저장하지 않는다. alreadyNeighbor 가 true 면 회원의 이웃이지만 false 는 '아니다'가 아니라 '네이버가 말하지 않았다'는 뜻이므로 이웃이 아니라고 단정하지 마라. 이 도구는 아무에게도 아무 것도 하지 않는다 — 회원이 한 명을 고르면 그때 다른 도구를 부른다.",
+  "summary": "회원이 지목한 글에 공감을 남긴 사람들의 블로그 아이디를 최신순으로 돌려준다. 이름·프로필·글 내용은 돌려주지 않고 아무것도 저장하지 않는다. alreadyNeighbor 가 true 면 회원의 이웃이지만 false 는 '아니다'가 아니라 '네이버가 말하지 않았다'는 뜻이라 이웃이 아니라는 근거가 되지 못한다. 이 도구는 아무에게도 아무 것도 하지 않는다 — 회원이 한 명을 고르면 그때 다른 도구를 부른다.",
   "tier": "write",
   "grade": "ask",
   "grade_badge": "g-ask",
@@ -13159,7 +13159,7 @@
  "run_research": {
   "name": "run_research",
   "label": "키워드 리서치",
-  "summary": "한 주제에 대해 연관 키워드 + 검색 관심도 + 블로그/카페 발행량을 한 번에 종합한 '요약본'이다. 글쓰기 전 빠른 리서치에 사용. 키워드 순위·전체 시계열이 필요하면 search_keywords / qra_keywords / keyword_trend / content_volume 개별 도구를 쓴다.",
+  "summary": "한 주제에 대해 연관 키워드 + 검색 관심도 + 블로그/카페 발행량을 한 번에 종합한 '요약본'이다. 글쓰기 전 빠른 리서치에 맞고, 키워드 순위가 필요하면 search_keywords, 전체 시계열이 필요하면 keyword_trend 같은 개별 도구를 쓴다.",
   "tier": "read",
   "grade": "read",
   "grade_badge": "g-read",
@@ -13185,11 +13185,6 @@
     "url": "/tools/keyword-research/search_keywords/"
    },
    {
-    "name": "qra_keywords",
-    "label": "인기주제 키워드",
-    "url": "/tools/keyword-research/qra_keywords/"
-   },
-   {
     "name": "keyword_trend",
     "label": "검색어 관심도 추이",
     "url": "/tools/keyword-research/keyword_trend/"
@@ -13198,6 +13193,11 @@
     "name": "content_volume",
     "label": "블로그·카페 발행량",
     "url": "/tools/keyword-research/content_volume/"
+   },
+   {
+    "name": "keyword_opportunity",
+    "label": "키워드 기회 지수",
+    "url": "/tools/keyword-research/keyword_opportunity/"
    }
   ],
   "prev": {
@@ -15072,7 +15072,7 @@
  "tab_debug": {
   "name": "tab_debug",
   "label": "내 브라우저 — 탭에서 코드 실행(개발용)",
-  "summary": "개발용. 이미 열려 있는 네이버 탭 하나의 페이지 안에서 짧은 자바스크립트를 직접 실행하고 반환값을 돌려준다. 검색 결과, 블로그 글, 인플루언서 홈, 스마트플레이스 같은 화면의 구조를 들여다보거나 점검 스크립트를 돌릴 때 쓴다. 글쓰기 창의 에디터 안은 editor_debug 를 쓴다. url 은 열려 있는 탭의 주소 그대로여야 하고, 그 주소의 탭이 정확히 하나일 때만 실행한다. 없으면 no-matching-tab, 여러 개면 multiple-tabs 로 답하고 탭을 새로 열지 않는다. 네이버 주소만 되고 로그인(nid)·결제(pay)·주문·메일·고객센터 화면과 데이터랩툴즈 화면은 host-refused 로 거절한다. 시크릿 창의 탭은 보이지 않는다. 코드는 탭의 맨 위 화면에서 async 함수의 본문으로 돌아 await 와 return 을 쓸 수 있고, 인자 하나 ctx 를 받는다. ctx.log(...) 는 결과의 logs 에 줄을 남기고(50줄, 줄마다 500자), ctx.sleep(ms) 는 기다리고, ctx.json(value) 는 값을 JSON 으로 바꿀 수 있는 모양으로 돌려주고, ctx.snapshot(selector, limit) 는 맞는 요소를 최대 limit 개(기본 10, 최대 50) 태그·id·클래스·글자(200자)·속성으로 돌려준다. 반환값은 순환과 DOM 과 함수를 걸러 JSON 으로 바뀌고 editor_debug 와 같은 상한을 쓴다: 깊이 6단계, 객체 키 100개, 배열 항목 100개, 문자열 2000자. 상한에 걸리면 clipped 가 붙고, JSON 전체가 maxChars 를 넘으면 잘라서 truncated 를 true 로 한다. 결과의 page 는 실행한 순간의 주소·제목·readyState 다. 코드는 회원의 로그인 상태로 그 페이지가 할 수 있는 일을 모두 할 수 있으니 읽기만 할 때는 바꾸지 않는 코드를 쓴다. 이미 시작된 코드는 되돌릴 수 없고 탭을 새로고침하면 멈춘다. 페이지가 문자열 코드 실행을 막으면 stage 가 eval-blocked 로 온다. 매번 사용자 확인을 받는다.",
+  "summary": "이미 열려 있는 네이버 탭 하나의 페이지 안에서 짧은 자바스크립트를 실행하고 반환값을 돌려주는 개발용 도구다. 화면 구조를 들여다보거나 점검 스크립트를 돌릴 때 쓰고, 글쓰기 창의 에디터 안이면 editor_debug 를 쓴다. 주소가 url 과 같은 탭이 정확히 하나일 때만 실행하고 탭을 새로 열지 않는다. 없으면 no-matching-tab, 여럿이면 multiple-tabs, 로그인·결제·주문·메일·고객센터와 데이터랩툴즈 화면이면 host-refused 로 답하며 시크릿 창의 탭은 보이지 않는다. 매번 사용자 확인을 받는다. 코드는 회원의 로그인 상태로 그 페이지가 할 수 있는 일을 모두 할 수 있고, 시작된 코드는 되돌릴 수 없으며 탭을 새로고침하면 멈춘다. 반환값이 깊이·개수 상한에 걸리면 clipped 가 붙고 maxChars 를 넘으면 truncated 가 true 다. stage 가 eval-blocked 면 그 페이지가 문자열 코드 실행을 막은 것이다.",
   "tier": "destructive",
   "grade": "ask",
   "grade_badge": "g-ask",
@@ -15094,7 +15094,7 @@
     "name": "code",
     "type": "문자열",
     "required": "O",
-    "description": "실행할 코드. async 함수의 본문이며 return 으로 값을 돌려준다. 예: return ctx.snapshot('h2', 5)"
+    "description": "실행할 코드. async 함수의 본문이며 return 으로 값을 돌려준다. 인자 ctx 는 log(...)·sleep(ms)·json(value)·snapshot(selector, limit) 를 준다. 예: return ctx.snapshot('h2', 5)"
    },
    {
     "name": "timeoutMs",
@@ -15197,7 +15197,7 @@
  "tab_list": {
   "name": "tab_list",
   "label": "내 브라우저 — 열려 있는 탭 보기",
-  "summary": "지금 열려 있는 네이버·데이터랩툴즈 탭을 돌려준다. 로그인·결제·메일 같은 민감한 네이버 페이지와 그 밖의 사이트 탭은 보이지 않는다. focusClose 가 yes 인 탭(네이버 블로그·데이터랩툴즈)만 tab_focus 와 tab_close 가 받고, tabDebug 가 yes 인 탭은 그 url 그대로 tab_debug 에 넘길 수 있다. 아무것도 바꾸지 않는다.",
+  "summary": "지금 열려 있는 네이버·데이터랩툴즈 탭을 돌려준다. 로그인·결제·메일 같은 민감한 네이버 페이지와 그 밖의 사이트 탭은 보이지 않는다. focusClose 가 yes 인 탭(네이버 블로그·데이터랩툴즈)만 앞으로 가져오거나 닫을 수 있고, tabDebug 가 yes 인 탭은 그 url 그대로 tab_debug 에 넘길 수 있다. 아무것도 바꾸지 않는다.",
   "tier": "write",
   "grade": "ask",
   "grade_badge": "g-ask",
@@ -15211,16 +15211,6 @@
   "params": [],
   "related": [
    {
-    "name": "tab_focus",
-    "label": "내 브라우저 — 그 탭을 앞으로",
-    "url": "/tools/browser-tabs/tab_focus/"
-   },
-   {
-    "name": "tab_close",
-    "label": "내 브라우저 — 그 탭 닫기",
-    "url": "/tools/browser-tabs/tab_close/"
-   },
-   {
     "name": "tab_debug",
     "label": "내 브라우저 — 탭에서 코드 실행(개발용)",
     "url": "/tools/browser-tabs/tab_debug/"
@@ -15229,6 +15219,16 @@
     "name": "tab_open",
     "label": "내 브라우저 — 새 탭 열기",
     "url": "/tools/browser-tabs/tab_open/"
+   },
+   {
+    "name": "tab_focus",
+    "label": "내 브라우저 — 그 탭을 앞으로",
+    "url": "/tools/browser-tabs/tab_focus/"
+   },
+   {
+    "name": "tab_close",
+    "label": "내 브라우저 — 그 탭 닫기",
+    "url": "/tools/browser-tabs/tab_close/"
    }
   ],
   "next": {
@@ -15458,7 +15458,7 @@
     "name": "style",
     "type": "문자열",
     "required": "X",
-    "description": "단계를 마친 뒤 입힐 스타일 팩(색·움직임·전환, 생략하면 입히지 않는다): informative 정보형·차분, review 제품 또렷, vlog 필름·빠른 호흡, mood 감성·느리게, sale 세일·눈에 띄게, tutorial 화면 고정, news 뉴스·또박또박, minimal 흑백·장식 없음. 장면 사이는 대부분 컷이고 팩이 정한 몇 장면마다만 전환이 들어간다"
+    "description": "단계 뒤 입힐 스타일 팩(색·움직임·전환, 생략 시 없음): informative 정보형·차분, review 제품 또렷, vlog 필름·빠른 호흡, mood 감성·느리게, sale 세일·눈에 띄게, tutorial 화면 고정, news 뉴스·또박또박, minimal 흑백·장식 없음. 전환은 팩이 정한 몇 장면에만 든다"
    },
    {
     "name": "editor_session",
@@ -17108,7 +17108,7 @@
     "name": "patch",
     "type": "객체",
     "required": "O",
-    "description": "바꿀 필드만 담는다(부분 패치). 필드를 생략하면 그대로 두고, null 은 아래 필드에서만 지우기다. highlight·outline·shadow 는 null 이면 없앤다. grade 는 null 이면 색 보정 전체를 지우고, grade.lut 만 null 이면 LUT 만 빼고 나머지 보정은 남긴다(grade 를 주면서 lut 를 생략하면 올린 LUT 가 그대로 남는다). mask 는 null 이 아니라 mask.node 를 빈 문자열로 줘서 푼다. 그 밖의 필드에 null 을 주거나, 요소 종류(글자·이미지·도형·가림 영역)에 없는 필드나 범위를 벗어난 값을 주면 reason schema 로 거부하고 아무것도 바꾸지 않는다"
+    "description": "바꿀 필드만(부분 패치). null 은 highlight·outline·shadow·grade 에서만 지우기이고 grade.lut 만 null 이면 LUT 만 뺀다. mask 는 mask.node 를 빈 문자열로 줘서 푼다. 그 밖의 null·종류에 없는 필드·범위 밖 값은 reason schema 로 거부한다"
    },
    {
     "name": "editor_session",
@@ -17402,7 +17402,7 @@
     "name": "grade",
     "type": "객체",
     "required": "X",
-    "description": "레벨 · 커브 · 색상별 HSL. 이 객체가 기존 값을 대신한다. 레벨 · 커브 값은 0~1(감마만 0.1~10, 1 이 그대로), 커브는 x 순서의 점 2~6개, 채널은 master·r·g·b. hsl 은 색 띠(red·orange·yellow·green·aqua·blue·purple·magenta)마다 h·s·l 을 -1~1(0 이 그대로). key 는 크로마키(배경색 color 와 tolerance·softness·spill 0~1). lut 는 media_stage 로 올린 .cube 파일의 handle(강도 strength 0~1, 이름 name)로 넣고, lut: null 은 LUT 만 뺀다. lut 를 주지 않으면 올린 LUT 가 그대로 남는다. null=전부 해제"
+    "description": "레벨·커브(x 순서의 점 2~6개)·색 띠별 HSL·크로마키(key)·LUT. 이 객체가 기존 값을 대신하지만 lut 를 빼면 올린 LUT 는 남고, lut 가 null 이면 LUT 만 뺀다. lut 의 handle 은 media_stage 로 올린 .cube 파일이다. null 이면 전부 해제"
    },
    {
     "name": "editor_session",
@@ -18702,7 +18702,7 @@
  "video_scene_update": {
   "name": "video_scene_update",
   "label": "영상 편집기 — 장면 고치기",
-  "summary": "한 장면의 길이·전환·모션·색을 바꾼다. 길이를 고정(durationLocked)하면 목소리를 만들 때 자동으로 늘어나지 않는다. 한 번 호출이 되돌리기 한 단계이고, 값이 하나라도 잘못되면 아무것도 바꾸지 않고 거부한다.\n색을 바꿀 수 있는 곳과 도구:\n- 배경 사진: filter·adjust·grade(이 도구, grade 는 target photo 또는 영상이 없는 장면의 auto)\n- 배경 영상: grade 만(이 도구, target clip 또는 영상이 있는 장면의 auto). filter·adjust 는 없다\n- 위에 얹은 이미지: filter·adjust·grade(video_node_update)\n- 화면 속 화면: grade 만(video_pip_update)\n장면은 배경 사진과 배경 영상 중 하나만 보여 주므로, 배경 영상이 있는 장면에서 filter·adjust·target photo 는 거부된다. contain 으로 놓은 영상의 여백 색은 어떤 보정도 받지 않고 video_background_set 으로만 바뀐다. 결과는 video_timeline_get 의 장면 backgroundImage(filter·adjust·grade)와 clipState.grade 로 확인한다.",
+  "summary": "한 장면의 길이·전환·모션·색을 바꾼다. 이 도구의 색은 배경 사진의 filter·adjust·grade 와 배경 영상의 grade 이고, 위에 얹은 이미지면 video_node_update, 화면 속 화면이면 video_pip_update 를 쓴다. 장면은 배경 사진과 배경 영상 중 하나만 보여 주므로 배경 영상이 있는 장면에서 filter·adjust·target photo 는 거부되고, contain 으로 놓은 영상의 여백 색은 어떤 보정도 받지 않는다. 길이를 고정(durationLocked)하면 목소리를 만들 때 자동으로 늘어나지 않는다. 한 번 호출이 되돌리기 한 단계이고, 값이 하나라도 잘못되면 아무것도 바꾸지 않고 거부한다.",
   "tier": "write",
   "grade": "ask",
   "grade_badge": "g-ask",
@@ -18760,7 +18760,7 @@
     "name": "grade",
     "type": "객체",
     "required": "X",
-    "description": "레벨 · 커브 · 색상별 HSL. 이 객체가 기존 값을 대신한다. 레벨 · 커브 값은 0~1(감마만 0.1~10, 1 이 그대로), 커브는 x 순서의 점 2~6개, 채널은 master·r·g·b. hsl 은 색 띠(red·orange·yellow·green·aqua·blue·purple·magenta)마다 h·s·l 을 -1~1(0 이 그대로). key 는 크로마키(배경색 color 와 tolerance·softness·spill 0~1). lut 는 media_stage 로 올린 .cube 파일의 handle(강도 strength 0~1, 이름 name)로 넣고, lut: null 은 LUT 만 뺀다. lut 를 주지 않으면 올린 LUT 가 그대로 남는다. null=전부 해제"
+    "description": "레벨·커브(x 순서의 점 2~6개)·색 띠별 HSL·크로마키(key)·LUT. 이 객체가 기존 값을 대신하지만 lut 를 빼면 올린 LUT 는 남고, lut 가 null 이면 LUT 만 뺀다. lut 의 handle 은 media_stage 로 올린 .cube 파일이다. null 이면 전부 해제"
    },
    {
     "name": "target",
@@ -18817,14 +18817,14 @@
     "url": "/tools/video-timeline/video_pip_update/"
    },
    {
-    "name": "video_background_set",
-    "label": "영상 편집기 — 배경 바꾸기",
-    "url": "/tools/video-editor/video_background_set/"
+    "name": "video_project_get",
+    "label": "영상 편집기 — 현재 프로젝트 확인",
+    "url": "/tools/video-editor/video_project_get/"
    },
    {
-    "name": "video_timeline_get",
-    "label": "영상 편집기 — 타임라인 확인",
-    "url": "/tools/video-editor/video_timeline_get/"
+    "name": "video_project_new",
+    "label": "영상 편집기 — 새 프로젝트 만들기",
+    "url": "/tools/video-editor/video_project_new/"
    }
   ],
   "prev": {
@@ -18842,7 +18842,7 @@
  "video_source_add": {
   "name": "video_source_add",
   "label": "영상 편집기 — 영상 · 음악 파일 넣기",
-  "summary": "연결 프로그램에 올려 봉인한 영상 · 소리 파일(media_stage_commit 의 handle)을 영상 편집기에 넣는 job 을 시작하고 job 을 돌려준다. clip 은 화면 올리기와 같이 10분까지 잘라 화질을 맞춘 뒤 그 장면의 배경 영상으로, bgm 은 배경 음악으로, narration 은 그 장면 대본을 읽은 목소리로 넣는다(대본이 있는 장면만, 장면 길이는 목소리에 맞춰 늘어난다, 대본을 고치면 다시 넣어야 한다). video_job_status 로 끝났는지 확인한다. 되돌리기 한 번으로 돌아간다. clip 은 기본으로 캔버스 전체를 채우고(cover) 넘치는 가장자리는 잘린다. fit·box·anchor 중 하나라도 주면 영상을 box 안에 놓는다: contain 은 원본 화면 전체를 비율대로 보이고 남는 곳은 장면 배경색, cover 는 box 를 채우고 anchor 쪽을 남겨 자른다. 영상이 덮지 않는 곳(contain 의 여백, box 바깥)은 넣기 전 장면 배경색을 이어받고, 넣은 뒤에도 video_background_set 으로 바꿀 수 있다. 영상 자체 색은 바뀌지 않는다. 배경 영상에는 지금처럼 장면 움직임(motion·camera)이 적용되지 않고, 전환은 그대로 적용된다. 결과 배치는 video_timeline_get 의 clipState.placement 로 확인한다.",
+  "summary": "연결 프로그램에 올려 봉인한 영상·소리 파일(media_stage_commit 의 handle)을 영상 편집기에 넣는 job 을 시작해 돌려주고, 끝났는지는 video_job_status 로 확인한다. clip 은 10분까지 잘라 화질을 맞춘 뒤 그 장면의 배경 영상으로, bgm 은 배경 음악으로, narration 은 그 장면 대본을 읽은 목소리로 넣는다. narration 은 대본이 있는 장면만 되고, 장면 길이가 목소리에 맞춰 늘어나며, 대본을 고치면 다시 넣어야 한다. 되돌리기 한 번으로 돌아간다. clip 은 기본으로 캔버스 전체를 채워 가장자리가 잘리고, fit·box·anchor 중 하나라도 주면 box 안에 놓으며 영상이 덮지 않는 곳은 장면 배경색이 되고 video_background_set 으로 바꾼다. 배경 영상에는 장면 움직임이 적용되지 않고 전환은 적용된다.",
   "tier": "write",
   "grade": "ask",
   "grade_badge": "g-ask",
@@ -18945,14 +18945,14 @@
     "url": "/tools/video-editor/video_background_set/"
    },
    {
-    "name": "video_timeline_get",
-    "label": "영상 편집기 — 타임라인 확인",
-    "url": "/tools/video-editor/video_timeline_get/"
-   },
-   {
     "name": "video_project_get",
     "label": "영상 편집기 — 현재 프로젝트 확인",
     "url": "/tools/video-editor/video_project_get/"
+   },
+   {
+    "name": "video_project_new",
+    "label": "영상 편집기 — 새 프로젝트 만들기",
+    "url": "/tools/video-editor/video_project_new/"
    }
   ],
   "prev": {
@@ -19039,7 +19039,7 @@
  "video_subtitle_set": {
   "name": "video_subtitle_set",
   "label": "영상 편집기 — 자막 넣기",
-  "summary": "한 장면의 자막을 바꾼다. 목소리가 읽는 대본은 video_timeline_get 의 장면 script 다. script.source 가 subtitle 이면(따로 적은 목소리 대본이 없으면) 자막이 곧 대본이다. script.source 가 narration 이면 목소리 대본이 따로 있어서, 자막을 고쳐도 목소리 대본과 이미 만든 목소리는 그대로이고 목소리는 최신으로 남는다. 다만 가져온 목소리 파일이 지금 자막을 대본으로 따르고 있으면, 대본도 같은 되돌리기 한 단계 안에서 새 자막으로 바뀌고 그 목소리는 stale 이 된다. 응답(data)의 narrationStale 은 이번 호출로 최신이던 목소리가 stale 이 되었을 때만 true 이고(같은 글자로 다시 쓰거나, 목소리가 없거나, 이미 stale 이었으면 false), script 는 호출 뒤의 대본이다(둘 다 응답마다 온다). stale 인 목소리는 video_narration_generate 로 다시 만든다. 자막의 글꼴·크기·색·상자·높이는 video_subtitle_style_set 으로 바꾸고, 서식만 바꾸면 목소리는 stale 이 되지 않는다.",
+  "summary": "한 장면의 자막을 바꾼다. 장면 script 의 source 가 subtitle 이면 자막이 곧 목소리 대본이고, narration 이면 대본이 따로 있어 자막을 고쳐도 대본과 이미 만든 목소리는 그대로다. 다만 가져온 목소리 파일이 지금 자막을 대본으로 따르고 있으면 대본도 같은 되돌리기 한 단계 안에서 새 자막으로 바뀌고 그 목소리는 stale 이 된다. 결과의 narrationStale 은 이번 호출로 최신이던 목소리가 stale 이 되었을 때만 true 이고, stale 인 목소리는 video_narration_generate 로 다시 만든다. 글꼴·크기·색 같은 서식만 바꾸려면 video_subtitle_style_set 을 쓰며, 그때 목소리는 stale 이 되지 않는다.",
   "tier": "write",
   "grade": "ask",
   "grade_badge": "g-ask",
@@ -19090,11 +19090,6 @@
   ],
   "related": [
    {
-    "name": "video_timeline_get",
-    "label": "영상 편집기 — 타임라인 확인",
-    "url": "/tools/video-editor/video_timeline_get/"
-   },
-   {
     "name": "video_narration_generate",
     "label": "영상 편집기 — AI 목소리 만들기(요금)",
     "url": "/tools/video-editor/video_narration_generate/"
@@ -19108,6 +19103,11 @@
     "name": "video_project_get",
     "label": "영상 편집기 — 현재 프로젝트 확인",
     "url": "/tools/video-editor/video_project_get/"
+   },
+   {
+    "name": "video_project_new",
+    "label": "영상 편집기 — 새 프로젝트 만들기",
+    "url": "/tools/video-editor/video_project_new/"
    }
   ],
   "prev": {
@@ -19125,7 +19125,7 @@
  "video_subtitle_style_set": {
   "name": "video_subtitle_style_set",
   "label": "영상 편집기 — 자막 서식 바꾸기",
-  "summary": "자막 서식(글꼴·크기·굵기·색·외곽선·배경 상자·아래 여백)을 바꾼다. scene 을 생략하면 영상 전체 자막 서식을, 주면 그 장면만의 서식(덮어쓰기)을 고치고 clear=true 면 그 장면을 다시 전체 서식으로 되돌린다. 자막은 언제나 가로 가운데 정렬이라 정렬 값은 없다 — video_text_add 의 align 은 화면 위 글자용이고 자막에는 쓰지 않는다. 한 번 호출이 되돌리기 한 단계이고, 적용된 서식은 video_timeline_get 의 장면 subtitleStyle 로 확인한다.\npreset 으로 이름 붙은 서식을 한 번에 입힌다. 프리셋을 먼저 펼치고 같은 호출의 style 항목이 그 위를 덮는다. 글꼴은 모두 번들 글꼴 목록 안에서 고른 것이다.\n- clean: 흰 글자·검은 외곽선(기본 서식)\n- bold-outline: 굵은 디스플레이체·두꺼운 검은 외곽선\n- box: 외곽선 없이 반투명 검은 상자\n- highlight-yellow: 노란 글자·어두운 외곽선\n- minimal-shadow: 외곽선 없이 그림자만\n- myeongjo-vlog: 명조체·작은 크기·옅은 그림자\n- variety-emphasis: 넓적한 디스플레이체·분홍 외곽선",
+  "summary": "자막 서식(글꼴·크기·굵기·색·외곽선·배경 상자·아래 여백)을 바꾼다. scene 을 생략하면 영상 전체 자막 서식을, 주면 그 장면만의 덮어쓰기를 고치고, clear 가 true 면 그 장면을 전체 서식으로 되돌린다. preset 은 이름 붙은 서식을 먼저 펼치고 같은 호출의 style 이 그 위를 덮는다. 자막은 언제나 가로 가운데 정렬이라 정렬 값이 없고, 화면 위 글자의 align 은 자막에 쓰이지 않는다. 한 번 호출이 되돌리기 한 단계이고, 적용된 서식은 video_timeline_get 의 장면 subtitleStyle 로 확인한다.",
   "tier": "write",
   "grade": "ask",
   "grade_badge": "g-ask",
@@ -19141,7 +19141,7 @@
     "name": "preset",
     "type": "문자열",
     "required": "X",
-    "description": "입힐 자막 서식 프리셋. style 을 함께 주면 그 항목이 프리셋을 덮는다"
+    "description": "자막 서식 프리셋. clean 은 흰 글자·검은 외곽선(기본), bold-outline 은 굵은 체·두꺼운 외곽선, box 는 반투명 검은 상자, myeongjo-vlog 는 명조체·작은 크기, variety-emphasis 는 넓적한 체·분홍 외곽선"
    },
    {
     "name": "scene",
@@ -19188,11 +19188,6 @@
   ],
   "related": [
    {
-    "name": "video_text_add",
-    "label": "영상 편집기 — 글자 넣기",
-    "url": "/tools/video-editor/video_text_add/"
-   },
-   {
     "name": "video_timeline_get",
     "label": "영상 편집기 — 타임라인 확인",
     "url": "/tools/video-editor/video_timeline_get/"
@@ -19206,6 +19201,11 @@
     "name": "video_bgm_update",
     "label": "영상 편집기 — 음원 바꾸기",
     "url": "/tools/video-timeline/video_bgm_update/"
+   },
+   {
+    "name": "video_bgm_split",
+    "label": "영상 편집기 — 음원 자르기",
+    "url": "/tools/video-timeline/video_bgm_split/"
    }
   ],
   "next": {
@@ -19384,7 +19384,7 @@
  "video_text_add": {
   "name": "video_text_add",
   "label": "영상 편집기 — 글자 넣기",
-  "summary": "장면 위에 글자를 얹는다. 자막과는 별개다 — 자막은 video_subtitle_set 으로 다루고, 이건 제목·강조 문구처럼 화면에 그려지는 일반 글자다. 여기의 align·글꼴·outline·shadow 는 이 글자에만 적용되고, 자막의 외곽선·그림자를 포함한 자막 서식은 video_subtitle_style_set 으로 바꾼다. outline·shadow 는 생략하면 preset 기본값을 쓴다(모든 preset 이 흰 글자에 #000000 4px 외곽선, 그림자 없음). 값이 범위를 벗어나면 아무것도 넣지 않고 거부한다. 넣은 값은 video_timeline_get 의 nodes[].style.outline·shadow 로 확인한다.",
+  "summary": "장면 위에 글자를 얹는다. 자막과는 별개다 — 자막은 video_subtitle_set 으로 다루고, 이건 제목·강조 문구처럼 화면에 그려지는 일반 글자다. 여기의 align·글꼴·outline·shadow 는 이 글자에만 적용되고, 자막의 외곽선·그림자를 포함한 자막 서식은 video_subtitle_style_set 으로 바꾼다. outline·shadow 는 생략하면 preset 기본값을 쓴다(모든 preset 이 흰 글자에 #000000 4px 외곽선, 그림자 없음). 값이 범위를 벗어나면 아무것도 넣지 않고 거부한다. 넣은 값은 타임라인의 nodes[].style 에서 확인한다.",
   "tier": "write",
   "grade": "ask",
   "grade_badge": "g-ask",
@@ -19511,14 +19511,14 @@
     "url": "/tools/video-timeline/video_subtitle_style_set/"
    },
    {
-    "name": "video_timeline_get",
-    "label": "영상 편집기 — 타임라인 확인",
-    "url": "/tools/video-editor/video_timeline_get/"
-   },
-   {
     "name": "video_project_get",
     "label": "영상 편집기 — 현재 프로젝트 확인",
     "url": "/tools/video-editor/video_project_get/"
+   },
+   {
+    "name": "video_project_new",
+    "label": "영상 편집기 — 새 프로젝트 만들기",
+    "url": "/tools/video-editor/video_project_new/"
    }
   ],
   "prev": {
@@ -19536,7 +19536,7 @@
  "video_timeline_get": {
   "name": "video_timeline_get",
   "label": "영상 편집기 — 타임라인 확인",
-  "summary": "현재 타임라인을 확인한다(장면 목록을 ref·길이·자막·목소리 상태와 함께). 편집 전 항상 먼저 호출해 장면 ref 를 파악한다. 장면 순서와 길이가 곧 타임라인이라 별도의 시간축은 없다. preset 은 화면 크기(width·height)와 크기가 같은 video_canvas_resize 프리셋 id 이고 없으면 null 이다. 장면마다 startMs 와, 전환이 있으면 transition(종류)·transitionMs(길이)와, 화면에 실제로 나가는 자막 조각 subtitleCues(startMs·endMs·text, 문서 시각)를 준다. 긴 자막은 여러 조각으로 나뉘어 나가므로 SRT 는 subtitle 이 아니라 subtitleCues 로 만든다. script 는 그 장면 목소리가 읽는 대본(text)과 출처(source: narration 이면 따로 쓴 대본, subtitle 이면 자막)다. measure: true 를 주면 글자 요소마다 measure(실제 줄바꿈·글꼴·영역·겹침)를, 자막 조각마다 wrappedLines·renderedBounds 를 렌더러 기준으로 함께 준다. 자막이나 장면 서식이 있는 장면은 subtitleStyle 에 전체 서식과 장면 덮어쓰기를 합친, 실제로 그려지는 자막 서식을 준다. renderer 는 이 타임라인을 그리는 렌더러·내보내기 버전이다. 배치를 정해 넣은 배경 영상은 clipState.placement 에 fit·anchor·box(캔버스 px)·crop(그려지는 원본 영역, 0..1)·renderedBounds(영상이 실제로 덮는 캔버스 px)를 렌더러와 같은 계산으로 준다. diagnostics: true 를 주면 장면마다 render 에 렌더러가 실제로 그리는 전환(transition: kind·실제 durationMs·문서 시각 startMs/endMs 창·아래 깔리는 previous 장면·layers 별 역할과 표본 시점 알파·이동·잘림, rendersAs 가 cut 이면 섞이지 않고 끊겨 보인다)과 움직임(motion: kind 와 elements 의 background·imageOverlays·text·subtitle 이 moves·still·absent 중 무엇인지)을 준다.",
+  "summary": "현재 타임라인을 장면 목록(ref·길이·자막·목소리 상태)으로 확인하며, 편집 전에 먼저 불러 장면 ref 를 알아 둔다. 장면 순서와 길이가 곧 타임라인이라 별도의 시간축은 없고, 아무것도 바꾸지 않는다. 긴 자막은 여러 조각으로 나뉘어 나가므로 SRT 는 subtitle 이 아니라 subtitleCues 로 만든다. script 의 source 가 narration 이면 자막과 따로 쓴 대본이고 subtitle 이면 자막이 곧 대본이다. diagnostics 를 주면 붙는 render 에서 전환의 rendersAs 가 cut 이면 섞이지 않고 끊겨 보인다.",
   "tier": "read",
   "grade": "read",
   "grade_badge": "g-read",
@@ -19552,7 +19552,7 @@
     "name": "measure",
     "type": "참/거짓",
     "required": "X",
-    "description": "true 면 글자 배치를 렌더러로 잰 값을 붙인다. 글자 요소의 measure 에는 actualFont·fontsReady·fallbackGlyphs 가 있다. actualFont 는 캔버스가 실제로 그리는 글꼴로, 요청한 글꼴이 글자 일부라도 그리면 그 이름이고 하나도 못 그리면 대체 글꼴이다. fallbackGlyphs 는 요청한 글꼴에 없어 다른 글꼴로 그려지는 글자 목록(이모지·드문 한자 등, 빈 배열이면 모두 요청한 글꼴), null 이면 판별하지 못한 것이다. 글꼴 로딩을 기다려 느리므로 배치 확인이 필요할 때만"
+    "description": "true 면 글자 요소와 자막 조각마다 렌더러가 잰 줄바꿈·실제 글꼴·영역·겹침을 붙인다. fallbackGlyphs 는 다른 글꼴로 그려지는 글자이고 null 이면 판별하지 못한 것이다. 글꼴 로딩을 기다려 느리다"
    },
    {
     "name": "diagnostics",
@@ -19587,11 +19587,6 @@
   ],
   "related": [
    {
-    "name": "video_canvas_resize",
-    "label": "영상 편집기 — 화면 비율 바꾸기(모든 장면 재배치)",
-    "url": "/tools/video-editor/video_canvas_resize/"
-   },
-   {
     "name": "video_project_get",
     "label": "영상 편집기 — 현재 프로젝트 확인",
     "url": "/tools/video-editor/video_project_get/"
@@ -19605,6 +19600,11 @@
     "name": "video_project_list",
     "label": "영상 편집기 — 저장된 프로젝트 목록",
     "url": "/tools/video-editor/video_project_list/"
+   },
+   {
+    "name": "video_project_open",
+    "label": "영상 편집기 — 저장된 프로젝트 열기",
+    "url": "/tools/video-editor/video_project_open/"
    }
   ],
   "prev": {
@@ -19622,7 +19622,7 @@
  "web_read": {
   "name": "web_read",
   "label": "웹문서 읽기",
-  "summary": "네이버 블로그/카페 등 네이버 도메인 페이지의 본문을 추출해 읽는다(제목·설명·본문 마크다운·단어수). 🔴 네이버 도메인 전용 — 비네이버 URL(위키·기관 사이트 등)은 브라우저 브리지가 네이버 스코프라 읽지 못한다.",
+  "summary": "네이버 블로그/카페 등 네이버 도메인 페이지의 본문을 추출해 읽는다(제목·설명·본문 마크다운·단어수). 네이버 도메인 전용이라 위키·기관 사이트 같은 다른 사이트 주소는 브라우저 브리지가 읽지 못한다.",
   "tier": "read",
   "grade": "read",
   "grade_badge": "g-read",
@@ -19754,7 +19754,7 @@
  "write_pipeline_step": {
   "name": "write_pipeline_step",
   "label": "글쓰기 단계별 안내",
-  "summary": "네이버 블로그 글 한 편을 조사부터 발행 초안까지 끝내는 절차에서, 지금 단계에 무엇을 어떻게 해야 하는지 돌려준다. 앞 단계에서 실제로 측정한 값을 findings 에 넣으면 그 수치에 맞춘 지시를 준다 — 특히 구조 설계(structure)는 앞 단계 실측치에 좌우되므로 미리 적어 둘 수 없다.\n단계:\n1. keyword — 키워드 리서치 (산출: 타깃 키워드와 그 수요·포화도 수치)\n2. serp — 상위 노출 콘텐츠 패턴 분석 (산출: 상위 글의 공통 구조와 아직 아무도 다루지 않은 빈틈)\n3. structure — SEO/AEO/GEO 구조 설계 (산출: 소제목 순서(outline)와 AEO/GEO 스펙)\n4. draft — 초안 작성 (산출: 제목과 본문 초안)\n5. apply — 에디터 반영 (산출: 글쓰기 창에 실제로 반영된 원고)",
+  "summary": "네이버 블로그 글 한 편을 조사부터 발행 초안까지 끝내는 절차에서, 지금 단계에 무엇을 어떻게 해야 하는지 돌려준다. 앞 단계에서 실제로 측정한 값을 findings 에 넣으면 그 수치에 맞춘 지시를 준다. 특히 구조 설계(structure)는 앞 단계 실측치에 좌우되므로 미리 적어 둘 수 없다. 아무것도 바꾸지 않으며, 결과의 nextStep 이 다음에 부를 단계다.",
   "tier": "read",
   "grade": "read",
   "grade_badge": "g-read",
@@ -19770,7 +19770,7 @@
     "name": "step",
     "type": "문자열",
     "required": "O",
-    "description": "지금 수행할 단계"
+    "description": "지금 수행할 단계. 순서: keyword → serp → structure → draft → apply"
    },
    {
     "name": "topic",

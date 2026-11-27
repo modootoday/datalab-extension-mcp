@@ -1,7 +1,7 @@
 ---
 layout: "dl-tool"
 title: "컴포넌트 삭제"
-description: "글쓰기 창 본문에서 컴포넌트를 통째로 지운다. 문단, 이미지, 인용구, 구분선 등 id 로 고른 컴포넌트가 글에서 사라진다. 한 번에 20개까지. id 가 하나라도 없으면 아무것도 지우지 않는다. 제목은 지울 수 없고, 본문이 모두 비게 되는 요청도 거절한다. 응답의 deleted 에 지운 컴포넌트의 id, 종류, 글 앞부분(30자)이 들어 있다. 지우기 전에 복원 지점이 저장되고 editor_undo 로 되돌릴 수 있다. 빈 문단만 지우려면 editor_remove_blank_paragraph 를 쓴다. 지울 id 는 반드시 editor_read_document 로 방금 읽은 것이어야 하고, target.expectedRevision 을 함께 주면 글이 그 사이 바뀐 경우 지우지 않는다."
+description: "글쓰기 창 본문에서 컴포넌트를 통째로 지운다. 문단, 이미지, 인용구, 구분선 등 id 로 고른 컴포넌트가 글에서 사라진다. 한 번에 20개까지. id 가 하나라도 없으면 아무것도 지우지 않는다. 제목은 지울 수 없고, 본문이 모두 비게 되는 요청도 거절한다. 응답의 deleted 에 지운 컴포넌트의 id, 종류, 글 앞부분(30자)이 들어 있다. 지우기 전에 복원 지점이 저장되고 editor_undo 로 되돌릴 수 있다. 빈 문단만 지우려면 editor_remove_blank_paragraph 를 쓴다. 지울 id 가 방금 읽은 본문의 것이 아니면 엉뚱한 컴포넌트가 지워질 수 있고, target.expectedRevision 을 함께 주면 글이 그 사이 바뀐 경우 지우지 않는다. 다시 부르면 id 가 이미 없어 아무것도 지우지 않는다."
 nav: "tools"
 tool: "editor_delete_components"
 generated: true
@@ -11,7 +11,7 @@ generated: true
 
 `editor_delete_components` · 매번 물어봄 · 내 컴퓨터
 
-글쓰기 창 본문에서 컴포넌트를 통째로 지운다. 문단, 이미지, 인용구, 구분선 등 id 로 고른 컴포넌트가 글에서 사라진다. 한 번에 20개까지. id 가 하나라도 없으면 아무것도 지우지 않는다. 제목은 지울 수 없고, 본문이 모두 비게 되는 요청도 거절한다. 응답의 deleted 에 지운 컴포넌트의 id, 종류, 글 앞부분(30자)이 들어 있다. 지우기 전에 복원 지점이 저장되고 editor_undo 로 되돌릴 수 있다. 빈 문단만 지우려면 editor_remove_blank_paragraph 를 쓴다. 지울 id 는 반드시 editor_read_document 로 방금 읽은 것이어야 하고, target.expectedRevision 을 함께 주면 글이 그 사이 바뀐 경우 지우지 않는다.
+글쓰기 창 본문에서 컴포넌트를 통째로 지운다. 문단, 이미지, 인용구, 구분선 등 id 로 고른 컴포넌트가 글에서 사라진다. 한 번에 20개까지. id 가 하나라도 없으면 아무것도 지우지 않는다. 제목은 지울 수 없고, 본문이 모두 비게 되는 요청도 거절한다. 응답의 deleted 에 지운 컴포넌트의 id, 종류, 글 앞부분(30자)이 들어 있다. 지우기 전에 복원 지점이 저장되고 editor_undo 로 되돌릴 수 있다. 빈 문단만 지우려면 editor_remove_blank_paragraph 를 쓴다. 지울 id 가 방금 읽은 본문의 것이 아니면 엉뚱한 컴포넌트가 지워질 수 있고, target.expectedRevision 을 함께 주면 글이 그 사이 바뀐 경우 지우지 않는다. 다시 부르면 id 가 이미 없어 아무것도 지우지 않는다.
 
 ## AI가 넘기는 값
 
@@ -25,7 +25,7 @@ generated: true
 
 - [실행 취소](/tools/editor-control/editor_undo/) `editor_undo`
 - [빈 줄 지우기](/tools/editor-detail/editor_remove_blank_paragraph/) `editor_remove_blank_paragraph`
-- [문서 전체 읽기](/tools/editor-control/editor_read_document/) `editor_read_document`
 - [컴포넌트 고치기](/tools/editor-detail/editor_update_component/) `editor_update_component`
+- [문단 서식 적용](/tools/editor-detail/editor_set_paragraph_styles/) `editor_set_paragraph_styles`
 
 이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.2 기준.

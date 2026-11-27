@@ -1,7 +1,7 @@
 ---
 layout: "dl-tool"
 title: "입찰가 추정"
-description: "검색광고 키워드의 입찰가 추정치를 조회한다. 이 값은 광고를 낼 때 광고주가 내는 비용이지 블로그 수익이 아니다 — 수익 추정 근거로 쓰지 마라. device=PC|MOBILE(기본 MOBILE). 사용자 SearchAd 인증정보 필요."
+description: "검색광고 키워드의 입찰가 추정치를 조회한다. 사용자의 SearchAd 인증정보가 있어야 한다. 이 값은 광고주가 광고를 낼 때 내는 비용이지 블로그 수익이 아니다. 수익 추정 근거로 읽으면 틀린 결론이 나온다."
 nav: "tools"
 tool: "ad_estimate_bid"
 generated: true
@@ -11,7 +11,7 @@ generated: true
 
 `ad_estimate_bid` · 바로 조회 · 내 데이터
 
-검색광고 키워드의 입찰가 추정치를 조회한다. 이 값은 광고를 낼 때 광고주가 내는 비용이지 블로그 수익이 아니다 — 수익 추정 근거로 쓰지 마라. device=PC|MOBILE(기본 MOBILE). 사용자 SearchAd 인증정보 필요.
+검색광고 키워드의 입찰가 추정치를 조회한다. 사용자의 SearchAd 인증정보가 있어야 한다. 이 값은 광고주가 광고를 낼 때 내는 비용이지 블로그 수익이 아니다. 수익 추정 근거로 읽으면 틀린 결론이 나온다.
 
 ## AI가 넘기는 값
 

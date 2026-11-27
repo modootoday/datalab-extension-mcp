@@ -19,7 +19,7 @@ generated: true
 | --- | --- | --- | --- |
 | `scene` | 문자열 | O | video_timeline_get 이 준 장면 ref |
 | `node` | 문자열 | O | video_timeline_get 이 준 요소 ref(글자는 t-, 가림 영역은 r-, 이미지·도형은 i-) |
-| `patch` | 객체 | O | 바꿀 필드만 담는다(부분 패치). 필드를 생략하면 그대로 두고, null 은 아래 필드에서만 지우기다. highlight·outline·shadow 는 null 이면 없앤다. grade 는 null 이면 색 보정 전체를 지우고, grade.lut 만 null 이면 LUT 만 빼고 나머지 보정은 남긴다(grade 를 주면서 lut 를 생략하면 올린 LUT 가 그대로 남는다). mask 는 null 이 아니라 mask.node 를 빈 문자열로 줘서 푼다. 그 밖의 필드에 null 을 주거나, 요소 종류(글자·이미지·도형·가림 영역)에 없는 필드나 범위를 벗어난 값을 주면 reason schema 로 거부하고 아무것도 바꾸지 않는다 |
+| `patch` | 객체 | O | 바꿀 필드만(부분 패치). null 은 highlight·outline·shadow·grade 에서만 지우기이고 grade.lut 만 null 이면 LUT 만 뺀다. mask 는 mask.node 를 빈 문자열로 줘서 푼다. 그 밖의 null·종류에 없는 필드·범위 밖 값은 reason schema 로 거부한다 |
 | `editor_session` | 문자열 | X | video_project_get/new/open 응답의 editorSession |
 | `expected_project` | 문자열 | X | 호출 대상 projectRef. 현재 대상과 다르면 실행하지 않는다 |
 | `expected_revision` | 정수 | X | 마지막으로 읽은 revision. 현재 값과 다르면 실행하지 않는다 |

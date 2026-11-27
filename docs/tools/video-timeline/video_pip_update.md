@@ -22,7 +22,7 @@ generated: true
 | `size` | 숫자 | X | 칸 너비(화면 너비 대비 0.1~0.9). 화면에서 정사각형이 된다 |
 | `start_sec` | 숫자 | X | 타임라인에서 칸이 나타나는 위치(초) |
 | `duration_sec` | 숫자 | X | 칸이 보이는 시간(초) |
-| `grade` | 객체 | X | 레벨 · 커브 · 색상별 HSL. 이 객체가 기존 값을 대신한다. 레벨 · 커브 값은 0~1(감마만 0.1~10, 1 이 그대로), 커브는 x 순서의 점 2~6개, 채널은 master·r·g·b. hsl 은 색 띠(red·orange·yellow·green·aqua·blue·purple·magenta)마다 h·s·l 을 -1~1(0 이 그대로). key 는 크로마키(배경색 color 와 tolerance·softness·spill 0~1). lut 는 media_stage 로 올린 .cube 파일의 handle(강도 strength 0~1, 이름 name)로 넣고, lut: null 은 LUT 만 뺀다. lut 를 주지 않으면 올린 LUT 가 그대로 남는다. null=전부 해제 |
+| `grade` | 객체 | X | 레벨·커브(x 순서의 점 2~6개)·색 띠별 HSL·크로마키(key)·LUT. 이 객체가 기존 값을 대신하지만 lut 를 빼면 올린 LUT 는 남고, lut 가 null 이면 LUT 만 뺀다. lut 의 handle 은 media_stage 로 올린 .cube 파일이다. null 이면 전부 해제 |
 | `editor_session` | 문자열 | X | video_project_get/new/open 응답의 editorSession |
 | `expected_project` | 문자열 | X | 호출 대상 projectRef. 현재 대상과 다르면 실행하지 않는다 |
 | `expected_revision` | 정수 | X | 마지막으로 읽은 revision. 현재 값과 다르면 실행하지 않는다 |

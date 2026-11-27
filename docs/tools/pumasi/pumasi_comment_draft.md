@@ -1,7 +1,7 @@
 ---
 layout: "dl-tool"
 title: "다른 사람의 글 — 댓글칸에 넣기(등록은 안 누름)"
-description: "회원이 그 글 탭을 열어 두었거나(tab_open) 활성화해 둔(tab_focus) 상태여야 한다 — 없으면 도구가 탭을 하나 열어 처리한다. 다른 사람의 블로그 글의 댓글칸에 주어진 글을 그대로 넣으며 문장을 다듬지 않는다. 댓글칸이 열려 있어야 하므로 pumasi_comment_open 을 먼저 부른다. submit 이 true 면 등록까지 누르고 false 면 넣은 뒤 멈춘다. true 는 실제 댓글을 남기므로 회원이 명시적으로 요청한 경우에만 쓴다."
+description: "다른 사람의 블로그 글의 댓글칸에 주어진 글을 그대로 넣으며 문장을 다듬지 않는다. 댓글칸이 열려 있어야 하므로 pumasi_comment_open 을 먼저 부르고, 그 글의 탭이 없으면 도구가 탭을 하나 열어 처리한다. submit 이 true 면 등록까지 누르고 false 면 넣은 뒤 멈춘다. true 는 실제 댓글을 남기므로 회원이 명시적으로 요청한 경우에만 맞다."
 nav: "tools"
 tool: "pumasi_comment_draft"
 generated: true
@@ -11,7 +11,7 @@ generated: true
 
 `pumasi_comment_draft` · 매번 물어봄 · 공개 데이터
 
-회원이 그 글 탭을 열어 두었거나(tab_open) 활성화해 둔(tab_focus) 상태여야 한다 — 없으면 도구가 탭을 하나 열어 처리한다. 다른 사람의 블로그 글의 댓글칸에 주어진 글을 그대로 넣으며 문장을 다듬지 않는다. 댓글칸이 열려 있어야 하므로 pumasi_comment_open 을 먼저 부른다. submit 이 true 면 등록까지 누르고 false 면 넣은 뒤 멈춘다. true 는 실제 댓글을 남기므로 회원이 명시적으로 요청한 경우에만 쓴다.
+다른 사람의 블로그 글의 댓글칸에 주어진 글을 그대로 넣으며 문장을 다듬지 않는다. 댓글칸이 열려 있어야 하므로 pumasi_comment_open 을 먼저 부르고, 그 글의 탭이 없으면 도구가 탭을 하나 열어 처리한다. submit 이 true 면 등록까지 누르고 false 면 넣은 뒤 멈춘다. true 는 실제 댓글을 남기므로 회원이 명시적으로 요청한 경우에만 맞다.
 
 ## AI가 넘기는 값
 
@@ -24,9 +24,9 @@ generated: true
 
 ## 함께 쓰는 도구
 
-- [내 브라우저 — 새 탭 열기](/tools/browser-tabs/tab_open/) `tab_open`
-- [내 브라우저 — 그 탭을 앞으로](/tools/browser-tabs/tab_focus/) `tab_focus`
 - [다른 사람의 글 — 댓글칸 열기](/tools/pumasi/pumasi_comment_open/) `pumasi_comment_open`
 - [다른 사람의 글 — 내 공감 상태 읽기](/tools/pumasi/pumasi_like_state/) `pumasi_like_state`
+- [다른 사람의 블로그 — 이웃 신청 가능 여부 읽기](/tools/pumasi/pumasi_neighbor_state/) `pumasi_neighbor_state`
+- [다른 사람의 글 — 공감한 사람 명단 받기](/tools/pumasi/pumasi_reactors/) `pumasi_reactors`
 
 이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.2 기준.

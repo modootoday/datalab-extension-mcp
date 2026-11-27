@@ -1,7 +1,7 @@
 ---
 layout: "dl-tool"
 title: "사진 편집기 — 파일로 내보내기"
-description: "현재 디자인을 이미지 파일로 내보내는 작업을 시작하고 job 을 돌려준다. 여러 페이지는 zip 하나로 묶고, pdf 는 페이지마다 한 쪽인 PDF 한 파일로 만든다. svg 는 활성 페이지 한 장만 — 글자·도형은 벡터, 사진은 PNG 로 담는다. 인쇄용이면 dpi 를 준다. 오래 걸리면 state running 인 job 을 먼저 돌려준다. photo_job_status 로 끝났는지 확인한 뒤 gallery_export_save 로 파일을 받는다. 응답을 놓쳤으면 같은 operation_id 로 다시 부른다 — 새로 내보내지 않고 그때 시작한 job 을 돌려준다(replayed true). 그리기 전에 글자에 쓴 글꼴을 정해진 시간 안에서 불러오고(기다리는 시간은 늘지 않는다), 응답과 photo_job_status 의 fonts 에 그 결과를 싣는다: faces 는 글꼴(family·weight·style)마다 캔버스가 그 글꼴로 그렸는지(drawn), 실제로 그린 글꼴(actualFont), 그 글꼴에 없어 다른 글꼴로 그린 글자(fallbackGlyphs, 알 수 없으면 null)이고, status 는 ready(모두 그 글꼴로 그림)·fallback(다른 글꼴로 그린 글자가 있음)·timeout(시간 안에 다 불러오지 못함) 중 하나다. 글자가 없으면 fonts 가 없다. 기본(on_font_fallback continue)은 fallback·timeout 이어도 파일을 만들고 알리기만 한다."
+description: "현재 디자인을 이미지 파일로 내보내는 작업을 시작하고 job 을 돌려준다. 여러 페이지는 zip 하나로, pdf 는 페이지마다 한 쪽인 한 파일로 만들고, svg 는 활성 페이지 한 장만 담는다. 오래 걸리면 state 가 running 인 job 을 먼저 돌려주므로 photo_job_status 로 끝났는지 확인한 뒤 gallery_export_save 로 파일을 받는다. 응답을 놓쳤으면 같은 operation_id 로 다시 부르면 새로 내보내지 않고 그때의 job 을 replayed 로 돌려준다. 결과 fonts 의 status 가 fallback 이면 다른 글꼴로 그린 글자가 있고 timeout 이면 글꼴을 시간 안에 다 불러오지 못한 것이며, on_font_fallback 이 continue(기본)면 그래도 파일을 만든다."
 nav: "tools"
 tool: "photo_export"
 generated: true
@@ -11,7 +11,7 @@ generated: true
 
 `photo_export` · 바로 조회 · 내 컴퓨터
 
-현재 디자인을 이미지 파일로 내보내는 작업을 시작하고 job 을 돌려준다. 여러 페이지는 zip 하나로 묶고, pdf 는 페이지마다 한 쪽인 PDF 한 파일로 만든다. svg 는 활성 페이지 한 장만 — 글자·도형은 벡터, 사진은 PNG 로 담는다. 인쇄용이면 dpi 를 준다. 오래 걸리면 state running 인 job 을 먼저 돌려준다. photo_job_status 로 끝났는지 확인한 뒤 gallery_export_save 로 파일을 받는다. 응답을 놓쳤으면 같은 operation_id 로 다시 부른다 — 새로 내보내지 않고 그때 시작한 job 을 돌려준다(replayed true). 그리기 전에 글자에 쓴 글꼴을 정해진 시간 안에서 불러오고(기다리는 시간은 늘지 않는다), 응답과 photo_job_status 의 fonts 에 그 결과를 싣는다: faces 는 글꼴(family·weight·style)마다 캔버스가 그 글꼴로 그렸는지(drawn), 실제로 그린 글꼴(actualFont), 그 글꼴에 없어 다른 글꼴로 그린 글자(fallbackGlyphs, 알 수 없으면 null)이고, status 는 ready(모두 그 글꼴로 그림)·fallback(다른 글꼴로 그린 글자가 있음)·timeout(시간 안에 다 불러오지 못함) 중 하나다. 글자가 없으면 fonts 가 없다. 기본(on_font_fallback continue)은 fallback·timeout 이어도 파일을 만들고 알리기만 한다.
+현재 디자인을 이미지 파일로 내보내는 작업을 시작하고 job 을 돌려준다. 여러 페이지는 zip 하나로, pdf 는 페이지마다 한 쪽인 한 파일로 만들고, svg 는 활성 페이지 한 장만 담는다. 오래 걸리면 state 가 running 인 job 을 먼저 돌려주므로 photo_job_status 로 끝났는지 확인한 뒤 gallery_export_save 로 파일을 받는다. 응답을 놓쳤으면 같은 operation_id 로 다시 부르면 새로 내보내지 않고 그때의 job 을 replayed 로 돌려준다. 결과 fonts 의 status 가 fallback 이면 다른 글꼴로 그린 글자가 있고 timeout 이면 글꼴을 시간 안에 다 불러오지 못한 것이며, on_font_fallback 이 continue(기본)면 그래도 파일을 만든다.
 
 ## AI가 넘기는 값
 

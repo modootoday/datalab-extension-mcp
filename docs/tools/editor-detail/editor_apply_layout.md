@@ -1,7 +1,7 @@
 ---
 layout: "dl-tool"
 title: "간격 맞추기"
-description: "글쓰기 창 본문에서 여러 컴포넌트 뒤의 빈 문단 수를 한 번에 맞춘다. 이 편집기에는 문단 앞뒤 간격 설정이 없어서 간격은 빈 문단 개수로 만든다. 단계마다 kind: setGap, componentId(editor_read_document 의 id), count(그 컴포넌트 뒤에 있어야 할 빈 문단 수, 0~10)를 준다. 빈 문단 수는 뒤따르는 빈 글 컴포넌트와 다음 글 컴포넌트 맨 앞의 빈 문단을 센 것이고, 그 컴포넌트 자신의 끝에 있는 빈 문단은 세지도 지우지도 않는다. 단계는 결과를 말하는 방식이라 많으면 지우고 모자라면 넣고 이미 맞으면 unchanged 로 지나간다. 단계 순서대로 실행하고 첫 실패에서 멈추며, 단계마다 before·after·state(done, unchanged, failed, not-run)와 실패 이유를 돌려준다. 중간에 멈췄으면 고친 뒤 같은 단계를 그대로 다시 보내면 끝낸 곳은 건너뛰고 이어서 한다. 본문 글, 이미지, 링크, 다른 컴포넌트의 순서가 바뀌면 그 단계를 되돌리고 content-changed 로 멈춘다. 컴포넌트의 첫 문단은 지울 수 없어 그 안의 맨 앞 빈 문단이 한 칸 남을 수 있다."
+description: "글쓰기 창 본문에서 여러 컴포넌트 뒤의 빈 문단 수를 한 번에 맞춘다. 이 편집기에는 문단 앞뒤 간격 설정이 없어서 간격은 빈 문단 개수로 만든다. 빈 문단 수는 뒤따르는 빈 글 컴포넌트와 다음 글 컴포넌트 맨 앞의 빈 문단을 센 것이고, 그 컴포넌트 자신의 끝에 있는 빈 문단은 세지도 지우지도 않는다. 단계는 결과를 말하는 방식이라 많으면 지우고 모자라면 넣고 이미 맞으면 unchanged 로 지나가므로, 첫 실패에서 멈춘 뒤 같은 단계를 그대로 다시 보내면 끝낸 곳은 건너뛴다. 본문 글·이미지·링크·다른 컴포넌트 순서가 바뀌면 그 단계를 되돌리고 content-changed 로 멈춘다. 컴포넌트의 첫 문단은 지울 수 없어 맨 앞 빈 문단이 한 칸 남을 수 있다."
 nav: "tools"
 tool: "editor_apply_layout"
 generated: true
@@ -11,7 +11,7 @@ generated: true
 
 `editor_apply_layout` · 매번 물어봄 · 내 컴퓨터
 
-글쓰기 창 본문에서 여러 컴포넌트 뒤의 빈 문단 수를 한 번에 맞춘다. 이 편집기에는 문단 앞뒤 간격 설정이 없어서 간격은 빈 문단 개수로 만든다. 단계마다 kind: setGap, componentId(editor_read_document 의 id), count(그 컴포넌트 뒤에 있어야 할 빈 문단 수, 0~10)를 준다. 빈 문단 수는 뒤따르는 빈 글 컴포넌트와 다음 글 컴포넌트 맨 앞의 빈 문단을 센 것이고, 그 컴포넌트 자신의 끝에 있는 빈 문단은 세지도 지우지도 않는다. 단계는 결과를 말하는 방식이라 많으면 지우고 모자라면 넣고 이미 맞으면 unchanged 로 지나간다. 단계 순서대로 실행하고 첫 실패에서 멈추며, 단계마다 before·after·state(done, unchanged, failed, not-run)와 실패 이유를 돌려준다. 중간에 멈췄으면 고친 뒤 같은 단계를 그대로 다시 보내면 끝낸 곳은 건너뛰고 이어서 한다. 본문 글, 이미지, 링크, 다른 컴포넌트의 순서가 바뀌면 그 단계를 되돌리고 content-changed 로 멈춘다. 컴포넌트의 첫 문단은 지울 수 없어 그 안의 맨 앞 빈 문단이 한 칸 남을 수 있다.
+글쓰기 창 본문에서 여러 컴포넌트 뒤의 빈 문단 수를 한 번에 맞춘다. 이 편집기에는 문단 앞뒤 간격 설정이 없어서 간격은 빈 문단 개수로 만든다. 빈 문단 수는 뒤따르는 빈 글 컴포넌트와 다음 글 컴포넌트 맨 앞의 빈 문단을 센 것이고, 그 컴포넌트 자신의 끝에 있는 빈 문단은 세지도 지우지도 않는다. 단계는 결과를 말하는 방식이라 많으면 지우고 모자라면 넣고 이미 맞으면 unchanged 로 지나가므로, 첫 실패에서 멈춘 뒤 같은 단계를 그대로 다시 보내면 끝낸 곳은 건너뛴다. 본문 글·이미지·링크·다른 컴포넌트 순서가 바뀌면 그 단계를 되돌리고 content-changed 로 멈춘다. 컴포넌트의 첫 문단은 지울 수 없어 맨 앞 빈 문단이 한 칸 남을 수 있다.
 
 ## AI가 넘기는 값
 
@@ -23,9 +23,9 @@ generated: true
 
 ## 함께 쓰는 도구
 
-- [문서 전체 읽기](/tools/editor-control/editor_read_document/) `editor_read_document`
 - [컴포넌트 고치기](/tools/editor-detail/editor_update_component/) `editor_update_component`
 - [문단 서식 적용](/tools/editor-detail/editor_set_paragraph_styles/) `editor_set_paragraph_styles`
 - [이미지 배치](/tools/editor-detail/editor_set_image_layout/) `editor_set_image_layout`
+- [컴포넌트 이동](/tools/editor-detail/editor_move_component/) `editor_move_component`
 
 이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.2 기준.

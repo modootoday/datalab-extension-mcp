@@ -1,7 +1,7 @@
 ---
 layout: "dl-tool"
 title: "영상 편집기 — 글자 넣기"
-description: "장면 위에 글자를 얹는다. 자막과는 별개다 — 자막은 video_subtitle_set 으로 다루고, 이건 제목·강조 문구처럼 화면에 그려지는 일반 글자다. 여기의 align·글꼴·outline·shadow 는 이 글자에만 적용되고, 자막의 외곽선·그림자를 포함한 자막 서식은 video_subtitle_style_set 으로 바꾼다. outline·shadow 는 생략하면 preset 기본값을 쓴다(모든 preset 이 흰 글자에 #000000 4px 외곽선, 그림자 없음). 값이 범위를 벗어나면 아무것도 넣지 않고 거부한다. 넣은 값은 video_timeline_get 의 nodes[].style.outline·shadow 로 확인한다."
+description: "장면 위에 글자를 얹는다. 자막과는 별개다 — 자막은 video_subtitle_set 으로 다루고, 이건 제목·강조 문구처럼 화면에 그려지는 일반 글자다. 여기의 align·글꼴·outline·shadow 는 이 글자에만 적용되고, 자막의 외곽선·그림자를 포함한 자막 서식은 video_subtitle_style_set 으로 바꾼다. outline·shadow 는 생략하면 preset 기본값을 쓴다(모든 preset 이 흰 글자에 #000000 4px 외곽선, 그림자 없음). 값이 범위를 벗어나면 아무것도 넣지 않고 거부한다. 넣은 값은 타임라인의 nodes[].style 에서 확인한다."
 nav: "tools"
 tool: "video_text_add"
 generated: true
@@ -11,7 +11,7 @@ generated: true
 
 `video_text_add` · 매번 물어봄 · 내 컴퓨터
 
-장면 위에 글자를 얹는다. 자막과는 별개다 — 자막은 video_subtitle_set 으로 다루고, 이건 제목·강조 문구처럼 화면에 그려지는 일반 글자다. 여기의 align·글꼴·outline·shadow 는 이 글자에만 적용되고, 자막의 외곽선·그림자를 포함한 자막 서식은 video_subtitle_style_set 으로 바꾼다. outline·shadow 는 생략하면 preset 기본값을 쓴다(모든 preset 이 흰 글자에 #000000 4px 외곽선, 그림자 없음). 값이 범위를 벗어나면 아무것도 넣지 않고 거부한다. 넣은 값은 video_timeline_get 의 nodes[].style.outline·shadow 로 확인한다.
+장면 위에 글자를 얹는다. 자막과는 별개다 — 자막은 video_subtitle_set 으로 다루고, 이건 제목·강조 문구처럼 화면에 그려지는 일반 글자다. 여기의 align·글꼴·outline·shadow 는 이 글자에만 적용되고, 자막의 외곽선·그림자를 포함한 자막 서식은 video_subtitle_style_set 으로 바꾼다. outline·shadow 는 생략하면 preset 기본값을 쓴다(모든 preset 이 흰 글자에 #000000 4px 외곽선, 그림자 없음). 값이 범위를 벗어나면 아무것도 넣지 않고 거부한다. 넣은 값은 타임라인의 nodes[].style 에서 확인한다.
 
 ## AI가 넘기는 값
 
@@ -39,7 +39,7 @@ generated: true
 
 - [영상 편집기 — 자막 넣기](/tools/video-editor/video_subtitle_set/) `video_subtitle_set`
 - [영상 편집기 — 자막 서식 바꾸기](/tools/video-timeline/video_subtitle_style_set/) `video_subtitle_style_set`
-- [영상 편집기 — 타임라인 확인](/tools/video-editor/video_timeline_get/) `video_timeline_get`
 - [영상 편집기 — 현재 프로젝트 확인](/tools/video-editor/video_project_get/) `video_project_get`
+- [영상 편집기 — 새 프로젝트 만들기](/tools/video-editor/video_project_new/) `video_project_new`
 
 이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.2 기준.
