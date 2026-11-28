@@ -26,4 +26,4 @@ tab_list 가 준 tabId 의 탭을 닫는다. 저장하지 않은 글이 그 탭�
 - [내 브라우저 — 그 탭을 앞으로](/tools/browser-tabs/tab_focus/) `tab_focus`
 - [내 브라우저 — 탭에서 코드 실행(개발용)](/tools/browser-tabs/tab_debug/) `tab_debug`
 
-이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.4 기준.
+이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.3 기준.

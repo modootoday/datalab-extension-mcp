@@ -27,4 +27,4 @@ generated: true
 - [글 독자 성별·연령](/tools/blog-insights/my_content_audience/) `my_content_audience`
 - [유입 검색어](/tools/blog-insights/my_inflow/) `my_inflow`
 
-이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.4 기준.
+이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.3 기준.

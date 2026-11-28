@@ -27,4 +27,4 @@ generated: true
 - [간격 맞추기](/tools/editor-detail/editor_apply_layout/) `editor_apply_layout`
 - [이미지 배치](/tools/editor-detail/editor_set_image_layout/) `editor_set_image_layout`
 
-이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.4 기준.
+이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.3 기준.

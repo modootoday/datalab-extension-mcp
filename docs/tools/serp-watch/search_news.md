@@ -30,4 +30,4 @@ generated: true
 - [통합검색 결과](/tools/serp-watch/search_total/) `search_total`
 - [카페 검색](/tools/serp-watch/search_cafe/) `search_cafe`
 
-이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.4 기준.
+이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.3 기준.

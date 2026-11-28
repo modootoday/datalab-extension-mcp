@@ -24,4 +24,4 @@ AI가 넘기는 값이 없어요.
 - [내 브라우저 — 그 탭을 앞으로](/tools/browser-tabs/tab_focus/) `tab_focus`
 - [내 브라우저 — 그 탭 닫기](/tools/browser-tabs/tab_close/) `tab_close`
 
-이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.4 기준.
+이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.3 기준.
