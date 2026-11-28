@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: video_project_open.md
-permalink: /tools/video-editor/video_project_open/index.md
----

@@ -17,7 +17,7 @@ export function handlePairing(
   const origin = req.headers.origin;
   void readJson(req, MAX_BODY_BYTES)
     .then((body) => {
-      const reply = desk.handle(body, origin);
+      const reply = desk.handle(body, origin, { endProfile: ctx.endProfile });
       json(res, reply.status, reply.answer);
     })
     .catch(() => json(res, 400, { ok: false, reason: "bad_request" }));

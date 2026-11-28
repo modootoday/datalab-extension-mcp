@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: seo_aeo_geo_spec.md
-permalink: /tools/keyword-research/seo_aeo_geo_spec/index.md
----

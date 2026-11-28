@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: search_video.md
-permalink: /tools/serp-watch/search_video/index.md
----

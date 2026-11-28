@@ -14,7 +14,8 @@ describe("unpair", () => {
     expect(code).toBe(0);
     expect(deleteRecord).toHaveBeenCalledOnce();
     expect(lines.join("\n")).toContain("페어링을 해제했어요.");
-    expect(lines.join("\n")).toContain("10분");
+    expect(lines.join("\n")).toContain("사이드패널을 다시 열면");
+    expect(lines.join("\n")).not.toContain("10분");
   });
 
   it("removes the record when no connector is running", async () => {

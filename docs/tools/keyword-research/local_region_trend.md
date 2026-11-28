@@ -28,4 +28,4 @@ generated: true
 - [연관·추천 키워드](/tools/keyword-research/search_keywords/) `search_keywords`
 - [검색어 관심도 추이](/tools/keyword-research/keyword_trend/) `keyword_trend`
 
-이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.3 기준.
+이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.4 기준.

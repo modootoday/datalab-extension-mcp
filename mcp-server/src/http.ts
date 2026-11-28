@@ -1,5 +1,10 @@
 /** Loopback HTTP transport for browser sessions and MCP hosts. */
-import { createServer, type Server, type ServerResponse } from "node:http";
+import {
+  createServer,
+  type IncomingMessage,
+  type Server,
+  type ServerResponse,
+} from "node:http";
 
 import {
   HEARTBEAT_INTERVAL_MS,
@@ -33,6 +38,8 @@ import { gateMcpApp } from "./route-mcp-app-gate.js";
 import { handleMediaUpload } from "./route-media-upload.js";
 import { handlePairing } from "./route-pairing.js";
 import { handleStageRange } from "./route-stage-range.js";
+import { gatePeer } from "./peer-gate.js";
+import { createPeerOwnerCheck } from "./peer-owner/index.js";
 import { refuseRequest } from "./request-filter.js";
 
 export type { HttpBridgeOptions, LifecycleHooks };
@@ -69,7 +76,15 @@ export function createHttpBridge(opts: HttpBridgeOptions): HttpBridge {
   // superseded socket closing late must not tear down the stream that replaced
   // it, and under a map that comparison is per key rather than global.
   const streams = new Map<string, StreamEntry>();
-  const ctx: HttpContext = { opts, streams };
+  // Runs at request time, after the stream helpers below exist.
+  const endProfile = (digest: string): void => {
+    const primary = opts.bridge.sessionKey;
+    const keys = opts.bridge.profileKeys(digest);
+    for (const key of keys) removeStream(key)?.end();
+    opts.bridge.endProfile(digest);
+    if (primary !== null && keys.includes(primary)) scheduleToolsDrop();
+  };
+  const ctx: HttpContext = { opts, streams, endProfile };
   let toolsDropTimer: NodeJS.Timeout | null = null;
   const debounceMs =
     opts.toolsChangedDebounceMs ?? DEFAULT_TOOLS_CHANGED_DEBOUNCE_MS;
@@ -185,7 +200,7 @@ export function createHttpBridge(opts: HttpBridgeOptions): HttpBridge {
     if (wasPrimary) scheduleToolsDrop();
   };
 
-  const server = createServer((req, res) => {
+  const handle = (req: IncomingMessage, res: ServerResponse): void => {
     const url = new URL(req.url ?? "/", `http://${host}`);
     const origin = req.headers.origin;
     const refusal = refuseRequest(req, url.pathname, opts.bridge.extensionIds);
@@ -268,8 +283,14 @@ export function createHttpBridge(opts: HttpBridgeOptions): HttpBridge {
       void readJson(req, MAX_BODY_BYTES)
         .then((body) => {
           const token = (body as { token?: unknown } | null)?.token;
+          const presented = typeof token === "string" ? token : "";
+          // An adapter at 1.18.3 or older probes with the single pairing file's
+          // key; refusing it would make that adapter retire a newer daemon. The
+          // probe answers only yes or no and stops nothing.
           if (
-            !opts.bridge.verifyRootToken(typeof token === "string" ? token : "")
+            !opts.bridge.verifyAuthority(presented) &&
+            !(opts.verifyTakeover?.(presented) ?? false) &&
+            !(opts.verifyLegacyKey?.(presented) ?? false)
           ) {
             json(res, 403, { error: "authority_mismatch" });
             return;
@@ -367,17 +388,11 @@ export function createHttpBridge(opts: HttpBridgeOptions): HttpBridge {
         .then((body) => {
           const token = (body as { token?: unknown } | null)?.token;
           const presented = typeof token === "string" ? token : "";
-          // The pairing token, which every browser attached here holds: with
-          // one key per machine this is the same person's browsers, and a
-          // host spawns the daemon again on its next call.
-          //
-          // Or the takeover secret, which is a file only this machine's user
-          // can read (takeover.ts). An adapter spawned from a host config on
-          // this machine can present it and retire a daemon holding a
-          // different root token; a page speaking HTTP to loopback cannot read
-          // a file, so what the token gate protects is unchanged.
+          // The environment token, or the takeover secret, a file only this
+          // machine's user can read (takeover.ts). A browser profile's key
+          // never stops the daemon: any profile may pair on its own.
           if (
-            !opts.bridge.verifyRootToken(presented) &&
+            !opts.bridge.verifyAuthority(presented) &&
             !(opts.verifyTakeover?.(presented) ?? false)
           ) {
             json(res, 403, { error: "unauthorized" });
@@ -483,7 +498,11 @@ export function createHttpBridge(opts: HttpBridgeOptions): HttpBridge {
     }
 
     json(res, 404, { error: "not found" });
-  });
+  };
+
+  const server = createServer(
+    gatePeer(opts.peerOwner ?? createPeerOwnerCheck(), handle, opts.log),
+  );
 
   return {
     server,

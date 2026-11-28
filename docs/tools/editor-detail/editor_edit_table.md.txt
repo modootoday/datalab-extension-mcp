@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: editor_edit_table.md
-permalink: /tools/editor-detail/editor_edit_table/index.md
----

@@ -4,7 +4,7 @@
       "command": "npx",
       "args": [
         "-y",
-        "@modootoday/datalab-extension-mcp@1.18.3"
+        "@modootoday/datalab-extension-mcp@1.18.4"
       ]
     }
   }

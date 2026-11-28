@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: ad_bizmoney.md
-permalink: /tools/ad-bidding/ad_bizmoney/index.md
----

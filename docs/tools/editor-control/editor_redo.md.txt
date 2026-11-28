@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: editor_redo.md
-permalink: /tools/editor-control/editor_redo/index.md
----

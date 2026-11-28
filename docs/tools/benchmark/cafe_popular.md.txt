@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: cafe_popular.md
-permalink: /tools/benchmark/cafe_popular/index.md
----

@@ -27,7 +27,7 @@ Claude 같은 AI 앱을 데이터랩툴즈에 연결해 주는 작은 무료 프
 2. 터미널에 아래 명령을 붙여넣어요. 컴퓨터에 있는 AI 앱을 찾아 한 번에 등록해요.
 
    ```
-   npx -y @modootoday/datalab-extension-mcp@1.18.3 install
+   npx -y @modootoday/datalab-extension-mcp@1.18.4 install
    ```
 
 3. AI 앱을 완전히 종료했다가 다시 켜고, 사이드패널에서 **[허용하기]** 를 눌러요.
@@ -37,14 +37,16 @@ Claude 같은 AI 앱을 데이터랩툴즈에 연결해 주는 작은 무료 프
 ```
 데이터랩툴즈 연결 프로그램을 설치하고 이 앱에 등록해 줘.
 1. node --version 으로 Node.js 22 이상인지 확인해. 없거나 낮으면 설치 방법만 알려 주고 멈춰.
-2. npm install -g @modootoday/datalab-extension-mcp@1.18.3 을 실행해.
+2. npm install -g @modootoday/datalab-extension-mcp@1.18.4 을 실행해.
 3. 이 앱의 MCP 설정에 datalab-extension-mcp 라는 이름으로 서버를 추가해.
    명령은 전역 설치된 datalab-extension-mcp 이고, Windows 에서는 cmd /c datalab-extension-mcp 야.
    npx 는 쓰지 말고, 키나 환경 변수는 넣지 마.
 4. 끝나면 이 앱을 완전히 종료했다가 다시 켜라고 알려 줘.
 ```
 
-지우려면 `npx -y @modootoday/datalab-extension-mcp@1.18.3 uninstall` 을 실행하고 확장 설정에서 MCP 연결을 꺼요.
+지우려면 `npx -y @modootoday/datalab-extension-mcp@1.18.4 uninstall` 을 실행하고 확장 설정에서 MCP 연결을 꺼요.
+
+여러 사람이 같은 컴퓨터를 쓴다면, 연결 프로그램은 이 컴퓨터의 다른 계정에서 실행한 프로그램의 연결을 받지 않아요. 내 계정에서 실행한 프로그램이나 내가 설치한 브라우저 확장은 브라우저처럼 연결할 수 있으니 믿을 수 있는 것만 설치해 주세요.
 
 ## 개발자 부록
 

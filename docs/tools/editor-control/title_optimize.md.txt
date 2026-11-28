@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: title_optimize.md
-permalink: /tools/editor-control/title_optimize/index.md
----

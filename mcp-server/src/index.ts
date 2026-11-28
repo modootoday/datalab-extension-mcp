@@ -78,13 +78,16 @@ export {
   writeTakeoverSecret,
 } from "./takeover.js";
 export {
-  CLAIM_WINDOW_MS,
+  PROFILE_ADDS_PER_MINUTE,
+  createProfileBook,
   deletePairingRecord,
   fixedRoot,
+  forgetAllPairings,
   pairingPath,
   pairingRoot,
+  profilesPath,
   readPairingRecord,
-  type ClaimOutcome,
+  readProfiles,
   type PairingRecord,
   type RootCredential,
 } from "./pairing/index.js";

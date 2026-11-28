@@ -195,8 +195,22 @@ describe("같은 키를 든 브라우저들이 각자 붙는가", () => {
     // no registration row left to carry a label or a status.
     expect(JSON.parse(rpc.result.content[0]!.text)).toEqual({
       browsers: [
-        { id: "brw-a", name: "업무용", primary: true },
-        { id: "brw-b", name: "미나고", primary: false },
+        {
+          id: "brw-a",
+          name: "업무용",
+          browser: null,
+          label: "업무용",
+          blogId: null,
+          primary: true,
+        },
+        {
+          id: "brw-b",
+          name: "미나고",
+          browser: null,
+          label: "미나고",
+          blogId: null,
+          primary: false,
+        },
       ],
     });
 

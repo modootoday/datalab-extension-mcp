@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: place_ai_briefing.md
-permalink: /tools/place/place_ai_briefing/index.md
----

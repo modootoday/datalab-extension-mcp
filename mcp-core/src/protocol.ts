@@ -33,15 +33,14 @@ export const SUPPORTED_PROTOCOL_VERSIONS: readonly number[] = [1];
  * connecting server reports and nudges the user to update anything older.
  *
  * Below it the panel refuses the connector outright (`outdated_server`), so
- * this is a compatibility gate and not a nudge. Two reasons move it, both
- * deliberate. One is a PROTOCOL drop. The other is a credential change the
- * older generation cannot serve, which is what 1.9.0 is: from there the
- * pairing token itself opens a browser session and the registration ledger is
- * gone, so a 1.8.x connector answers a correct key with a refusal. npm will
- * not remove the versions below it, so this gate is the sole thing that moves
+ * this is a compatibility gate and not a nudge. It moves only by a deliberate
+ * decision: a PROTOCOL drop, a credential change the older generation cannot
+ * serve (1.9.0), or an operator decision to stop serving a generation (1.18.3,
+ * from which the loopback routes answer only local clients). npm will not
+ * remove the versions below it, so this gate is the sole thing that moves
  * those installs forward.
  */
-export const MIN_SUPPORTED_SERVER_VERSION = "1.9.0";
+export const MIN_SUPPORTED_SERVER_VERSION = "1.18.3";
 
 /**
  * MCP tool-name grammar. The projection rejects anything outside it rather
@@ -120,6 +119,10 @@ export const HelloSchema = z.object({
    * name. A display label authorises nothing.
    */
   browserLabel: z.string().max(64).optional(),
+  /** The browser product, from the panel's user-agent brands. Display only. */
+  browserName: z.string().max(32).optional(),
+  /** The Naver blog id the panel sees signed in; absent when signed out. */
+  blogId: z.string().max(64).optional(),
   /**
    * Feature flags this panel build understands. Additive evolution happens
    * HERE, not via a protocol bump: a capability an old peer never sent is
@@ -188,8 +191,22 @@ export const HelloNackReasonSchema = z.enum([
   "browser_capability_required",
   /** The connector is paired with another browser's key; only that key is accepted. */
   "paired_elsewhere",
-  /** Nothing is paired and the pairing window has ended; a restart reopens it. */
+  /** Sent by 1.18.2 and older only: nothing paired and the pairing window ended. */
   "window_closed",
+  /** The key's profile already serves as many browsers as one profile may. */
+  "browser_limit",
+  /** The connector's pairing record cannot be read; unpair resets it. */
+  "record_unreadable",
+  /** The pairing record has no room for another profile; unpair makes room. */
+  "record_full",
+  /** This key's profile was unpaired; the panel connects again with a new key. */
+  "revoked",
+  /** Too many new profiles in the last minute; a later try pairs. */
+  "pairing_busy",
+  /** The connector could not confirm the caller runs under this computer account. */
+  "peer_unverified",
+  /** The caller runs under another account of this computer. */
+  "forbidden_peer",
 ]);
 export type HelloNackReason = z.infer<typeof HelloNackReasonSchema>;
 

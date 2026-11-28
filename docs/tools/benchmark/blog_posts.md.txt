@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: blog_posts.md
-permalink: /tools/benchmark/blog_posts/index.md
----

@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: editor_reduce_windows.md
-permalink: /tools/editor-control/editor_reduce_windows/index.md
----

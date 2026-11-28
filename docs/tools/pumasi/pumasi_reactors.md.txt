@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: pumasi_reactors.md
-permalink: /tools/pumasi/pumasi_reactors/index.md
----

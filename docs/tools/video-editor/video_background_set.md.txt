@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: video_background_set.md
-permalink: /tools/video-editor/video_background_set/index.md
----

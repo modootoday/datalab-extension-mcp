@@ -27,7 +27,7 @@ You need the DataLab Tools extension in your browser, an AI app installed on you
 2. Paste this into a terminal. It finds the AI apps on your computer and registers them in one go.
 
    ```
-   npx -y @modootoday/datalab-extension-mcp@1.18.3 install
+   npx -y @modootoday/datalab-extension-mcp@1.18.4 install
    ```
 
 3. Fully quit and reopen the AI app, then press **[허용하기]** (allow) in the side panel.
@@ -37,7 +37,7 @@ If you'd rather not use a terminal, paste this into an AI app that can run comma
 ```
 데이터랩툴즈 연결 프로그램을 설치하고 이 앱에 등록해 줘.
 1. node --version 으로 Node.js 22 이상인지 확인해. 없거나 낮으면 설치 방법만 알려 주고 멈춰.
-2. npm install -g @modootoday/datalab-extension-mcp@1.18.3 을 실행해.
+2. npm install -g @modootoday/datalab-extension-mcp@1.18.4 을 실행해.
 3. 이 앱의 MCP 설정에 datalab-extension-mcp 라는 이름으로 서버를 추가해.
    명령은 전역 설치된 datalab-extension-mcp 이고, Windows 에서는 cmd /c datalab-extension-mcp 야.
    npx 는 쓰지 말고, 키나 환경 변수는 넣지 마.
@@ -46,7 +46,9 @@ If you'd rather not use a terminal, paste this into an AI app that can run comma
 
 _(Install the DataLab Tools connector and register it with this app: check Node.js 22 or later and stop with install advice if missing; run the pinned global install; add a server named datalab-extension-mcp that runs the global bin, through cmd /c on Windows, never npx, with no key or environment variables; then ask me to fully restart the app.)_
 
-To remove it, run `npx -y @modootoday/datalab-extension-mcp@1.18.3 uninstall` and turn MCP off in the extension settings.
+To remove it, run `npx -y @modootoday/datalab-extension-mcp@1.18.4 uninstall` and turn MCP off in the extension settings.
+
+On a shared computer, the connector refuses programs running under other accounts on it. A program running under your own account, or a browser extension you installed, can still connect as a browser, so install only ones you trust.
 
 ## Developer appendix
 

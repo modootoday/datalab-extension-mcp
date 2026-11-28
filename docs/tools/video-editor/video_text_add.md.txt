@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: video_text_add.md
-permalink: /tools/video-editor/video_text_add/index.md
----

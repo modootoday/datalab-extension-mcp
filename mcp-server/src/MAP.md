@@ -7,23 +7,26 @@ process entry an adapter spawns; `index.ts` is the surface.
 
 ## The process
 
-| File            | What                                                                       |
-| --------------- | -------------------------------------------------------------------------- |
-| `daemon.ts`     | the entry that wires the modules below and adds only their glue            |
-| `config.ts`     | configuration resolved purely; the published extension id is the default   |
-| `pairing/`      | the root credential, handshake refusals, the approved AI apps, the desk    |
-| `singleton.ts`  | one daemon per machine: the TCP bind is the lock                           |
-| `owner-file/`   | writes private state files readable by the local user alone                |
-| `takeover.ts`   | the proof a local adapter presents to retire a running daemon              |
-| `port-owner.ts` | the last resort: ending whatever else holds the port                       |
-| `lifecycle.ts`  | ref-count plus idle timeout; at zero the daemon closes the panel and exits |
-| `log-file.ts`   | where the detached daemon writes what it is doing                          |
+| File            | What                                                                        |
+| --------------- | --------------------------------------------------------------------------- |
+| `daemon.ts`     | the entry that wires the modules below and adds only their glue             |
+| `config.ts`     | configuration resolved purely; the published extension id is the default    |
+| `pairing/`      | the profile credential and record, refusals, the approved AI apps, the desk |
+| `singleton.ts`  | one daemon per machine: the TCP bind is the lock                            |
+| `owner-file/`   | writes private state files readable by the local user alone                 |
+| `takeover.ts`   | the proof a local adapter presents to retire a running daemon               |
+| `port-owner.ts` | the last resort: ending whatever else holds the port                        |
+| `lifecycle.ts`  | ref-count plus idle timeout; at zero the daemon closes the panel and exits  |
+| `log-file.ts`   | where the detached daemon writes what it is doing                           |
 
 ## HTTP
 
 | File                    | What                                                                |
 | ----------------------- | ------------------------------------------------------------------- |
 | `http.ts`               | the loopback transport for browser sessions and MCP hosts           |
+| `request-filter.ts`     | refuses what only a web page sends: foreign Host, page Origin       |
+| `peer-gate.ts`          | serves only programs of the account that runs the daemon            |
+| `peer-owner/`           | the OS account behind a loopback peer, per platform, once a socket  |
 | `http-io.ts`            | body limits and reading for the route the extension answers through |
 | `http-context.ts`       | the ref-count hooks the lifecycle owner observes                    |
 | `mcp-http.ts`           | the `/mcp` JSON-RPC route and the reserved error codes it raises    |

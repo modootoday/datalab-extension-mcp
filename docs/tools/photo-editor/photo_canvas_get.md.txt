@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: photo_canvas_get.md
-permalink: /tools/photo-editor/photo_canvas_get/index.md
----

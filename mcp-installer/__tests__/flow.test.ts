@@ -86,7 +86,7 @@ describe("install flow", () => {
 
   it("draws three steps and groups both surfaces under each program", async () => {
     const harness = twoHostSetup();
-    await runInstall({ ...INSTALL_OPTS, yes: true }, harness.io);
+    await runInstall({ ...INSTALL_OPTS, yes: true, skills: true }, harness.io);
     const text = harness.out.join("\n");
     for (const heading of [
       "━━ 1/3  AI 프로그램 찾기 ",
@@ -111,9 +111,9 @@ describe("install flow", () => {
     ]);
   });
 
-  it("registers the catalog with Claude Code's own command and guides Cursor by hand", async () => {
+  it("--skills registers the catalog with Claude Code's own command and guides Cursor by hand", async () => {
     const harness = twoHostSetup();
-    await runInstall({ ...INSTALL_OPTS, yes: true }, harness.io);
+    await runInstall({ ...INSTALL_OPTS, yes: true, skills: true }, harness.io);
     expect(
       harness.spawns.map((s) => `${s.command} ${s.args.join(" ")}`),
     ).toContain(
@@ -128,13 +128,18 @@ describe("install flow", () => {
     expect(text).toContain("  ┃ 주소  https://skills.modoo.today/mcp");
   });
 
-  it("--no-skills connects the extension only", async () => {
+  it.each([
+    ["the default", undefined],
+    ["--no-skills", false],
+  ])("%s connects the extension only", async (_name, skills) => {
     const harness = twoHostSetup();
-    await runInstall({ ...INSTALL_OPTS, yes: true, skills: false }, harness.io);
+    await runInstall({ ...INSTALL_OPTS, yes: true, skills }, harness.io);
     expect(
       harness.spawns.some((s) => s.args.includes("modoo-today-skills")),
     ).toBe(false);
-    expect(harness.out.join("\n")).not.toContain("스킬 카탈로그");
+    const text = harness.out.join("\n");
+    expect(text).not.toContain("스킬 카탈로그");
+    expect(text).not.toContain("modoo.today 로그인");
   });
 
   it("--host filters to the named host only", async () => {
@@ -166,7 +171,10 @@ describe("install flow", () => {
 
   it("closes with the must-do card: restart, then the catalog sign-in", async () => {
     const harness = twoHostSetup();
-    const code = await runInstall({ ...INSTALL_OPTS, yes: true }, harness.io);
+    const code = await runInstall(
+      { ...INSTALL_OPTS, yes: true, skills: true },
+      harness.io,
+    );
 
     expect(code).toBe(0);
     // Pinned as literals: this is a frozen copy contract.

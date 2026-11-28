@@ -286,7 +286,14 @@ describe("두 브라우저, 두 스트림", () => {
     await a.close();
     await settle();
     expect(bridge.connectedBrowsers()).toEqual([
-      { id: "brw-b", name: "B", primary: true },
+      {
+        id: "brw-b",
+        name: "B",
+        browser: null,
+        label: "B",
+        blogId: null,
+        primary: true,
+      },
     ]);
 
     const pending = bridge

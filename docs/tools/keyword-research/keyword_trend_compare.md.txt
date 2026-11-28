@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: keyword_trend_compare.md
-permalink: /tools/keyword-research/keyword_trend_compare/index.md
----

@@ -60,6 +60,8 @@ jobs:
           cp publish/package.json mcp/package.json
           (cd mcp && npm pack --pack-destination "$RUNNER_TEMP/out")
           cp server.json "$RUNNER_TEMP/out/server.json"
+      - name: "Check the installed tarball"
+        run: "node scripts/check-installed-tree.mjs \"$RUNNER_TEMP/out\"/*.tgz"
       - name: "Pack the .mcpb bundle"
         run: |
           set -euo pipefail

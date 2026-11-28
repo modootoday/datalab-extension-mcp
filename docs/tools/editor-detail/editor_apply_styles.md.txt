@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: editor_apply_styles.md
-permalink: /tools/editor-detail/editor_apply_styles/index.md
----

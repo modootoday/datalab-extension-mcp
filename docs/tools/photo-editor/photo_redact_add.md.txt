@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: photo_redact_add.md
-permalink: /tools/photo-editor/photo_redact_add/index.md
----

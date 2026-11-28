@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: editor_read_structure.md
-permalink: /tools/editor-control/editor_read_structure/index.md
----

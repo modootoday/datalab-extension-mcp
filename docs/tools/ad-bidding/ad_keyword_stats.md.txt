@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: ad_keyword_stats.md
-permalink: /tools/ad-bidding/ad_keyword_stats/index.md
----

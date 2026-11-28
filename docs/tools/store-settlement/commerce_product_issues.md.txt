@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: commerce_product_issues.md
-permalink: /tools/store-settlement/commerce_product_issues/index.md
----

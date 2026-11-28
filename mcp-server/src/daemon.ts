@@ -26,6 +26,7 @@ import {
   createPairingDesk,
   fixedRoot,
   pairingRoot,
+  readPairingRecord,
 } from "./pairing/index.js";
 import { writeTakeoverSecret } from "./takeover.js";
 import { bindAsLock } from "./singleton.js";
@@ -119,8 +120,8 @@ export function runDaemon(
   // Each needs the other: the bridge pushes frames, the HTTP server owns the
   // socket. The closure defers the lookup until a frame is sent, by which point
   // both exist.
-  // A token in the environment wins and nothing is written; without one the
-  // connector pairs with the first side panel that claims it.
+  // A token in the environment wins and nothing is written; without one each
+  // browser profile pairs on its first handshake.
   const root =
     token === null ? pairingRoot({ home: deps.home, log }) : fixedRoot(token);
   const apps = token === null ? createAppBook({ home: deps.home, log }) : null;
@@ -165,6 +166,14 @@ export function runDaemon(
       takeoverSecret !== null &&
       presented.length === takeoverSecret.length &&
       timingSafeEqual(Buffer.from(presented), Buffer.from(takeoverSecret)),
+    verifyLegacyKey: (presented) => {
+      const legacy = token === null ? readPairingRecord(deps.home) : null;
+      return (
+        legacy !== null &&
+        presented.length === legacy.token.length &&
+        timingSafeEqual(Buffer.from(presented), Buffer.from(legacy.token))
+      );
+    },
     onShutdown: () => {
       // The sweeper is unref'd and the exit ends the process, so nothing needs
       // cleaning up here beyond closing the server.

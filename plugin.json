@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "datalab-extension-mcp",
-  "version": "1.18.3",
+  "version": "1.18.4",
   "description": "Use the DataLab Tools browser extension from an AI app, inside your own browser session.",
   "homepage": "https://github.com/modootoday/datalab-extension-mcp#readme",
   "repository": "https://github.com/modootoday/datalab-extension-mcp",

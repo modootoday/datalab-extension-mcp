@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: influencer_profile.md
-permalink: /tools/benchmark/influencer_profile/index.md
----

@@ -26,4 +26,4 @@ generated: true
 - [내부 링크 제안](/tools/editor-control/internal_links/) `internal_links`
 - [글쓰기 창 열기](/tools/editor-control/editor_open_window/) `editor_open_window`
 
-이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.3 기준.
+이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.4 기준.

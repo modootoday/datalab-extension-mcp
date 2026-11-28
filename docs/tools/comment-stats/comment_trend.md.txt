@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: comment_trend.md
-permalink: /tools/comment-stats/comment_trend/index.md
----

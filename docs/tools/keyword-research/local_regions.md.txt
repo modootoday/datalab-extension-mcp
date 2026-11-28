@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: local_regions.md
-permalink: /tools/keyword-research/local_regions/index.md
----

@@ -8,7 +8,9 @@ export default defineConfig({
   sourcemap: false,
   target: "node22",
   outDir: "dist",
+  metafile: true,
   noExternal: [
+    "@modelcontextprotocol/sdk",
     "@modootoday/datalab-extension-app-mcp-core",
     "@modootoday/datalab-extension-app-mcp-installer",
     "@modootoday/datalab-extension-app-mcp-server",

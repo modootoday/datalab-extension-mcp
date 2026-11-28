@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: my_daily_brief.md
-permalink: /tools/blog-brief/my_daily_brief/index.md
----

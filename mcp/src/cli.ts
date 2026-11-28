@@ -12,7 +12,9 @@ import { createRequire } from "node:module";
 import {
   DEFAULT_HOST,
   DEFAULT_PORT,
-  deletePairingRecord,
+  createProfileBook,
+  forgetAllPairings,
+  readProfiles,
   readTakeoverSecret,
   resolveConfig,
   runDaemon,
@@ -20,7 +22,8 @@ import {
 } from "@modootoday/datalab-extension-app-mcp-server";
 
 import { defaultShutdown, dispatchCli, runAdapter } from "./adapter.js";
-import { runUnpair } from "./pairing/unpair.js";
+import { runList, runUnpairOne } from "./pairing/profiles.js";
+import { runUnpair, type StopOutcome } from "./pairing/unpair.js";
 
 const NAME = "datalab-extension-mcp";
 
@@ -89,6 +92,21 @@ async function runInstaller(
   process.exit(code);
 }
 
+async function stopDaemon(): Promise<StopOutcome> {
+  const env = resolveConfig(process.env);
+  const host = env.ok ? env.config.host : DEFAULT_HOST;
+  const port = env.ok ? env.config.port : DEFAULT_PORT;
+  const socket = await tryConnect(host, port, 500);
+  if (!socket) return "not_running";
+  socket.destroy();
+  const secret = readTakeoverSecret();
+  const base = `http://${host}:${String(port)}`;
+  if (secret !== null && (await defaultShutdown(base, secret))) {
+    return "stopped";
+  }
+  return "refused";
+}
+
 async function main(): Promise<void> {
   await dispatchCli(process.argv, {
     install: (sub, argv) => runInstaller(sub, argv),
@@ -98,23 +116,32 @@ async function main(): Promise<void> {
     serve: () => {
       runDaemon(process.env);
     },
-    unpair: async () => {
-      const env = resolveConfig(process.env);
-      const host = env.ok ? env.config.host : DEFAULT_HOST;
-      const port = env.ok ? env.config.port : DEFAULT_PORT;
-      const base = `http://${host}:${String(port)}`;
-      const code = await runUnpair({
-        deleteRecord: () => deletePairingRecord(),
-        stopDaemon: async () => {
-          const socket = await tryConnect(host, port, 500);
-          if (!socket) return "not_running";
-          socket.destroy();
-          const secret = readTakeoverSecret();
-          if (secret !== null && (await defaultShutdown(base, secret))) {
-            return "stopped";
-          }
-          return "refused";
-        },
+    unpair: async (target) => {
+      const print = (line: string): void => {
+        process.stdout.write(`${line}\n`);
+      };
+      if (target === undefined) {
+        process.exit(
+          await runUnpair({
+            deleteRecord: () => forgetAllPairings(),
+            stopDaemon,
+            print,
+          }),
+        );
+      }
+      process.exit(
+        await runUnpairOne({
+          target,
+          read: () => readProfiles(),
+          revoke: (digest) => createProfileBook().revoke(digest),
+          stopDaemon,
+          print,
+        }),
+      );
+    },
+    list: () => {
+      const code = runList({
+        read: () => readProfiles(),
         print: (line) => process.stdout.write(`${line}\n`),
       });
       process.exit(code);
@@ -137,7 +164,7 @@ async function main(): Promise<void> {
     // go to stderr — and start a connector on the way.
     unknown: (sub) => {
       log(`unknown command "${sub}".`);
-      log(`usage: ${NAME} [install|uninstall|serve|unpair]`);
+      log(`usage: ${NAME} [install|uninstall|serve|list|unpair [name]]`);
       log(`run with no command to serve an MCP host over stdio.`);
       process.exit(2);
     },

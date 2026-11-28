@@ -26,4 +26,4 @@ photo_export·video_export 로 끝난 작업의 결과 파일을 저장한다. M
 - [영상 편집기 — 파일로 내보내기](/tools/video-editor/video_export/) `video_export`
 - [갤러리 — 내 컴퓨터 사진 넣기](/tools/gallery/gallery_image_add/) `gallery_image_add`
 
-이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.3 기준.
+이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.4 기준.

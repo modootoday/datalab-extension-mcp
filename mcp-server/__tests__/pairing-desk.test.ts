@@ -4,7 +4,6 @@ import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 import {
-  CLAIM_WINDOW_MS,
   appsPath,
   createAppBook,
   createPairingDesk,
@@ -73,23 +72,19 @@ describe("a pending claim", () => {
     ]);
   });
 
-  it("refusing pairs nothing and the app stays held", () => {
+  it("refusing holds the app and approves nothing", () => {
     apps.see("Claude Desktop");
     expect(ask("refuse", MINE, "Claude Desktop").status).toBe(200);
-    expect(readPairingRecord(home)).toBeNull();
+    expect(readApprovedApps(home)).toEqual([]);
     expect(apps.see("Claude Desktop")).toBe("refused");
   });
 
-  it("cannot be approved after the claim window closes", () => {
+  it("can be approved hours after start, and the window older panels read stays open", () => {
     apps.see("Claude Desktop");
-    now += CLAIM_WINDOW_MS + 1;
-    expect(ask("approve", MINE, "Claude Desktop").answer).toEqual({
-      ok: false,
-      reason: "window_closed",
-    });
-    expect(readPairingRecord(home)).toBeNull();
+    now += 6 * 60 * 60 * 1000;
+    expect(ask("approve", MINE, "Claude Desktop").status).toBe(200);
     expect(ask("status", MINE).answer).toMatchObject({
-      status: { windowOpen: false, pending: [{ name: "Claude Desktop" }] },
+      status: { windowOpen: true, windowEndsAt: null },
     });
   });
 
@@ -109,32 +104,31 @@ describe("a pending claim", () => {
   });
 });
 
-describe("a second claim", () => {
+describe("a second profile", () => {
   beforeEach(() => {
     apps.see("Claude Desktop");
     ask("approve", MINE, "Claude Desktop");
   });
 
-  it("is told the computer is paired elsewhere and sees nothing of it", () => {
-    const status = ask("status", OTHER).answer;
-    expect(status).toMatchObject({
+  it("sees nothing before it pairs, then shares the machine's approvals", () => {
+    expect(ask("status", OTHER).answer).toMatchObject({
       ok: true,
       status: { paired: true, yours: false, pending: [], apps: [] },
     });
     apps.see("Cursor");
-    expect(ask("approve", OTHER, "Cursor").answer).toEqual({
-      ok: false,
-      reason: "paired_elsewhere",
+    expect(ask("approve", OTHER, "Cursor").status).toBe(200);
+    expect(ask("status", OTHER).answer).toMatchObject({
+      status: {
+        yours: true,
+        apps: [{ name: "Claude Desktop" }, { name: "Cursor" }],
+      },
     });
     expect(readPairingRecord(home)?.token).toBe(MINE);
   });
 
-  it("does not let the other panel revoke", () => {
-    expect(ask("revoke", OTHER, "Claude Desktop").answer).toEqual({
-      ok: false,
-      reason: "paired_elsewhere",
-    });
-    expect(readApprovedApps(home)).toHaveLength(1);
+  it("may revoke an app approved in another profile, since approval is per machine", () => {
+    expect(ask("revoke", OTHER, "Claude Desktop").status).toBe(200);
+    expect(readApprovedApps(home)).toHaveLength(0);
   });
 });
 
@@ -218,6 +212,20 @@ describe("the per-app hold", () => {
     expect(gateMcpApp(apps, "Claude Desktop", call, undefined)).toBeNull();
     ask("revoke", MINE, "Claude Desktop");
     expect(gateMcpApp(apps, "Claude Desktop", call, undefined)).not.toBeNull();
+  });
+
+  it("serves every paired profile after one approval, and shows it to each", () => {
+    expect(ask("approve", OTHER, "Claude Desktop").answer).toEqual({
+      ok: false,
+      reason: "unknown_app",
+    });
+    apps.see("Claude Desktop");
+    ask("approve", MINE, "Claude Desktop");
+    expect(gateMcpApp(apps, "Claude Desktop", call, undefined)).toBeNull();
+    expect(ask("status", OTHER).answer).toMatchObject({
+      ok: true,
+      status: { yours: true, apps: [{ name: "Claude Desktop" }] },
+    });
   });
 
   it("says a refused app was refused", () => {

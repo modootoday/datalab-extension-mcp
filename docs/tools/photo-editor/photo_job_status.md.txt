@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: photo_job_status.md
-permalink: /tools/photo-editor/photo_job_status/index.md
----

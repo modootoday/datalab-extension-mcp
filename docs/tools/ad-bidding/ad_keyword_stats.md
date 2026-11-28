@@ -26,4 +26,4 @@ generated: true
 - [예상 성과 추정](/tools/ad-bidding/ad_estimate_performance/) `ad_estimate_performance`
 - [효율 균형 입찰가](/tools/ad-bidding/ad_performance_balance/) `ad_performance_balance`
 
-이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.3 기준.
+이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.4 기준.

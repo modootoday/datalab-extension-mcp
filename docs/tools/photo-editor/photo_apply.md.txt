@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: photo_apply.md
-permalink: /tools/photo-editor/photo_apply/index.md
----

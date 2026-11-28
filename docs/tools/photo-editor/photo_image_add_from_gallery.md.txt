@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: photo_image_add_from_gallery.md
-permalink: /tools/photo-editor/photo_image_add_from_gallery/index.md
----

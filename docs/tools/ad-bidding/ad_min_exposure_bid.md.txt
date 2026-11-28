@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: ad_min_exposure_bid.md
-permalink: /tools/ad-bidding/ad_min_exposure_bid/index.md
----

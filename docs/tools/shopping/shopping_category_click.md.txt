@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: shopping_category_click.md
-permalink: /tools/shopping/shopping_category_click/index.md
----

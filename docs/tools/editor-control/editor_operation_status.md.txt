@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: editor_operation_status.md
-permalink: /tools/editor-control/editor_operation_status/index.md
----

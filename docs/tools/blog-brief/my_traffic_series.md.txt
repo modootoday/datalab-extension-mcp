@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: my_traffic_series.md
-permalink: /tools/blog-brief/my_traffic_series/index.md
----

@@ -26,6 +26,8 @@ export const PairingActionSchema = z.enum([
   "approve",
   "refuse",
   "revoke",
+  /** Forget the presenting profile; other profiles stay paired. */
+  "unpair",
 ]);
 export type PairingAction = z.infer<typeof PairingActionSchema>;
 
@@ -59,9 +61,9 @@ export const PairingStatusSchema = z.object({
   paired: z.boolean(),
   /** The presented token is the paired one. False for another browser profile. */
   yours: z.boolean(),
-  /** An unpaired connector still accepts a claim. */
+  /** A new profile may pair now; from 1.18.4 always true without a token in the environment. */
   windowOpen: z.boolean(),
-  /** Epoch ms when the claim window ends; null once paired. */
+  /** Epoch ms when pairing ends; from 1.18.4 always null. */
   windowEndsAt: z.number().int().nonnegative().nullable(),
   /** Empty unless the presented token is the paired one, or nothing is paired yet. */
   pending: z.array(PendingAppSchema),
@@ -78,6 +80,8 @@ export const PairingRefusalSchema = z.enum([
   "window_closed",
   "unknown_app",
   "bad_request",
+  /** The unpair could not be written, so the profile is still paired. */
+  "not_saved",
 ]);
 export type PairingRefusal = z.infer<typeof PairingRefusalSchema>;
 

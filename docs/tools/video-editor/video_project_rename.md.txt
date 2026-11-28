@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: video_project_rename.md
-permalink: /tools/video-editor/video_project_rename/index.md
----

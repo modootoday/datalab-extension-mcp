@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: photo_sticker_add.md
-permalink: /tools/photo-editor/photo_sticker_add/index.md
----

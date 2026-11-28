@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: tab_open.md
-permalink: /tools/browser-tabs/tab_open/index.md
----

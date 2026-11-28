@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: qra_keywords.md
-permalink: /tools/keyword-research/qra_keywords/index.md
----

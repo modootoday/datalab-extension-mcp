@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: editor_set_paragraph_styles.md
-permalink: /tools/editor-detail/editor_set_paragraph_styles/index.md
----

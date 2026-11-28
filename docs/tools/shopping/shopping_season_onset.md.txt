@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: shopping_season_onset.md
-permalink: /tools/shopping/shopping_season_onset/index.md
----

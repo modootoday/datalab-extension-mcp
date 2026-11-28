@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: content_volume.md
-permalink: /tools/keyword-research/content_volume/index.md
----

@@ -35,9 +35,15 @@ import {
   tryConnect,
   spawnDaemon,
   readTakeoverSecret,
-  readPairingRecord,
   killPortOwner,
 } from "@modootoday/datalab-extension-app-mcp-server";
+import {
+  PortHeldByOtherAccount,
+  createListenerGuard,
+  measureListener,
+  systemMeasureDeps,
+  type ListenerGuard,
+} from "./listener-owner/index.js";
 
 const NAME = "datalab-extension-mcp";
 const PACKAGE_NAME = "@modootoday/datalab-extension-mcp";
@@ -177,11 +183,15 @@ function credentialHeader(): Record<string, string> {
   return token ? { authorization: `Bearer ${token}` } : {};
 }
 
-/** The machine's pairing token: the environment's, else the paired record's. */
-function localRootToken(): string | undefined {
+/**
+ * The environment token, else the running daemon's takeover secret. Read on
+ * every use, because a respawned daemon writes a new secret; a browser
+ * profile's key is never the adapter's credential.
+ */
+export function localRootToken(): string | undefined {
   const configured = process.env["DATALAB_MCP_TOKEN"]?.trim();
   if (configured) return configured;
-  return readPairingRecord()?.token;
+  return readTakeoverSecret() ?? undefined;
 }
 
 /**
@@ -356,7 +366,7 @@ export interface EnsureRunningDeps {
    * never downgrades a newer daemon. Unset means no reconciliation at all.
    */
   selfVersion?: string;
-  /** Pairing token authorising the shutdown. Defaults to `DATALAB_MCP_TOKEN`. */
+  /** Credential for the shutdown and authority probe. Defaults to `localRootToken`. */
   token?: string;
   /** Injected in tests; defaults to reading `/bridge/health`. */
   readVersion?: (base: string) => Promise<string | null>;
@@ -390,7 +400,6 @@ export async function ensureDaemonRunning(
   const intervalMs = deps.intervalMs ?? READY_INTERVAL_MS;
   const base = `http://${host}:${port}`;
   const selfVersion = deps.selfVersion;
-  const token = deps.token ?? localRootToken();
   const readVersion = deps.readVersion ?? defaultReadVersion;
   const shutdown = deps.shutdown ?? defaultShutdown;
   const checkAuthority = deps.checkAuthority ?? defaultCheckAuthority;
@@ -460,7 +469,14 @@ export async function ensureDaemonRunning(
   // A daemon already owns the port. If it is older than us an update just
   // landed, so ask it to step aside and wait for the port; without this the new
   // version never runs until the user kills the old process by hand.
-  if (!selfVersion || !token) return;
+  if (!selfVersion) return;
+  const token = deps.token ?? localRootToken();
+  if (!token) {
+    log(
+      "could not read the connector's takeover file; leaving the running connector as it is",
+    );
+    return;
+  }
   const running = await readVersion(base);
   if (!running) {
     throw new Error(
@@ -531,6 +547,8 @@ export interface AdapterServerDeps {
   revive?: (deps: EnsureRunningDeps) => Promise<void>;
   /** Settles once the start-up daemon check is done; calls wait on it, the handshake does not. */
   ready?: Promise<void>;
+  /** Refuses a port another OS account holds. Absent, every call is sent. */
+  guard?: ListenerGuard;
 }
 
 /**
@@ -592,6 +610,14 @@ export function createAdapterServer(deps: AdapterServerDeps = {}): Server {
     }
     let resp: JsonRpcResponse;
     try {
+      await deps.guard?.verify();
+    } catch (held) {
+      log(`tools/list not sent: ${describeError(held)}`);
+      return {
+        tools: [...staticDiscoveryCatalog(), ...mediaToolDescriptors()],
+      };
+    }
+    try {
       resp = await postMcp(
         fetchImpl,
         mcpUrl,
@@ -600,6 +626,7 @@ export function createAdapterServer(deps: AdapterServerDeps = {}): Server {
         hostApp(),
       );
     } catch (first) {
+      deps.guard?.forget();
       // The daemon idle-exits by design, so a host that spent a while
       // thinking arrives here with nothing listening — the same situation a
       // tool call handles by bringing it back. Asking for the catalog was
@@ -613,6 +640,7 @@ export function createAdapterServer(deps: AdapterServerDeps = {}): Server {
           log,
           selfVersion: deps.version,
         });
+        await deps.guard?.verify();
         resp = await postMcp(
           fetchImpl,
           mcpUrl,
@@ -664,6 +692,11 @@ export function createAdapterServer(deps: AdapterServerDeps = {}): Server {
     await deps.ready;
     let resp: JsonRpcResponse;
     try {
+      await deps.guard?.verify();
+    } catch (held) {
+      return failedCall(held);
+    }
+    try {
       resp = await postMcp(
         fetchImpl,
         mcpUrl,
@@ -679,6 +712,7 @@ export function createAdapterServer(deps: AdapterServerDeps = {}): Server {
       // A timeout is a different fault — the daemon answered late, so it IS
       // there — and respawning on top of a live process would race it.
       if (isTimeout(first)) return failedCall(first);
+      deps.guard?.forget();
       try {
         resp = await reviveAndRetry(name, args);
       } catch (second) {
@@ -700,6 +734,7 @@ export function createAdapterServer(deps: AdapterServerDeps = {}): Server {
       log,
       selfVersion: deps.version,
     });
+    await deps.guard?.verify();
     return postMcp(
       fetchImpl,
       mcpUrl,
@@ -715,6 +750,9 @@ export function createAdapterServer(deps: AdapterServerDeps = {}): Server {
    */
   function failedCall(err: unknown): Record<string, unknown> {
     log(`tools/call transport failure: ${describeError(err)}`);
+    if (err instanceof PortHeldByOtherAccount) {
+      return { content: [{ type: "text", text: err.message }], isError: true };
+    }
     return {
       content: [
         {
@@ -759,12 +797,20 @@ export type SubscribeImpl = (
   url: string,
   onEvent: (data: string) => void,
   signal: AbortSignal,
+  /** Called once the daemon has accepted the stream. */
+  onOpen?: () => void,
 ) => Promise<void>;
 
-const defaultSubscribe: SubscribeImpl = async (url, onEvent, signal) => {
+const defaultSubscribe: SubscribeImpl = async (
+  url,
+  onEvent,
+  signal,
+  onOpen,
+) => {
   const res = await (globalThis.fetch as typeof fetch)(url, { signal });
   const reader = res.body?.getReader();
   if (!reader) return;
+  if (res.ok) onOpen?.();
   const decoder = new TextDecoder();
   let buf = "";
   for (;;) {
@@ -798,6 +844,10 @@ export interface ToolChangeDeps {
   revive?: (deps: EnsureRunningDeps) => Promise<void>;
   /** Passed through to revive so a stale older daemon is still replaced. */
   selfVersion?: string;
+  /** The daemon accepted the stream. */
+  onOpen?: () => void;
+  /** The stream ended, so the daemon behind the port may have changed. */
+  onDrop?: () => void;
 }
 
 /**
@@ -849,11 +899,13 @@ export async function pushToolChanges(deps: ToolChangeDeps): Promise<void> {
           }
         },
         deps.signal,
+        () => deps.onOpen?.(),
       );
     } catch {
       // Stream dropped — reconnect after a jittered beat unless we are shutting down.
     }
     if (deps.signal.aborted) return;
+    deps.onDrop?.();
     // Holding at least a base interval means a real connection dropped, not a
     // failing connect — reset so the reconnect is prompt.
     const held = now() - startedAt >= TOOLCHANGE_BACKOFF_BASE_MS;
@@ -1058,8 +1110,13 @@ export async function runAdapter(deps: RunAdapterDeps = {}): Promise<void> {
   // stops once this process has installed or moved anything.
   const flight = { count: 0 };
   const watchMs = deps.watchIntervalMs ?? DEFAULT_WATCH_MS;
+  const guardPort = deps.port ?? DEFAULT_PORT;
+  const guard =
+    deps.guard ??
+    createListenerGuard(() => measureListener(guardPort, systemMeasureDeps()));
   const server = createAdapterServer({
     ...deps,
+    guard,
     ready,
     onActivity: countRequests(flight, deps.onActivity),
   });
@@ -1138,6 +1195,8 @@ export async function runAdapter(deps: RunAdapterDeps = {}): Promise<void> {
       subscribe: deps.subscribe,
       log: deps.log,
       signal: controller.signal,
+      onOpen: () => guard.streamOpened(),
+      onDrop: () => guard.forget(),
     }),
   );
 }
@@ -1148,7 +1207,9 @@ export interface CliHandlers {
     argv: readonly string[],
   ) => Promise<void>;
   serve: () => void;
-  unpair: () => Promise<void>;
+  /** Bare unpair forgets every profile; a name or number picks one. */
+  unpair: (target: string | undefined) => Promise<void>;
+  list: () => void;
   adapter: () => Promise<void>;
   /**
    * A word we do not know. Injected so the refusal is testable without a
@@ -1185,7 +1246,11 @@ export async function dispatchCli(
     return;
   }
   if (sub === "unpair") {
-    await handlers.unpair();
+    await handlers.unpair(argv[3]);
+    return;
+  }
+  if (sub === "list") {
+    handlers.list();
     return;
   }
   if (sub !== undefined && !sub.startsWith("-")) {

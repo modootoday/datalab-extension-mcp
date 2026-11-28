@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: photo_node_arrange.md
-permalink: /tools/photo-editor/photo_node_arrange/index.md
----

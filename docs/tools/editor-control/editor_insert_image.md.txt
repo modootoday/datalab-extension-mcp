@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: editor_insert_image.md
-permalink: /tools/editor-control/editor_insert_image/index.md
----

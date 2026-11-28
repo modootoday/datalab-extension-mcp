@@ -1,7 +1,7 @@
 /**
  * Several browser profiles against one connector over real loopback. Each
- * profile mints its own key, so only the profile that paired, and any profile
- * handed that key, may attach; the others are told why.
+ * profile mints its own key and pairs on its first hello; a browser id bound
+ * to one key is refused with another.
  */
 import { mkdtempSync, rmSync } from "node:fs";
 import type { AddressInfo } from "node:net";
@@ -13,7 +13,6 @@ import { REQUIRED_BROWSER_CAPABILITIES } from "@modootoday/datalab-extension-app
 import { Bridge } from "../src/bridge.js";
 import { createHttpBridge, type HttpBridge } from "../src/http.js";
 import {
-  CLAIM_WINDOW_MS,
   fixedRoot,
   pairingRoot,
   readPairingRecord,
@@ -165,23 +164,21 @@ const settle = (): Promise<void> =>
   new Promise((resolve) => setTimeout(resolve, 60));
 
 describe("browser profiles that each minted their own key", () => {
-  it("the first profile pairs, and a second profile is told the connector is paired elsewhere", async () => {
+  it("the first profile pairs, and a second profile with its own key pairs beside it", async () => {
     const a = await attach("profile-a", KEY_A);
-    expect(await hello("profile-b", KEY_B)).toMatchObject({
-      t: "hello_nack",
-      reason: "paired_elsewhere",
-    });
+    const b = await attach("profile-b", KEY_B);
     expect(readPairingRecord(home)?.token).toBe(KEY_A);
     expect(bridge.connectedBrowsers().map((entry) => entry.id)).toEqual([
       "profile-a",
+      "profile-b",
     ]);
-    await a.close();
+    await Promise.all([a.close(), b.close()]);
   });
 
-  it("a refused profile retrying in a loop never moves the pairing or detaches the paired profile", async () => {
+  it("another key retrying a bound browser id in a loop never moves the pairing or detaches the paired profile", async () => {
     const a = await attach("profile-a", KEY_A);
     for (let i = 0; i < 30; i += 1) {
-      expect((await hello("profile-b", KEY_B)).reason).toBe("paired_elsewhere");
+      expect((await hello("profile-a", KEY_B)).reason).toBe("paired_elsewhere");
     }
     const call = bridge.callTool("keyword_trend", { probe: "a" }, "profile-a");
     await settle();
@@ -228,7 +225,7 @@ describe("browser profiles that each minted their own key", () => {
 
     expect((await hello("profile-b", KEY_A)).reason).toBe("session_active");
     await b.close();
-    expect((await hello("profile-d", KEY_C)).reason).toBe("paired_elsewhere");
+    expect((await hello("profile-c", KEY_C)).reason).toBe("paired_elsewhere");
     await settle();
     const b2 = await attach("profile-b", KEY_A);
     await c.close();
@@ -255,14 +252,11 @@ describe("browser profiles that each minted their own key", () => {
   });
 });
 
-describe("why an unpaired connector refuses", () => {
-  it("past the pairing window a profile is told the window closed and nothing is paired", async () => {
-    now += CLAIM_WINDOW_MS + 1;
-    expect(await hello("profile-a", KEY_A)).toMatchObject({
-      t: "hello_nack",
-      reason: "window_closed",
-    });
-    expect(readPairingRecord(home)).toBeNull();
+describe("when a profile pairs", () => {
+  it("hours after start a new profile still pairs on its first hello", async () => {
+    now += 6 * 60 * 60 * 1000;
+    expect((await hello("profile-a", KEY_A)).t).toBe("hello_ack");
+    expect(readPairingRecord(home)?.token).toBe(KEY_A);
   });
 
   it("a configured token still refuses a different key as unauthorized", async () => {

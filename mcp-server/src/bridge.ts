@@ -14,10 +14,11 @@ import {
   HelloSchema,
   MIN_TOKEN_LENGTH,
   UPSTREAM_FRAME_TYPES,
+  annotationsForTier,
   checkExtensionIdentity,
-  checkToken,
+  normalizeAppName,
+  staticDiscoveryCatalog,
   classifyFrame,
-  resolveCredential,
   timingSafeEqual,
   negotiateProtocol,
   projectTools,
@@ -239,12 +240,55 @@ function daemonIdTag(): string {
     .padStart(4, "0");
 }
 
+interface BrowserDescription {
+  readonly browser: string | null;
+  readonly label: string | null;
+  readonly blogId: string | null;
+}
+
+export interface ConnectedBrowser extends BrowserDescription {
+  readonly id: string;
+  readonly name: string | null;
+  readonly primary: boolean;
+}
+
+const BLOG_ID = /^[A-Za-z0-9_-]{1,64}$/;
+
+const DISCOVERY_READ_TOOLS: ReadonlySet<string> = new Set(
+  staticDiscoveryCatalog()
+    .filter((tool) => tool.annotations?.["readOnlyHint"] === true)
+    .map((tool) => tool.name),
+);
+
+function describeBrowser(hello: {
+  browserName?: string;
+  browserLabel?: string;
+  blogId?: string;
+}): BrowserDescription {
+  const blogId = hello.blogId?.trim() ?? "";
+  return {
+    browser: normalizeAppName(hello.browserName),
+    label: normalizeAppName(hello.browserLabel),
+    blogId: BLOG_ID.test(blogId) ? blogId : null,
+  };
+}
+
+/**
+ * Whether a call only reads. Judged from the tier table this build ships, the
+ * one the panel's own catalog derives from; nothing the AI app sends counts.
+ */
+function readsOnly(tool: unknown): boolean {
+  if (typeof tool !== "string") return false;
+  if (DISCOVERY_READ_TOOLS.has(tool)) return true;
+  return annotationsForTier(tool)?.readOnlyHint === true;
+}
+
 export class Bridge {
   readonly #deps: BridgeDeps;
   readonly #root: RootCredential;
   readonly #sessions = new Map<string, SessionEntry>();
-  /** browserId to the name it reported, for datalab_browsers. */
-  readonly #labels = new Map<string, string>();
+  /** browserId to what its panel reported about itself, for datalab_browsers. */
+  readonly #described = new Map<string, BrowserDescription>();
   readonly #idTag = daemonIdTag();
   #sessionSeq = 0;
   #defaultKey: string | null = null;
@@ -286,20 +330,53 @@ export class Bridge {
    * is invisible otherwise: with two profiles connected a host would keep
    * landing in the older one and never learn why the newer one saw nothing.
    */
-  connectedBrowsers(): Array<{
-    id: string;
-    name: string | null;
-    primary: boolean;
-  }> {
+  connectedBrowsers(): ConnectedBrowser[] {
     const keys = [...this.#sessions.values()]
       .filter((entry) => entry.streamActive)
       .map((entry) => entry.key);
     const primary = this.#primary()?.key ?? null;
-    return keys.map((id) => ({
-      id,
-      name: this.#labels.get(id) ?? null,
-      primary: primary === id,
-    }));
+    return keys.map((id) => {
+      const described = this.#described.get(id);
+      const label = described?.label ?? null;
+      return {
+        id,
+        // Older hosts read the label under this name.
+        name: label,
+        browser: described?.browser ?? null,
+        label,
+        blogId: described?.blogId ?? null,
+        primary: primary === id,
+      };
+    });
+  }
+
+  /** Paired profiles with a live stream; browsers sharing one key count once. */
+  #liveProfiles(): number {
+    const digests = new Set<string>();
+    for (const entry of this.#sessions.values()) {
+      if (entry.streamActive) digests.add(entry.tokenHash);
+    }
+    return digests.size;
+  }
+
+  /** The browsers whose sessions belong to this profile. */
+  profileKeys(digest: string): string[] {
+    return [...this.#sessions.values()]
+      .filter((entry) => timingSafeEqual(entry.tokenHash, digest))
+      .map((entry) => entry.key);
+  }
+
+  /** An unpaired profile's sessions end, and routing moves off them. */
+  endProfile(digest: string): void {
+    for (const key of this.profileKeys(digest)) {
+      this.#closeSession(
+        key,
+        "disconnected",
+        "This browser profile was unpaired.",
+      );
+      this.#described.delete(key);
+      if (this.#defaultKey === key) this.#defaultKey = null;
+    }
   }
 
   /**
@@ -423,42 +500,16 @@ export class Bridge {
   }
 
   /**
-   * Does the presented value match the pairing token this server was started
-   * with? Authorises the shutdown an updating adapter sends, which no other
-   * local process should be able to trigger.
-   *
-   * The root token only. A browser's own credential must never open this:
-   * one browser could then end another's unattended run.
+   * Is the presented value the environment token? Any browser profile can pair
+   * on its own, so a profile key never authorises stopping or probing the
+   * daemon; the takeover secret is checked beside this, not here.
    */
-  /**
-   * The root token a handshake is checked against. An unpaired connector
-   * pairs only with a handshake that every other check admits: identity,
-   * protocol and capabilities before this call, a routable name here.
-   */
-  #rootFor(presented: string, browserId: string | undefined): string | null {
-    const held = this.#root.current();
-    if (held !== null) return held;
-    if (browserId === undefined || browserId.length === 0) return null;
-    if (this.#root.claim(presented) === "claimed") {
-      this.#deps.log?.("paired with a side panel");
-    }
-    return this.#root.current();
-  }
-
-  verifyRootToken(presented: string | undefined | null): boolean {
-    const root = this.#root.current();
-    if (root === null) return false;
-    return checkToken(presented ?? undefined, root).ok;
+  verifyAuthority(presented: string | undefined | null): boolean {
+    if (typeof presented !== "string" || presented.length === 0) return false;
+    return this.#root.authorizes(presented);
   }
 
   /**
-   * May this credential add a browser to this machine?
-   *
-   * The root token, or a browser already registered here. Binding this to the
-   * root alone tied the right to add a browser to whoever installed last, so
-   * the second browser's only offered path was to install again -- which moved
-   * the right away from the first one, which then had the same problem.
-   *
    * Does the presented value belong to the session it names?
    *
    * A credential nobody is using opens nothing: this is bound to the session
@@ -474,7 +525,7 @@ export class Bridge {
   }
 
   #fileCredentialClass(presented: string): "root" | "unknown" {
-    return this.verifyRootToken(presented) ? "root" : "unknown";
+    return this.verifyAuthority(presented) ? "root" : "unknown";
   }
 
   authorizeFileRequest(input: {
@@ -708,45 +759,28 @@ export class Bridge {
       };
     }
 
-    const rootToken = this.#rootFor(parsed.data.token, parsed.data.browserId);
-    const explained = pairingRefusal(
-      this.#root,
+    // Every other check has passed, so a new profile is added only for a
+    // handshake that is admissible in all but its key.
+    const admission = this.#root.admit(
       parsed.data.token,
       parsed.data.browserId,
     );
-    if (explained !== null) {
-      this.#deps.log?.(`refused a browser handshake: ${explained.reason}`);
-      return explained;
-    }
-    if (rootToken === null) {
+    if (admission.kind === "refused") {
+      const explained = pairingRefusal(admission.reason);
+      if (explained !== null) {
+        this.#deps.log?.(`refused a browser handshake: ${explained.reason}`);
+        return explained;
+      }
+      this.#deps.log?.("refused an unauthorized browser credential");
       return {
         t: "hello_nack",
         reason: "unauthorized",
         supported: [],
-        message:
-          "This connector is not paired. Restart your AI app, then connect from the side panel within 10 minutes.",
+        message: "Pairing token missing or invalid.",
       };
     }
-    const tokenHash = digestToken(parsed.data.token);
-    const credential = resolveCredential(
-      { token: parsed.data.token, browserId: parsed.data.browserId },
-      { rootToken },
-    );
-    if (credential.kind !== "claimed") {
-      this.#deps.log?.("refused an unauthorized browser credential");
-      return {
-        t: "hello_nack",
-        reason: credential.reason,
-        supported: [],
-        message: credential.message,
-      };
-    }
-    const key = credential.browserId;
-    // Self-reported, and only ever a display name. Kept beside the session so
-    // it lives exactly as long as the browser is here to be addressed.
-    const label = parsed.data.browserLabel?.trim();
-    if (label) this.#labels.set(key, label);
-    else this.#labels.delete(key);
+    const tokenHash = admission.digest;
+    const key = parsed.data.browserId ?? "";
     const held = this.#sessions.get(key);
     if (held?.streamActive) {
       return {
@@ -769,6 +803,11 @@ export class Bridge {
       routingRequired,
       fileRequestBound,
     });
+    // Self-reported display text; it authorises nothing and lives as long as
+    // the browser is here to be addressed.
+    const described = describeBrowser(parsed.data);
+    this.#described.set(key, described);
+    if (described.label !== null) this.#root.label(tokenHash, described.label);
     return {
       t: "hello_ack",
       protocolVersion: negotiated.version,
@@ -1036,6 +1075,21 @@ export class Bridge {
     browser?: string,
   ): Promise<PendingOutcome<T>> {
     let entry: SessionEntry | null;
+    if (
+      browser === undefined &&
+      req.method === "tools/call" &&
+      this.#liveProfiles() > 1 &&
+      !readsOnly(req.name === CALL_TOOL ? req.args["tool"] : req.name)
+    ) {
+      // Profiles may be signed in to different accounts, so a change sent to
+      // whichever is oldest can land in the wrong one.
+      return {
+        ok: false,
+        reason: "browser_required",
+        message:
+          "More than one browser profile is connected. Call datalab_browsers and pass the chosen id as browser.",
+      };
+    }
     if (browser === undefined) {
       entry = this.#primary();
     } else {

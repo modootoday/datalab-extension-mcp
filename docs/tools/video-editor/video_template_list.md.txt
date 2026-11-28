@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: video_template_list.md
-permalink: /tools/video-editor/video_template_list/index.md
----

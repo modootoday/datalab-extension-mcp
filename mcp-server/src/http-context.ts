@@ -7,6 +7,7 @@ import type { ArtifactStore } from "./artifact-store.js";
 import type { openLocalImage } from "./local-file.js";
 import type { MediaStage } from "./media-stage.js";
 import type { AppBook, PairingDesk } from "./pairing/index.js";
+import type { PeerOwnerCheck } from "./peer-owner/index.js";
 
 /**
  * Ref-count hooks for the lifecycle owner. The panel stream and each in-flight
@@ -40,10 +41,12 @@ export interface HttpBridgeOptions {
   /** Optional idle-lifecycle wiring. */
   lifecycle?: LifecycleHooks;
   /**
-   * Accepts this daemon's takeover secret on /mcp/shutdown, alongside the root
-   * token. Absent means only the root token is honoured.
+   * Accepts this daemon's takeover secret on /mcp/shutdown and /mcp/authority,
+   * alongside the environment token.
    */
   verifyTakeover?: (presented: string) => boolean;
+  /** Accepts the single pairing file's key on the /mcp/authority probe only. */
+  verifyLegacyKey?: (presented: string) => boolean;
   /**
    * Where staged binaries land. Absent means the daemon accepts no uploads —
    * the endpoint 404s rather than inventing a root, so a build that never wired
@@ -73,6 +76,8 @@ export interface HttpBridgeOptions {
   pairingDesk?: PairingDesk;
   /** The approved apps behind the desk; its presence turns the per-app hold on. */
   apps?: AppBook;
+  /** Injected in tests; the default asks the OS which account owns each peer. */
+  peerOwner?: PeerOwnerCheck;
 }
 
 export interface StreamEntry {
@@ -91,4 +96,6 @@ export interface StreamEntry {
 export interface HttpContext {
   readonly opts: HttpBridgeOptions;
   readonly streams: ReadonlyMap<string, StreamEntry>;
+  /** End every stream and session of one paired profile. */
+  readonly endProfile: (digest: string) => void;
 }

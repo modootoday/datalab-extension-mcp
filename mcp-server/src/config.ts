@@ -18,7 +18,7 @@ export interface McpConfig {
   host: string;
   /**
    * Pairing token the panel must present, when given in the environment.
-   * Null means the connector pairs with the first side panel that claims it.
+   * Null means each browser profile pairs on its first handshake.
    */
   token: string | null;
   /**

@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: video_bgm_remove.md
-permalink: /tools/video-timeline/video_bgm_remove/index.md
----

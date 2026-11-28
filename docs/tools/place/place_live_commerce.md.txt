@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: place_live_commerce.md
-permalink: /tools/place/place_live_commerce/index.md
----

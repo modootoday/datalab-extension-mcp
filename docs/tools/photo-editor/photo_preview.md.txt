@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: photo_preview.md
-permalink: /tools/photo-editor/photo_preview/index.md
----

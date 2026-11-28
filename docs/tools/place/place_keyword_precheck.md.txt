@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: place_keyword_precheck.md
-permalink: /tools/place/place_keyword_precheck/index.md
----

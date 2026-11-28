@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: local_area_category_rank.md
-permalink: /tools/keyword-research/local_area_category_rank/index.md
----

@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: editor_open_window.md
-permalink: /tools/editor-control/editor_open_window/index.md
----

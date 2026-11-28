@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: photo_group.md
-permalink: /tools/photo-editor/photo_group/index.md
----

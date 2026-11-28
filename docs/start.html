@@ -101,13 +101,14 @@ claude plugin install datalab-extension-mcp@modootoday</pre></div>
     </ol>
   </section>
   {% include dl/callout.html type="note" title="한 컴퓨터 안에서만 돼요" body="연결 프로그램은 이 컴퓨터 안에서만 연결을 받고, 연결 키는 다른 사람에게 보내는 것이 아니에요. AI 앱이 지금 어느 프로필에 닿는지는 <code>datalab_browsers</code>로 물어보면 돼요." %}
+  {% include dl/callout.html type="note" title="여러 사람이 같은 컴퓨터를 쓴다면" body="연결 프로그램은 이 컴퓨터의 다른 계정에서 실행한 프로그램의 연결을 받지 않아요. 내 계정에서 실행한 프로그램이나 내가 설치한 브라우저 확장은 브라우저처럼 연결할 수 있으니 믿을 수 있는 것만 설치해 주세요." %}
 
   <section class="mt-section mt-c-features" data-c="features" aria-labelledby="s-skills"><h2 id="s-skills">스킬 카탈로그</h2>
-    <p>설치할 때 스킬 카탈로그(skills.modoo.today)도 함께 연결돼요. 스킬 파일을 컴퓨터에 복사하지 않고, AI 앱이 필요할 때 받아 써요.</p>
+    <p>기본 설치는 확장만 연결해요. 스킬 카탈로그(skills.modoo.today)도 쓰려면 설치 명령 끝에 <code>--skills</code>를 붙여요. 스킬 파일을 컴퓨터에 복사하지 않고, AI 앱이 필요할 때 받아 써요.</p>
     <ul>
-      <li><strong>연결</strong>Claude Code와 Codex는 자동으로 연결돼요. 다른 앱은 설치가 끝날 때 보여 주는 안내대로 원격 서버 <code>https://skills.modoo.today/mcp</code>를 추가해요.</li>
+      <li><strong>연결</strong><code>--skills</code>를 붙이면 Claude Code와 Codex는 자동으로 연결돼요. 다른 앱은 설치가 끝날 때 보여 주는 안내대로 원격 서버 <code>https://skills.modoo.today/mcp</code>를 추가해요.</li>
       <li><strong>로그인</strong>처음 쓸 때 modoo.today 로그인 창이 한 번 열려요.</li>
-      <li><strong>빼고 설치하기</strong>설치 명령 끝에 <code>--no-skills</code>를 붙이면 확장만 연결해요.</li>
+      <li><strong>예전에 연결했다면</strong>다시 설치해도 이미 연결된 카탈로그는 그대로 둬요. 빼려면 제거 명령을 써요.</li>
     </ul>
   </section>
 

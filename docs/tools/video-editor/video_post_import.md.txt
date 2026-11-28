@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: video_post_import.md
-permalink: /tools/video-editor/video_post_import/index.md
----

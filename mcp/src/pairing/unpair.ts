@@ -1,6 +1,6 @@
 /**
- * The unpair command: forget the side panel this machine's connector paired
- * with, and stop the running connector so the next start accepts a new claim.
+ * The unpair command: forget every browser profile this machine's connector
+ * paired with, and stop the running connector so no old session lingers.
  */
 export type StopOutcome = "stopped" | "not_running" | "refused";
 
@@ -33,8 +33,6 @@ export async function runUnpair(deps: UnpairDeps): Promise<number> {
   }
   deps.print("페어링을 해제했어요.");
   if (stop === "stopped") deps.print("실행 중이던 커넥터도 멈췄어요.");
-  deps.print(
-    "AI 앱을 다시 시작한 뒤 10분 안에 사이드패널에서 연결하면 새로 페어링돼요.",
-  );
+  deps.print("사이드패널을 다시 열면 새로 연결돼요.");
   return 0;
 }

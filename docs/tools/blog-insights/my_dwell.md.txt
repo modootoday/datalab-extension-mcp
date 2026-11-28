@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: my_dwell.md
-permalink: /tools/blog-insights/my_dwell/index.md
----

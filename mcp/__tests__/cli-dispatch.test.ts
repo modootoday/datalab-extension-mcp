@@ -11,6 +11,7 @@ function spies(): CliHandlers & {
   install: ReturnType<typeof vi.fn>;
   serve: ReturnType<typeof vi.fn>;
   unpair: ReturnType<typeof vi.fn>;
+  list: ReturnType<typeof vi.fn>;
   adapter: ReturnType<typeof vi.fn>;
   unknown: ReturnType<typeof vi.fn>;
 } {
@@ -18,6 +19,7 @@ function spies(): CliHandlers & {
     install: vi.fn().mockResolvedValue(undefined),
     serve: vi.fn(),
     unpair: vi.fn().mockResolvedValue(undefined),
+    list: vi.fn(),
     unknown: vi.fn(),
     adapter: vi.fn().mockResolvedValue(undefined),
   };
@@ -30,9 +32,19 @@ describe("dispatchCli", () => {
   it("routes `unpair` to the unpair handler only", async () => {
     const h = spies();
     await dispatchCli([NODE, BIN, "unpair"], h);
-    expect(h.unpair).toHaveBeenCalledOnce();
+    expect(h.unpair).toHaveBeenCalledExactlyOnceWith(undefined);
     expect(h.adapter).not.toHaveBeenCalled();
     expect(h.unknown).not.toHaveBeenCalled();
+  });
+
+  it("passes the profile named after `unpair`, and routes `list`", async () => {
+    const h = spies();
+    await dispatchCli([NODE, BIN, "unpair", "업무"], h);
+    expect(h.unpair).toHaveBeenCalledExactlyOnceWith("업무");
+    await dispatchCli([NODE, BIN, "list"], h);
+    expect(h.list).toHaveBeenCalledOnce();
+    expect(h.unknown).not.toHaveBeenCalled();
+    expect(h.adapter).not.toHaveBeenCalled();
   });
 
   it("routes `install` to the installer with the remaining args", async () => {

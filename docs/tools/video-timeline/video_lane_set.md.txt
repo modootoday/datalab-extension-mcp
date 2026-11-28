@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: video_lane_set.md
-permalink: /tools/video-timeline/video_lane_set/index.md
----

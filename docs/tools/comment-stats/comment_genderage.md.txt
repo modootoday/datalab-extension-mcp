@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: comment_genderage.md
-permalink: /tools/comment-stats/comment_genderage/index.md
----

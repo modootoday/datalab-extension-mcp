@@ -24,4 +24,4 @@ AI가 넘기는 값이 없어요.
 - [현재 글 읽기](/tools/editor-control/editor_read/) `editor_read`
 - [본문 구조 읽기](/tools/editor-control/editor_read_structure/) `editor_read_structure`
 
-이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.3 기준.
+이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.4 기준.

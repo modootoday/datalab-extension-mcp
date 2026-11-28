@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: gallery_export_save.md
-permalink: /tools/gallery/gallery_export_save/index.md
----

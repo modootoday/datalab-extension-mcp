@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: ad_average_position_bid.md
-permalink: /tools/ad-bidding/ad_average_position_bid/index.md
----

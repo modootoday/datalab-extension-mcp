@@ -109,7 +109,7 @@ export interface RunOptions {
   yes?: boolean;
   /** Restrict the run to these host ids. */
   hosts?: string[];
-  /** Register the skill catalog as well. Default on; --no-skills turns it off. */
+  /** Register the skill catalog as well, only on --skills; the extension stands alone. */
   skills?: boolean;
   /** Show backup paths and exit codes beside each row. */
   verbose?: boolean;

@@ -29,4 +29,4 @@ generated: true
 - [사진 편집기 — 갤러리 사진 넣기](/tools/photo-editor/photo_image_add_from_gallery/) `photo_image_add_from_gallery`
 - [편집기 결과 파일 저장](/tools/gallery/gallery_export_save/) `gallery_export_save`
 
-이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.3 기준.
+이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.4 기준.

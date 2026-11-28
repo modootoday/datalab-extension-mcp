@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: ad_performance_balance.md
-permalink: /tools/ad-bidding/ad_performance_balance/index.md
----

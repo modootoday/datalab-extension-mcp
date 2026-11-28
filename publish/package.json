@@ -1,6 +1,6 @@
 {
   "name": "@modootoday/datalab-extension-mcp",
-  "version": "1.18.3",
+  "version": "1.18.4",
   "private": false,
   "type": "module",
   "main": "./dist/index.js",
@@ -18,12 +18,9 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup",
+    "build": "tsup && node scripts/third-party-notices.mjs",
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
-  },
-  "dependencies": {
-    "@modelcontextprotocol/sdk": "1.32.0"
   },
   "engines": {
     "node": ">=22.0.0",

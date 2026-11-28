@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: editor_move_component.md
-permalink: /tools/editor-detail/editor_move_component/index.md
----

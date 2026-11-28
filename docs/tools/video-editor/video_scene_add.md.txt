@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: video_scene_add.md
-permalink: /tools/video-editor/video_scene_add/index.md
----

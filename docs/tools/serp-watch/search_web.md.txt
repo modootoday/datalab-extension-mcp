@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: search_web.md
-permalink: /tools/serp-watch/search_web/index.md
----

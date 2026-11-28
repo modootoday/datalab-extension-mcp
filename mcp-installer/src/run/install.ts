@@ -69,7 +69,7 @@ export async function runInstall(opts: RunOptions, io: Io): Promise<number> {
   ui.step(1, STEPS, INSTALL_STEPS.find);
   const found = await findPrograms(opts, io, ui);
   if (typeof found === "number") return found;
-  const withCatalog = opts.skills !== false;
+  const withCatalog = opts.skills === true;
   presentPlan(ui, found, withCatalog);
   if (
     opts.yes !== true &&

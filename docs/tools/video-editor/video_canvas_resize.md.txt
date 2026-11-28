@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: video_canvas_resize.md
-permalink: /tools/video-editor/video_canvas_resize/index.md
----

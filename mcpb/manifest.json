@@ -2,7 +2,7 @@
   "manifest_version": "0.3",
   "name": "datalab-extension-mcp",
   "display_name": "DataLab Tools",
-  "version": "1.18.3",
+  "version": "1.18.4",
   "description": "Use the DataLab Tools browser extension from an AI app, inside your own browser session.",
   "long_description": "Local MCP server that exposes the DataLab Tools browser extension's tools to an MCP host. Read-only lookups run without a prompt; anything that edits a document or costs money is gated by the extension and confirmed by you first. Holds no credentials; every call runs inside your own browser session.",
   "author": {

@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: outline_suggest.md
-permalink: /tools/keyword-research/outline_suggest/index.md
----

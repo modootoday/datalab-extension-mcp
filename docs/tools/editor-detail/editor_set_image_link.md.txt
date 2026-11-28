@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: editor_set_image_link.md
-permalink: /tools/editor-detail/editor_set_image_link/index.md
----

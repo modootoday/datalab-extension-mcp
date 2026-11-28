@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: photo_canvas_resize.md
-permalink: /tools/photo-editor/photo_canvas_resize/index.md
----

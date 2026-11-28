@@ -1,5 +1,0 @@
----
-layout: twin
-twin_of: place_photos.md
-permalink: /tools/place/place_photos/index.md
----

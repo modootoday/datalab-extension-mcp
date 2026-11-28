@@ -24,4 +24,4 @@ AI가 넘기는 값이 없어요.
 - [블로그·카페 발행량](/tools/keyword-research/content_volume/) `content_volume`
 - [키워드 기회 지수](/tools/keyword-research/keyword_opportunity/) `keyword_opportunity`
 
-이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.3 기준.
+이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.4 기준.

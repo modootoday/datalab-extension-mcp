@@ -25,15 +25,15 @@ describe("pairing wire", () => {
     expect(normalizeAppName(7)).toBeNull();
   });
 
-  it("accepts only the four actions", () => {
+  it("accepts only the five actions", () => {
     const base = { token: "t" };
-    for (const action of ["status", "approve", "refuse", "revoke"]) {
+    for (const action of ["status", "approve", "refuse", "revoke", "unpair"]) {
       expect(PairingRequestSchema.safeParse({ ...base, action }).success).toBe(
         true,
       );
     }
     expect(
-      PairingRequestSchema.safeParse({ ...base, action: "unpair" }).success,
+      PairingRequestSchema.safeParse({ ...base, action: "forget" }).success,
     ).toBe(false);
   });
 
