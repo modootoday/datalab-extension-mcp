@@ -391,6 +391,10 @@ export class Bridge {
     return this.#sessions.get(key)?.session ?? null;
   }
 
+  get extensionIds(): readonly string[] {
+    return this.#deps.extensionIds;
+  }
+
   /** Is a panel connected and ready to serve tool calls? */
   get connected(): boolean {
     return this.#primary() !== null;

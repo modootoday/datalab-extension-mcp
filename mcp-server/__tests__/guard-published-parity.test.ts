@@ -4,8 +4,8 @@
  * What this catches is not a bug but a false statement: changing a limit
  * breaks nothing and every test still passes, while the published document
  * quietly names the wrong number — and a release cannot be re-cut at the same
- * version. Both language editions are checked, because fixing one and
- * forgetting the other leaves half the readers with the wrong document.
+ * version. Both README editions and the site's troubleshooting data are
+ * checked, because fixing one and forgetting another leaves readers wrong.
  */
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -18,19 +18,32 @@ import { describe, expect, it } from "vitest";
 
 import { mediaToolDescriptors } from "../src/media-tools.js";
 
-// The monorepo names the connector extension-mcp; the published mirror, mcp.
-const readDoc = (name: string): string => {
-  for (const dir of ["extension-mcp", "mcp"]) {
+const readFirst = (candidates: readonly string[]): string => {
+  for (const rel of candidates) {
     try {
-      return readFileSync(
-        fileURLToPath(new URL(`../../${dir}/${name}`, import.meta.url)),
-        { encoding: "utf8" },
-      );
+      return readFileSync(fileURLToPath(new URL(rel, import.meta.url)), {
+        encoding: "utf8",
+      });
     } catch {
       continue;
     }
   }
-  throw new Error(`${name} not found beside this package`);
+  throw new Error(`${candidates.join(" or ")} not found beside this package`);
+};
+
+// The monorepo names the connector extension-mcp; the published mirror, mcp.
+const readDoc = (name: string): string =>
+  readFirst([`../../extension-mcp/${name}`, `../../mcp/${name}`]);
+
+// The site source sits in the connector package here and at the mirror's root.
+const troubleshootTitles = (): string[] => {
+  const data = JSON.parse(
+    readFirst([
+      "../../extension-mcp/docs/_data/troubleshoot.json",
+      "../../docs/_data/troubleshoot.json",
+    ]),
+  ) as { groups: Array<{ items: Array<{ title: string }> }> };
+  return data.groups.flatMap((group) => group.items.map((item) => item.title));
 };
 
 const READMES: ReadonlyArray<readonly [string, string]> = [
@@ -58,19 +71,15 @@ describe("published docs match the code", () => {
   it("문제해결 제목이 호스트가 실제로 보는 개수를 적는다", () => {
     const seen =
       staticDiscoveryCatalog().length + mediaToolDescriptors().length;
-    const HEADINGS: ReadonlyArray<readonly [string, RegExp]> = [
-      ["README.md", /도구가 (\d+)개밖에 안 보여요/],
-      ["README.en.md", /I only see (\d+) tools/],
-    ];
-    for (const [name, re] of HEADINGS) {
-      const text = READMES.find(([n]) => n === name)?.[1] ?? "";
-      const said = re.exec(text)?.[1];
-      expect(
-        said,
-        `${name}: 제목을 못 찾음 — 문구가 바뀌었으면 이 정규식도`,
-      ).toBeDefined();
-      expect(Number(said), `${name}: 문서 ${said} vs 실제 ${seen}`).toBe(seen);
-    }
+    const re = /도구가 (\d+)개밖에 안 보여요/;
+    const said = troubleshootTitles()
+      .map((title) => re.exec(title)?.[1])
+      .find((n) => n !== undefined);
+    expect(
+      said,
+      "troubleshoot.json: 제목을 못 찾음 — 문구가 바뀌었으면 이 정규식도",
+    ).toBeDefined();
+    expect(Number(said), `문서 ${said} vs 실제 ${seen}`).toBe(seen);
   });
 
   // Forces the documentation to move in the same commit as the constant.

@@ -26,4 +26,4 @@ generated: true
 - [유입 경로](/tools/blog-insights/my_inflow_domain/) `my_inflow_domain`
 - [독자 국가](/tools/blog-insights/my_country/) `my_country`
 
-이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.2 기준.
+이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.3 기준.

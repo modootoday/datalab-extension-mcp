@@ -26,4 +26,4 @@ generated: true
 - [전년 대비 관심도](/tools/keyword-research/keyword_yoy/) `keyword_yoy`
 - [키워드 관심도 비교](/tools/keyword-research/keyword_trend_batch/) `keyword_trend_batch`
 
-이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.2 기준.
+이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.3 기준.

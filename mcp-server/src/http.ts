@@ -33,6 +33,7 @@ import { gateMcpApp } from "./route-mcp-app-gate.js";
 import { handleMediaUpload } from "./route-media-upload.js";
 import { handlePairing } from "./route-pairing.js";
 import { handleStageRange } from "./route-stage-range.js";
+import { refuseRequest } from "./request-filter.js";
 
 export type { HttpBridgeOptions, LifecycleHooks };
 export { writeSafely };
@@ -187,6 +188,12 @@ export function createHttpBridge(opts: HttpBridgeOptions): HttpBridge {
   const server = createServer((req, res) => {
     const url = new URL(req.url ?? "/", `http://${host}`);
     const origin = req.headers.origin;
+    const refusal = refuseRequest(req, url.pathname, opts.bridge.extensionIds);
+    if (refusal !== null) {
+      req.resume();
+      json(res, refusal.status, { error: refusal.error });
+      return;
+    }
 
     // The public MCP transport. Loopback reach is the gate; a stateless POST
     // carries its own id, so many hosts share this route with no session map.

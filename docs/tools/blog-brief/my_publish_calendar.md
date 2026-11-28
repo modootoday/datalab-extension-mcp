@@ -24,4 +24,4 @@ AI가 넘기는 값이 없어요.
 - [방문·조회 추이](/tools/blog-brief/my_traffic_series/) `my_traffic_series`
 - [인기 콘텐츠](/tools/blog-brief/my_top_content/) `my_top_content`
 
-이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.2 기준.
+이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.3 기준.

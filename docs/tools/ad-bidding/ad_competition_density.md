@@ -26,4 +26,4 @@ generated: true
 - [입찰가 추정](/tools/ad-bidding/ad_estimate_bid/) `ad_estimate_bid`
 - [예상 성과 추정](/tools/ad-bidding/ad_estimate_performance/) `ad_estimate_performance`
 
-이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.2 기준.
+이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.3 기준.

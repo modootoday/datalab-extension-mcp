@@ -31,4 +31,4 @@ generated: true
 - [컴포넌트 고치기](/tools/editor-detail/editor_update_component/) `editor_update_component`
 - [문단 서식 적용](/tools/editor-detail/editor_set_paragraph_styles/) `editor_set_paragraph_styles`
 
-이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.2 기준.
+이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.3 기준.

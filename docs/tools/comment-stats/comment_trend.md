@@ -27,4 +27,4 @@ generated: true
 - [댓글 시간대](/tools/comment-stats/comment_hourly/) `comment_hourly`
 - [댓글 기기](/tools/comment-stats/comment_device/) `comment_device`
 
-이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.2 기준.
+이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.3 기준.

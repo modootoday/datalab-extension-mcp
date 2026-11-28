@@ -26,4 +26,4 @@ generated: true
 - [다른 사람의 글 — 댓글 단 사람 명단 받기](/tools/pumasi/pumasi_commenters/) `pumasi_commenters`
 - [다른 사람의 글 — 댓글칸 열기](/tools/pumasi/pumasi_comment_open/) `pumasi_comment_open`
 
-이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.2 기준.
+이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.3 기준.

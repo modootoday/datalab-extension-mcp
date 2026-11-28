@@ -28,4 +28,4 @@ generated: true
 - [이미지 배치](/tools/editor-detail/editor_set_image_layout/) `editor_set_image_layout`
 - [컴포넌트 이동](/tools/editor-detail/editor_move_component/) `editor_move_component`
 
-이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.2 기준.
+이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.3 기준.

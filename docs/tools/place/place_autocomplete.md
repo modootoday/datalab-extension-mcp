@@ -26,4 +26,4 @@ generated: true
 - [리뷰 통계](/tools/place/place_review_stats/) `place_review_stats`
 - [방문자 리뷰](/tools/place/place_reviews/) `place_reviews`
 
-이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.2 기준.
+이 페이지는 도구 정의에서 자동으로 만들어져요. 연결 프로그램 1.18.3 기준.
